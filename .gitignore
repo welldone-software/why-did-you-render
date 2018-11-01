@@ -1,0 +1,8 @@
+.idea
+.temp
+
+*.swo
+*.swp
+*.log
+
+node_modules
