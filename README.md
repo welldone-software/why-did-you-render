@@ -1,10 +1,10 @@
 # Why Did You Render
 
-[![npm version](https://badge.fury.io/js/@welldone-software/why-did-you-render.svg)](https://badge.fury.io/js/@welldone-software/why-did-you-render)
+[![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 
 `why-did-you-render` monkey patches `React.CreateElement` to notify you about avoidable re-renders.
 
-![](/demo-image.png)
+![](demo-image.png)
 
 ### Setup
 ```
