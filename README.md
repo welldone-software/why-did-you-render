@@ -4,7 +4,7 @@
 
 `why-did-you-render` monkey patches `React.CreateElement` to notify you about avoidable re-renders.
 
-![](demo-image.png)
+![](https://raw.githubusercontent.com/welldone-software/why-did-you-render/master/demo-image.png)
 
 ### Setup
 ```
