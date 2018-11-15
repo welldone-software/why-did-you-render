@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
+const compact = require('lodash/compact')
 
 module.exports = function(api){
-  const isDemo = api.env('demo')
+  const isDevelopment = api.env('development')
   const isTest = api.env('test')
 
   const presets = [
@@ -11,13 +12,11 @@ module.exports = function(api){
     '@babel/preset-react'
   ]
 
-  const plugins = [
-    'babel-plugin-lodash'
-  ]
-
-  if(isDemo || isTest){
-    plugins.push('@babel/plugin-proposal-class-properties')
-  }
+  const plugins = compact([
+    isDevelopment && 'react-hot-loader/babel',
+    !isDevelopment && 'babel-plugin-lodash',
+    (isDevelopment || isTest) && '@babel/plugin-proposal-class-properties'
+  ])
 
   return {presets, plugins}
 }

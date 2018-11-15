@@ -1,28 +1,27 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import ReactDomServer from 'react-dom/server'
 
 import createStepLogger from '../createStepLogger'
+
+import DemoComponent from './DemoComponent'
 
 export default {
   name: 'Server Side (hydrate)',
   fn({domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 
-    const HydratedComponent = ({text}) => (
-      <div>{text}</div>
-    )
+    fetch('/ssrComponent')
+      .then(response => response.text())
+      .then(initialDemoHTML => {
+        domElement.innerHTML = initialDemoHTML
 
-    HydratedComponent.whyDidYouRender = true
+        whyDidYouRender(React)
 
-    domElement.innerHTML = ReactDomServer.renderToString(<HydratedComponent text="HI :D"/>)
+        stepLogger('hydrate')
+        ReactDom.hydrate(<DemoComponent text="hydrated hi"/>, domElement)
 
-    whyDidYouRender(React)
-
-    stepLogger('hydrate')
-    ReactDom.hydrate(<HydratedComponent text="HI :D"/>, domElement)
-
-    stepLogger('render with same props', true)
-    ReactDom.render(<HydratedComponent text="HI :D"/>, domElement)
+        stepLogger('render with same props', true)
+        ReactDom.render(<DemoComponent text="hydrated hi"/>, domElement)
+      })
   }
 }

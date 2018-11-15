@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
+import Menu from './Menu'
+
 import bigList from './bigList'
 import propsChanges from './propsChanges'
 import stateChanges from './stateChanges'
@@ -39,17 +41,10 @@ const DemoLink = ({name, fn}) => (
   <li><a href="#" onClick={() => changeDemo(fn)}>{name}</a></li>
 )
 
-const Menu = () => (
-  <div>
-    <h1>whyDidYouRender Demos</h1>
-    <h3>
-      <span style={{backgroundColor: '#dad'}}>&nbsp;Open the console&nbsp;</span>
-      &nbsp;and click on one of the demos
-    </h3>
-    <ul>
-      {demosList.map(demoData => <DemoLink key={demoData.name} {...demoData}/>)}
-    </ul>
-  </div>
+const App = () => (
+  <Menu>
+    {demosList.map(demoData => <DemoLink key={demoData.name} {...demoData}/>)}
+  </Menu>
 )
 
-ReactDom.render(<Menu/>, domMenuElement)
+ReactDom.render(<App/>, domMenuElement)
