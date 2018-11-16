@@ -1,6 +1,6 @@
 import {diffTypes} from './consts'
 
-const moreInfoUrl = 'https://goo.gl/hnfMPb'
+const moreInfoUrl = 'http://bit.ly/wdyr02'
 
 const diffTypesDescriptions = {
   [diffTypes.different]: 'different objects.',
@@ -37,7 +37,7 @@ function logDifference(Component, displayName, prefixMessage, propsOrSate, diffe
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
       options.consoleGroup(`%c${propsOrSate}.%c${pathString}%c`, 'color:blue;', 'color:red;', 'color:black;')
       options.consoleLog(`${diffTypesDescriptions[diffType]} (more info at ${moreInfoUrl})`)
-      options.consoleLog(`prev '${pathString}':`, prevValue, ' !== ', nextValue, `:next '${pathString}'`)
+      options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue})
       options.consoleGroupEnd()
     })
   }

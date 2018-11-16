@@ -11,12 +11,12 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 It can also help you to simply track when and why a certain component re-renders.
 
 You can read more about the library
-[>> HERE <<](https://medium.com/welldone-software/why-did-you-render-mr-big-pure-react-component-2a36dd86996f).
+[>> HERE <<](http://bit.ly/wdyr1).
 
 And about common fixing scenarios this library can hep with
-[>> HERE <<](https://medium.com/welldone-software/why-did-you-render-mr-big-pure-react-component-part-2-common-fixing-scenarios-667bfdec2e0f).
+[>> HERE <<](http://bit.ly/wdyr02).
 
-You can test the library in it's sandbox [>> HERE <<](https://goo.gl/Gqb7wb).
+You can test the library in it's sandbox [>> HERE <<](http://bit.ly/wdyrsb).
 
 ### Setup
 ```

@@ -5,17 +5,13 @@ export default {
   fn({React, render, domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 
-    whyDidYouRender(React, {
-      collapseGroups: true
-    })
+    whyDidYouRender(React)
 
-    class ClassDemo extends React.Component{
-      static whyDidYouRender = true
+    const ClassDemo = () => (
+      <div>Props Changes</div>
+    )
 
-      render(){
-        return <div>Props Changes</div>
-      }
-    }
+    ClassDemo.whyDidYouRender = true
 
     stepLogger('First render')
     render(<ClassDemo a={1} />, domElement)
@@ -30,15 +26,9 @@ export default {
     render(<ClassDemo a={{b: 'b'}} />, domElement)
 
     stepLogger('Other props')
-    render(<ClassDemo tooltip={<div>hi!</div>} list={[]} />, domElement)
+    render(<ClassDemo list={[]} />, domElement)
 
     stepLogger('Re-created react element', true)
-    render(<ClassDemo tooltip={<div>hi!</div>} list={[]} />, domElement)
-
-    stepLogger('different props')
-    render(<ClassDemo a={1} nestedFn={{fn: function something(){}}} />, domElement)
-
-    stepLogger('Re-created function', true)
-    render(<ClassDemo a={1} nestedFn={{fn: function something(){}}} />, domElement)
+    render(<ClassDemo list={[]} />, domElement)
   }
 }

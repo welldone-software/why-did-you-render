@@ -6,6 +6,7 @@ import propsChanges from './propsChanges'
 import stateChanges from './stateChanges'
 import bothChanges from './bothChanges'
 import noChanges from './noChanges'
+import specialChanges from './specialChanges'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -14,7 +15,8 @@ const demosList = [
   propsChanges,
   stateChanges,
   bothChanges,
-  noChanges
+  noChanges,
+  specialChanges
 ]
 
 const domMenuElement = document.getElementById('menu')

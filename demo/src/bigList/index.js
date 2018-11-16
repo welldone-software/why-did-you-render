@@ -21,6 +21,7 @@ export default {
 
     const bigListStyle = {width: '100%'} // eslint-disable-line no-unused-vars
 
+    // Notice, that unlike the huge list, we don't track Main's re-renders because we don't care about it's re-renders.
     class Main extends React.Component{
       state = {count: 0}
       render(){
