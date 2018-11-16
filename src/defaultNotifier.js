@@ -33,7 +33,7 @@ function shouldLog(reason, Component, options){
 
 function logDifference(Component, displayName, prefixMessage, propsOrSate, differences, values, options){
   if(differences && differences.length > 0){
-    options.consoleLog({[displayName]: Component}, `${prefixMessage} ${propsOrSate} changes:`)
+    options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${propsOrSate} changes:`)
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
       options.consoleGroup(`%c${propsOrSate}.%c${pathString}%c`, 'color:blue;', 'color:red;', 'color:black;')
       options.consoleLog(`${diffTypesDescriptions[diffType]} (more info at ${moreInfoUrl})`)
@@ -44,10 +44,10 @@ function logDifference(Component, displayName, prefixMessage, propsOrSate, diffe
   else if(differences){
     options.consoleLog(
       {[displayName]: Component},
-      `${prefixMessage} ${propsOrSate} objects changed but they are equal by value.`,
+      `${prefixMessage} the ${propsOrSate} object itself changed but it's values are all equal.`,
       propsOrSate === 'props' ?
         'This could of been avoided by making the component pure, or by preventing it\'s father from re-rendering.' :
-        'This usually means this component called setState when no changes in it\'s state occurred.',
+        'This usually means this component called setState when no changes in it\'s state actually occurred.',
       `more info at ${moreInfoUrl}`
     )
     options.consoleLog(`prev ${propsOrSate}:`, values.prev, ' !== ', values.next, `:next ${propsOrSate}`)
@@ -63,11 +63,11 @@ export default function defaultNotifier(updateInfo){
 
   options.consoleGroup(`%c${displayName}`, 'color: #058;')
 
-  let prefixMessage = 'Re-rendered because of'
+  let prefixMessage = 'Re-rendered because'
 
   if(reason.propsDifferences){
     logDifference(Component, displayName, prefixMessage, 'props', reason.propsDifferences, {prev: prevProps, next: nextProps}, options)
-    prefixMessage = 'And because of'
+    prefixMessage = 'And because'
   }
 
   if(reason.stateDifferences){

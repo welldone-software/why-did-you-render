@@ -6,3 +6,5 @@
 *.log
 
 node_modules
+
+demo/dist

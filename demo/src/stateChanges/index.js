@@ -9,7 +9,7 @@ export default function stateChanges(domElement){
 
   whyDidYouRender(React)
 
-  class ClassDemo extends React.PureComponent{
+  class ClassDemo extends React.Component{
     static whyDidYouRender = true
 
     state = {
@@ -28,6 +28,7 @@ export default function stateChanges(domElement){
         })
       })
     }
+
     render(){
       return <div>State Changes</div>
     }

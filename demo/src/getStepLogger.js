@@ -7,8 +7,7 @@ export default function getStepLogger(){
     const comment = shouldTrigger ? shouldTriggerComment : shouldNotTriggerComment
     // eslint-disable-next-line no-console
     console.log(
-      `\nRender #${step++} %c${description} %c${comment}`
-      ,
+      `\nRender #${step++} %c${description} %c${comment}`,
       'color:blue',
       shouldTrigger ? 'color:red' : 'color:green'
     )

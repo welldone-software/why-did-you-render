@@ -76,6 +76,7 @@ export default function whyDidYouRender(React, userOptions){
   React.__REVERT_WHY_DID_YOU_RENDER_PATCH__ = () => {
     React.createElement = origCreateElement
     delete React.__REVERT_WHY_DID_YOU_RENDER_PATCH__
+    componentsMapping.clear()
   }
 
   return React
