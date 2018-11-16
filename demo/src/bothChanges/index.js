@@ -1,35 +1,34 @@
-/* eslint-disable no-console */
-import React from 'react'
-import {render} from 'react-dom'
-import getStepLogger from '../getStepLogger'
-import whyDidYouRender from '../whyDidYouRender'
+import createStepLogger from '../createStepLogger'
 
-export default function bothChanges(domElement){
-  const stepLogger = getStepLogger()
+export default {
+  name: 'Props And State Changes',
+  fn({React, render, domElement, whyDidYouRender}){
+    const stepLogger = createStepLogger()
 
-  whyDidYouRender(React)
+    whyDidYouRender(React)
 
-  class ClassDemo extends React.Component{
-    static whyDidYouRender = true
+    class ClassDemo extends React.Component{
+      static whyDidYouRender = true
 
-    state = {
-      c: {d: 'd'}
-    }
-
-    static getDerivedStateFromProps(){
-      return {
+      state = {
         c: {d: 'd'}
+      }
+
+      static getDerivedStateFromProps(){
+        return {
+          c: {d: 'd'}
+        }
+      }
+
+      render(){
+        return <div>State And Props Changes</div>
       }
     }
 
-    render(){
-      return <div>State And Props Changes</div>
-    }
+    stepLogger('First Render')
+    render(<ClassDemo a={{b: 'b'}}/>, domElement)
+
+    stepLogger('Second Render', true)
+    render(<ClassDemo a={{b: 'b'}}/>, domElement)
   }
-
-  stepLogger('First Render')
-  render(<ClassDemo a={{b: 'b'}}/>, domElement)
-
-  stepLogger('Second Render', true)
-  render(<ClassDemo a={{b: 'b'}}/>, domElement)
 }

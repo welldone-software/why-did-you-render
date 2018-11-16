@@ -1,7 +1,7 @@
 const shouldTriggerComment = 'Should trigger whyDidYouRender'
 const shouldNotTriggerComment = 'Shouldn\'t trigger whyDidYouRender'
 
-export default function getStepLogger(){
+export default function createStepLogger(){
   let step = 0
   return function stepLogger(description = '', shouldTrigger){
     const comment = shouldTrigger ? shouldTriggerComment : shouldNotTriggerComment

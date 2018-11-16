@@ -10,17 +10,15 @@
     "dist"
   ],
   "scripts": {
+    "start": "cross-env NODE_ENV=demo rollup --config demo/rollup.config.js --watch",
     "build": "rollup --config",
     "test": "jest",
     "test:watch": "npm run test -- --watchAll",
     "lint": "esw . --ext=js --cache --cache-location .temp/eslint-cache",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --watch",
-    "demo:build:watch": "cross-env NODE_ENV=demo rollup --config demo/rollup.config.js --watch",
-    "demo:serve": "live-server demo/dist --port=3030 --host=localhost",
     "clear": "rimraf .temp dist demo/dist",
-    "watch": "concurrently --names \"Build,Lint,Test,Serve\" \"npm:demo:build:watch\" \"npm:lint:watch\" \"npm:test:watch\" \"npm:demo:serve\"",
-    "start": "concurrently --names \"Build,Serve\" \"npm:demo:build:watch\" \"npm:demo:serve\""
+    "watch": "concurrently --names \"Serve,Lint,Test\" \"npm:start\" \"npm:lint:watch\" \"npm:test:watch\""
   },
   "husky": {
     "hooks": {
@@ -56,7 +54,6 @@
     "husky": "^1.1.4",
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
-    "live-server": "^1.2.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-test-renderer": "^16.6.3",
@@ -65,8 +62,10 @@
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-copy": "^0.2.3",
+    "rollup-plugin-livereload": "^0.6.0",
     "rollup-plugin-node-resolve": "^3.4.0",
     "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-serve": "^0.6.0",
     "rollup-plugin-terser": "^3.0.0"
   },
   "authors": [

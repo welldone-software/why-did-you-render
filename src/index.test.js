@@ -35,7 +35,7 @@ describe('index', () => {
   })
 
   afterEach(() => {
-    React.__REVERT_WHY_DID_YOU_RENDER_PATCH__()
+    React.__REVERT_WHY_DID_YOU_RENDER__()
   })
 
   test('Empty props and state', () => {
