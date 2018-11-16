@@ -16,7 +16,7 @@ yarn add @welldone-software/why-did-you-render
 ```
 
 ### Sandbox
-You can test the library [>> HERE <<](https://goo.gl/6TdqeQ)
+You can test the library [>> HERE <<](https://goo.gl/Gqb7wb)
 (don't forget to open the browser's console).
 
 ### Usage
