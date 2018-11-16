@@ -2,9 +2,21 @@
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 
-`why-did-you-render` monkey patches `React.CreateElement` to notify you about avoidable re-renders.
+`why-did-you-render` monkey patches `React` to notify you about avoidable re-renders.
+
+For example, when you pass `style={{width: '100%'}}` to a big pure component and make it always re-render:
 
 ![](https://raw.githubusercontent.com/welldone-software/why-did-you-render/master/demo-image.png)
+
+It can also help you to simply track when and why a certain component re-renders.
+
+You can read more about the library
+[>> HERE <<](https://medium.com/welldone-software/why-did-you-render-mr-big-pure-react-component-2a36dd86996f).
+
+And about common fixing scenarios this library can hep with
+[>> HERE <<](https://medium.com/welldone-software/why-did-you-render-mr-big-pure-react-component-part-2-common-fixing-scenarios-667bfdec2e0f).
+
+You can test the library in it's sandbox [>> HERE <<](https://goo.gl/Gqb7wb).
 
 ### Setup
 ```
@@ -14,10 +26,6 @@ or
 ```
 yarn add @welldone-software/why-did-you-render
 ```
-
-### Sandbox
-You can test the library [>> HERE <<](https://goo.gl/Gqb7wb)
-(don't forget to open the browser's console).
 
 ### Usage
 Execute `whyDidYouRender` with `React` as it's first argument.
@@ -45,9 +53,7 @@ class BigListPureComponent extends React.PureComponent {
   }
 }
 ```
-Functional components, or class components if you don't use
-[`@babel/plugin-proposal-class-properties`](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties)
-can be tracked by assigning `whyDidYouRender` on them:
+Or like this:
 ```js
 const BigListPureComponent = props => (
   <div>

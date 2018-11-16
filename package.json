@@ -1,7 +1,7 @@
 {
   "name": "@welldone-software/why-did-you-render",
   "version": "2.0.3",
-  "description": "Patch React to discover unnecessary re-renders.",
+  "description": "Monkey patches React to notify you about avoidable re-renders.",
   "main": "dist/cjs/whyDidYouRender.min.js",
   "module": "dist/esm/whyDidYouRender.min.js",
   "browser": "dist/umd/whyDidYouRender.min.js",
@@ -77,6 +77,7 @@
   "keywords": [
     "react",
     "component",
+    "pure",
     "performance",
     "render",
     "update",
