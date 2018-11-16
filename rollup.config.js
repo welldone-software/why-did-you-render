@@ -52,7 +52,7 @@ export default flatMap([false, true], shouldMinify => [
     output: [
       {
         file: pkg.module.replace('.min', shouldMinify ? '.min' : ''),
-        format: 'es',
+        format: 'esm',
         sourcemap: shouldMinify,
         sourcemapFile: pkg.module.replace('.js', '.js.map')
       }

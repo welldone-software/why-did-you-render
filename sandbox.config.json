@@ -1,4 +1,3 @@
 {
-  "template": "node",
-  "entry": "demo/src"
+  "template": "node"
 }
