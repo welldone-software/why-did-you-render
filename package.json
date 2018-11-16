@@ -1,6 +1,6 @@
 {
   "name": "@welldone-software/why-did-you-render",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Patch React to discover unnecessary re-renders.",
   "main": "dist/cjs/whyDidYouRender.min.js",
   "module": "dist/esm/whyDidYouRender.min.js",

@@ -137,7 +137,7 @@
   };
 
   var _diffTypesDescription;
-  var moreInfoUrl = 'https://goo.gl/Jx2e6M';
+  var moreInfoUrl = 'https://goo.gl/hnfMPb';
   var diffTypesDescriptions = (_diffTypesDescription = {}, _defineProperty(_diffTypesDescription, diffTypes.different, 'different objects.'), _defineProperty(_diffTypesDescription, diffTypes.deepEquals, 'different objects that are equal by value.'), _defineProperty(_diffTypesDescription, diffTypes.date, 'different date objects with the same value.'), _defineProperty(_diffTypesDescription, diffTypes.regex, 'different regular expressions with the same value.'), _defineProperty(_diffTypesDescription, diffTypes.reactElement, 'different React elements with the same displayName.'), _defineProperty(_diffTypesDescription, diffTypes.function, 'different functions with the same name.'), _diffTypesDescription);
 
   function shouldLog(reason, Component, options) {
@@ -159,7 +159,7 @@
 
   function logDifference(Component, displayName, prefixMessage, propsOrSate, differences, values, options) {
     if (differences && differences.length > 0) {
-      options.consoleLog(_defineProperty({}, displayName, Component), "".concat(prefixMessage, " ").concat(propsOrSate, " changes:"));
+      options.consoleLog(_defineProperty({}, displayName, Component), "".concat(prefixMessage, " of ").concat(propsOrSate, " changes:"));
       differences.forEach(function (_ref) {
         var pathString = _ref.pathString,
             diffType = _ref.diffType,
@@ -171,7 +171,7 @@
         options.consoleGroupEnd();
       });
     } else if (differences) {
-      options.consoleLog(_defineProperty({}, displayName, Component), "".concat(prefixMessage, " ").concat(propsOrSate, " objects changed but they are equal by value."), propsOrSate === 'props' ? 'This could of been avoided by making the component pure, or by preventing it\'s father from re-rendering.' : 'This usually means this component called setState when no changes in it\'s state occurred.', "more info at ".concat(moreInfoUrl));
+      options.consoleLog(_defineProperty({}, displayName, Component), "".concat(prefixMessage, " the ").concat(propsOrSate, " object itself changed but it's values are all equal."), propsOrSate === 'props' ? 'This could of been avoided by making the component pure, or by preventing it\'s father from re-rendering.' : 'This usually means this component called setState when no changes in it\'s state actually occurred.', "more info at ".concat(moreInfoUrl));
       options.consoleLog("prev ".concat(propsOrSate, ":"), values.prev, ' !== ', values.next, ":next ".concat(propsOrSate));
     }
   }
@@ -191,14 +191,14 @@
     }
 
     options.consoleGroup("%c".concat(displayName), 'color: #058;');
-    var prefixMessage = 'Re-rendered because of';
+    var prefixMessage = 'Re-rendered because';
 
     if (reason.propsDifferences) {
       logDifference(Component, displayName, prefixMessage, 'props', reason.propsDifferences, {
         prev: prevProps,
         next: nextProps
       }, options);
-      prefixMessage = 'And because of';
+      prefixMessage = 'And because';
     }
 
     if (reason.stateDifferences) {
@@ -3831,6 +3831,7 @@
     React.__REVERT_WHY_DID_YOU_RENDER_PATCH__ = function () {
       React.createElement = origCreateElement;
       delete React.__REVERT_WHY_DID_YOU_RENDER_PATCH__;
+      componentsMapping.clear();
     };
 
     return React;
