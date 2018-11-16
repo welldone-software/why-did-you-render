@@ -3828,9 +3828,9 @@
       return origCreateElement.apply(React, [PatchedComponent].concat(rest));
     };
 
-    React.__REVERT_WHY_DID_YOU_RENDER_PATCH__ = function () {
+    React.__REVERT_WHY_DID_YOU_RENDER__ = function () {
       React.createElement = origCreateElement;
-      delete React.__REVERT_WHY_DID_YOU_RENDER_PATCH__;
+      delete React.__REVERT_WHY_DID_YOU_RENDER__;
       componentsMapping.clear();
     };
 

@@ -1,6 +1,6 @@
 {
   "name": "@welldone-software/why-did-you-render",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Patch React to discover unnecessary re-renders.",
   "main": "dist/cjs/whyDidYouRender.min.js",
   "module": "dist/esm/whyDidYouRender.min.js",
@@ -18,7 +18,8 @@
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "npm run lint -- --watch",
     "clear": "rimraf .temp dist demo/dist",
-    "watch": "concurrently --names \"Serve,Lint,Test\" \"npm:start\" \"npm:lint:watch\" \"npm:test:watch\""
+    "watch": "concurrently --names \"Serve,Lint,Test\" \"npm:start\" \"npm:lint:watch\" \"npm:test:watch\"",
+    "prepublishOnly": "npm run build && npm run test && npm run lint"
   },
   "husky": {
     "hooks": {
