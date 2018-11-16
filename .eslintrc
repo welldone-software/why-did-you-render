@@ -41,7 +41,8 @@
     "keyword-spacing": ["error", {"before": false, "after": false, "overrides": {
       "from": {"before": true, "after": true},
       "import": {"after": true},
-      "return": {"after": true}
+      "return": {"after": true},
+      "export": {"after": true}
     }}],
     "space-before-blocks": ["error", "never"],
     "comma-dangle": ["error", "never"]
