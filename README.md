@@ -16,7 +16,7 @@ You can read more about the library
 And about common fixing scenarios this library can hep with
 [>> HERE <<](http://bit.ly/wdyr02).
 
-You can test the library in it's sandbox [>> HERE <<](http://bit.ly/wdyrsb).
+You can test the library in it's sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
 
 ### Setup
 ```

@@ -25,10 +25,10 @@ export default {
     stepLogger('Different by ref, equals by value', true)
     render(<ClassDemo a={{b: 'b'}} />, domElement)
 
-    stepLogger('Other props')
-    render(<ClassDemo list={[]} />, domElement)
+    stepLogger('Other nested props')
+    render(<ClassDemo a={{b: {c: {d: 'd'}}}} />, domElement)
 
-    stepLogger('Re-created react element', true)
-    render(<ClassDemo list={[]} />, domElement)
+    stepLogger('Deep equal nested props', true)
+    render(<ClassDemo a={{b: {c: {d: 'd'}}}} />, domElement)
   }
 }
