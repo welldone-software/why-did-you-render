@@ -26,7 +26,9 @@ function changeDemo(demoFn){
   console.clear && console.clear() // eslint-disable-line no-console
   React.__REVERT_WHY_DID_YOU_RENDER__ && React.__REVERT_WHY_DID_YOU_RENDER__()
   unmountComponentAtNode(domDemoElement)
-  demoFn({React, render, domElement: domDemoElement, whyDidYouRender})
+  setTimeout(() => {
+    demoFn({React, render, domElement: domDemoElement, whyDidYouRender})
+  }, 1)
 }
 
 changeDemo(demosList[0].fn)
