@@ -19,7 +19,8 @@
     "lint:watch": "npm run lint -- --watch",
     "clear": "rimraf .temp dist demo/dist",
     "watch": "concurrently --names \"Serve,Lint,Test\" \"npm:start\" \"npm:lint:watch\" \"npm:test:watch\"",
-    "prepublishOnly": "npm run build && npm run test && npm run lint"
+    "version": "npm run lint && npm run test && npm run build && git add --all dist",
+    "postversion": "git push && git push --tags"
   },
   "husky": {
     "hooks": {
