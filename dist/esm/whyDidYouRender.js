@@ -141,7 +141,7 @@ var diffTypes = {
 };
 
 var _diffTypesDescription;
-var moreInfoUrl = 'https://goo.gl/hnfMPb';
+var moreInfoUrl = 'http://bit.ly/wdyr02';
 var diffTypesDescriptions = (_diffTypesDescription = {}, _defineProperty(_diffTypesDescription, diffTypes.different, 'different objects.'), _defineProperty(_diffTypesDescription, diffTypes.deepEquals, 'different objects that are equal by value.'), _defineProperty(_diffTypesDescription, diffTypes.date, 'different date objects with the same value.'), _defineProperty(_diffTypesDescription, diffTypes.regex, 'different regular expressions with the same value.'), _defineProperty(_diffTypesDescription, diffTypes.reactElement, 'different React elements with the same displayName.'), _defineProperty(_diffTypesDescription, diffTypes.function, 'different functions with the same name.'), _diffTypesDescription);
 
 function shouldLog(reason, Component, options) {
@@ -171,7 +171,7 @@ function logDifference(Component, displayName, prefixMessage, propsOrSate, diffe
           nextValue = _ref.nextValue;
       options.consoleGroup("%c".concat(propsOrSate, ".%c").concat(pathString, "%c"), 'color:blue;', 'color:red;', 'color:black;');
       options.consoleLog("".concat(diffTypesDescriptions[diffType], " (more info at ").concat(moreInfoUrl, ")"));
-      options.consoleLog("prev '".concat(pathString, "':"), prevValue, ' !== ', nextValue, ":next '".concat(pathString, "'"));
+      options.consoleLog(_defineProperty({}, "prev ".concat(pathString), prevValue), '!==', _defineProperty({}, "next ".concat(pathString), nextValue));
       options.consoleGroupEnd();
     });
   } else if (differences) {
