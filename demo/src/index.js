@@ -1,5 +1,5 @@
 import React from 'react'
-import {render, unmountComponentAtNode} from 'react-dom'
+import ReactDom from 'react-dom'
 
 import bigList from './bigList'
 import propsChanges from './propsChanges'
@@ -7,6 +7,7 @@ import stateChanges from './stateChanges'
 import bothChanges from './bothChanges'
 import noChanges from './noChanges'
 import specialChanges from './specialChanges'
+import ssr from './ssr'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -16,7 +17,8 @@ const demosList = [
   stateChanges,
   bothChanges,
   noChanges,
-  specialChanges
+  specialChanges,
+  ssr
 ]
 
 const domMenuElement = document.getElementById('menu')
@@ -25,13 +27,13 @@ const domDemoElement = document.getElementById('demo')
 function changeDemo(demoFn){
   console.clear && console.clear() // eslint-disable-line no-console
   React.__REVERT_WHY_DID_YOU_RENDER__ && React.__REVERT_WHY_DID_YOU_RENDER__()
-  unmountComponentAtNode(domDemoElement)
+  ReactDom.unmountComponentAtNode(domDemoElement)
   setTimeout(() => {
-    demoFn({React, render, domElement: domDemoElement, whyDidYouRender})
+    demoFn({whyDidYouRender, domElement: domDemoElement})
   }, 1)
 }
 
-changeDemo(demosList[0].fn)
+changeDemo(demosList[6].fn)
 
 const DemoLink = ({name, fn}) => (
   <li><a href="#" onClick={() => changeDemo(fn)}>{name}</a></li>
@@ -50,4 +52,4 @@ const Menu = () => (
   </div>
 )
 
-render(<Menu/>, domMenuElement)
+ReactDom.render(<Menu/>, domMenuElement)

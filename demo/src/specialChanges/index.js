@@ -1,8 +1,11 @@
+import React from 'react'
+import ReactDom from 'react-dom'
+
 import createStepLogger from '../createStepLogger'
 
 export default {
   name: 'Special Changes',
-  fn({React, render, domElement, whyDidYouRender}){
+  fn({domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 
     whyDidYouRender(React)
@@ -16,7 +19,7 @@ export default {
     }
 
     stepLogger('First render')
-    render(
+    ReactDom.render(
       <ClassDemo
         regEx={/something/}
         fn={function something(){}}
@@ -27,7 +30,7 @@ export default {
     )
 
     stepLogger('Same special props', true)
-    render(
+    ReactDom.render(
       <ClassDemo
         regEx={/something/}
         fn={function something(){}}

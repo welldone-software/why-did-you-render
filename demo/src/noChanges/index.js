@@ -1,8 +1,11 @@
+import React from 'react'
+import ReactDom from 'react-dom'
+
 import createStepLogger from '../createStepLogger'
 
 export default {
   name: 'No Changes',
-  fn({React, render, domElement, whyDidYouRender}){
+  fn({domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 
     whyDidYouRender(React)
@@ -20,6 +23,6 @@ export default {
     }
 
     stepLogger('First Render')
-    render(<ClassDemo/>, domElement)
+    ReactDom.render(<ClassDemo/>, domElement)
   }
 }

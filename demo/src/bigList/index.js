@@ -1,8 +1,10 @@
+import React from 'react'
+import ReactDom from 'react-dom'
 import {times} from 'lodash'
 
 export default {
   name: 'Big List (Main Demo)',
-  fn({React, render, domElement, whyDidYouRender}){
+  fn({domElement, whyDidYouRender}){
     whyDidYouRender(React)
 
     class BigListPureComponent extends React.PureComponent{
@@ -47,6 +49,6 @@ export default {
       }
     }
 
-    render(<Main/>, domElement)
+    ReactDom.render(<Main/>, domElement)
   }
 }

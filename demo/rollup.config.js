@@ -5,6 +5,8 @@ import replace from 'rollup-plugin-replace'
 import copy from 'rollup-plugin-copy'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
+import builtins from 'rollup-plugin-node-builtins'
+import globals from 'rollup-plugin-node-globals'
 
 export default {
   input: 'demo/src/index.js',
@@ -13,18 +15,16 @@ export default {
     format: 'iife'
   },
   plugins: [
+    replace({
+      'process.env.NODE_ENV': JSON.stringify('demo')
+    }),
     babel({
       exclude: 'node_modules/**'
     }),
     resolve(),
-    commonjs({
-      namedExports: {
-        'react-dom': ['render', 'unmountComponentAtNode']
-      }
-    }),
-    replace({
-      'process.env.NODE_ENV': JSON.stringify('demo')
-    }),
+    commonjs(),
+    globals(),
+    builtins(),
     copy({
       'demo/src/index.html': 'demo/dist/index.html'
     }),
