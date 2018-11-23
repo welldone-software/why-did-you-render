@@ -1,5 +1,5 @@
 import {isString} from 'lodash'
 
 export default function getDisplayName(type){
-  return isString(type) ? type : (type.displayName || type.name)
+  return type.displayName || type.name || (isString(type) ? type : undefined)
 }

@@ -6,7 +6,7 @@ import createStepLogger from '../createStepLogger'
 import DemoComponent from './DemoComponent'
 
 export default {
-  name: 'Server Side (hydrate)',
+  description: 'Server Side (hydrate)',
   fn({domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 

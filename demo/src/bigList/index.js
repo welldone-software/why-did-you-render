@@ -3,7 +3,7 @@ import ReactDom from 'react-dom'
 import {times} from 'lodash'
 
 export default {
-  name: 'Big List (Main Demo)',
+  description: 'Big List (Main Demo)',
   fn({domElement, whyDidYouRender}){
     whyDidYouRender(React)
 

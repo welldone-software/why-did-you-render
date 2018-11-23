@@ -11,7 +11,13 @@ const diffTypesDescriptions = {
   [diffTypes.function]: 'different functions with the same name.'
 }
 
+let inHotReload = false
+
 function shouldLog(reason, Component, options){
+  if(inHotReload){
+    return false
+  }
+
   if(options.logOnDifferentValues){
     return true
   }
@@ -84,4 +90,21 @@ export default function defaultNotifier(updateInfo){
   }
 
   options.consoleGroupEnd()
+}
+
+export function createDefaultNotifier(hotReloadBufferMs){
+  if(hotReloadBufferMs){
+    if(module && module.hot && module.hot.addStatusHandler){
+      module.hot.addStatusHandler(status => {
+        if(status === 'idle'){
+          inHotReload = true
+          setTimeout(() => {
+            inHotReload = false
+          }, hotReloadBufferMs)
+        }
+      })
+    }
+  }
+
+  return defaultNotifier
 }
