@@ -5,8 +5,8 @@ import shouldTrack from './shouldTrack'
 
 function patchClassComponent(ClassComponent, displayName, React, options){
   class WDYRPatchedClassComponent extends ClassComponent{
-    constructor(){
-      super()
+    constructor(props, context){
+      super(props, context)
       if(this.render && !ClassComponent.prototype.render){
         const origRender = this.render
         this.render = () => {
