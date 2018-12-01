@@ -111,6 +111,36 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
+function _superPropBase(object, property) {
+  while (!Object.prototype.hasOwnProperty.call(object, property)) {
+    object = _getPrototypeOf(object);
+    if (object === null) break;
+  }
+
+  return object;
+}
+
+function _get(target, property, receiver) {
+  if (typeof Reflect !== "undefined" && Reflect.get) {
+    _get = Reflect.get;
+  } else {
+    _get = function _get(target, property, receiver) {
+      var base = _superPropBase(target, property);
+
+      if (!base) return;
+      var desc = Object.getOwnPropertyDescriptor(base, property);
+
+      if (desc.get) {
+        return desc.get.call(receiver);
+      }
+
+      return desc.value;
+    };
+  }
+
+  return _get(target, property, receiver || target);
+}
+
 function _toConsumableArray(arr) {
   return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
 }
@@ -439,95 +469,98 @@ function shouldTrack(Component, displayName, options) {
   return !!(Component.whyDidYouRender || shouldInclude(displayName, options));
 }
 
-var patchClassComponent = function patchClassComponent(Component, options) {
-  var PatchedComponent =
+var patchClassComponent = function patchClassComponent(ClassComponent, displayName, React, options) {
+  var WDYRPatchedClassComponent =
   /*#__PURE__*/
-  function (_Component) {
-    _inherits(PatchedComponent, _Component);
+  function (_ClassComponent) {
+    _inherits(WDYRPatchedClassComponent, _ClassComponent);
 
-    function PatchedComponent() {
-      _classCallCheck(this, PatchedComponent);
+    function WDYRPatchedClassComponent() {
+      _classCallCheck(this, WDYRPatchedClassComponent);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(PatchedComponent).apply(this, arguments));
+      return _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedClassComponent).apply(this, arguments));
     }
 
-    _createClass(PatchedComponent, [{
-      key: "componentDidUpdate",
-      value: function componentDidUpdate(prevProps, prevState, snapshot) {
+    _createClass(WDYRPatchedClassComponent, [{
+      key: "render",
+      value: function render() {
         options.notifier(getUpdateInfo({
-          Component: Component,
-          prevProps: prevProps,
-          prevState: prevState,
+          Component: ClassComponent,
+          prevProps: this._prevProps,
+          prevState: this._prevState,
           nextProps: this.props,
           nextState: this.state,
           options: options
         }));
-
-        if (typeof Component.prototype.componentDidUpdate === 'function') {
-          Component.prototype.componentDidUpdate.call(this, prevProps, prevState, snapshot);
-        }
+        this._prevProps = this.props;
+        this._prevState = this.state;
+        return _get(_getPrototypeOf(WDYRPatchedClassComponent.prototype), "render", this).call(this);
       }
     }]);
 
-    return PatchedComponent;
-  }(Component);
+    return WDYRPatchedClassComponent;
+  }(ClassComponent);
 
-  PatchedComponent.displayName = getDisplayName(Component);
-  return PatchedComponent;
+  Object.assign(WDYRPatchedClassComponent, ClassComponent, {
+    displayName: displayName
+  });
+  return WDYRPatchedClassComponent;
 };
 
-var patchFunctionalComponent = function patchFunctionalComponent(Fn, React, options) {
-  var PatchedComponent =
+var patchFunctionalComponent = function patchFunctionalComponent(FunctionalComponent, displayName, React, options) {
+  var WDYRPatchedFunctionalComponent =
   /*#__PURE__*/
   function (_React$Component) {
-    _inherits(PatchedComponent, _React$Component);
+    _inherits(WDYRPatchedFunctionalComponent, _React$Component);
 
-    function PatchedComponent() {
-      _classCallCheck(this, PatchedComponent);
+    function WDYRPatchedFunctionalComponent() {
+      _classCallCheck(this, WDYRPatchedFunctionalComponent);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(PatchedComponent).apply(this, arguments));
+      return _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedFunctionalComponent).apply(this, arguments));
     }
 
-    _createClass(PatchedComponent, [{
-      key: "render",
-      value: function render() {
-        return Fn(this.props);
-      }
-    }, {
+    _createClass(WDYRPatchedFunctionalComponent, [{
       key: "componentDidUpdate",
       value: function componentDidUpdate(prevProps) {
         options.notifier(getUpdateInfo({
-          Component: Fn,
+          Component: FunctionalComponent,
           prevProps: prevProps,
           nextProps: this.props,
           options: options
         }));
       }
+    }, {
+      key: "render",
+      value: function render() {
+        return FunctionalComponent(this.props);
+      }
     }]);
 
-    return PatchedComponent;
+    return WDYRPatchedFunctionalComponent;
   }(React.Component);
 
-  PatchedComponent.displayName = getDisplayName(Fn);
-  return PatchedComponent;
+  Object.assign(WDYRPatchedFunctionalComponent, FunctionalComponent, {
+    displayName: displayName
+  });
+  return WDYRPatchedFunctionalComponent;
 };
 
-function createPatchedComponent(componentsMapping, Component, React, options) {
+function createPatchedComponent(componentsMapping, Component, displayName, React, options) {
   if (Component.prototype && typeof Component.prototype.render === 'function') {
-    return patchClassComponent(Component, options);
+    return patchClassComponent(Component, displayName, React, options);
   }
 
-  return patchFunctionalComponent(Component, React, options);
+  return patchFunctionalComponent(Component, displayName, React, options);
 }
 
-function getPatchedComponent(componentsMapping, Component, React, options) {
+function getPatchedComponent(componentsMapping, Component, displayName, React, options) {
   if (componentsMapping.has(Component)) {
     return componentsMapping.get(Component);
   }
 
-  var PatchedComponent = createPatchedComponent(componentsMapping, Component, React, options);
-  componentsMapping.set(Component, PatchedComponent);
-  return PatchedComponent;
+  var WDYRPatchedComponent = createPatchedComponent(componentsMapping, Component, displayName, React, options);
+  componentsMapping.set(Component, WDYRPatchedComponent);
+  return WDYRPatchedComponent;
 }
 
 function whyDidYouRender(React, userOptions) {
@@ -536,7 +569,8 @@ function whyDidYouRender(React, userOptions) {
   var componentsMapping = new Map();
 
   React.createElement = function (componentNameOrComponent) {
-    var isShouldTrack = typeof componentNameOrComponent === 'function' && shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options);
+    var displayName = getDisplayName(componentNameOrComponent);
+    var isShouldTrack = typeof componentNameOrComponent === 'function' && shouldTrack(componentNameOrComponent, displayName, options);
 
     for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       rest[_key - 1] = arguments[_key];
@@ -546,8 +580,8 @@ function whyDidYouRender(React, userOptions) {
       return origCreateElement.apply(React, [componentNameOrComponent].concat(rest));
     }
 
-    var PatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, React, options);
-    return origCreateElement.apply(React, [PatchedComponent].concat(rest));
+    var WDYRPatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, displayName, React, options);
+    return origCreateElement.apply(React, [WDYRPatchedComponent].concat(rest));
   };
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = function () {
