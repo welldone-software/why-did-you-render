@@ -497,12 +497,12 @@ function patchClassComponent(ClassComponent, displayName, React, options) {
   function (_ClassComponent) {
     _inherits(WDYRPatchedClassComponent, _ClassComponent);
 
-    function WDYRPatchedClassComponent() {
+    function WDYRPatchedClassComponent(props, context) {
       var _this;
 
       _classCallCheck(this, WDYRPatchedClassComponent);
 
-      _this = _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedClassComponent).call(this));
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedClassComponent).call(this, props, context));
 
       if (_this.render && !ClassComponent.prototype.render) {
         var origRender = _this.render;
