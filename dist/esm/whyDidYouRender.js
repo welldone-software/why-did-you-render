@@ -491,16 +491,29 @@ function shouldTrack(Component, displayName, options) {
   return !!(Component.whyDidYouRender || shouldInclude(displayName, options));
 }
 
-var patchClassComponent = function patchClassComponent(ClassComponent, displayName, React, options) {
+function patchClassComponent(ClassComponent, displayName, React, options) {
   var WDYRPatchedClassComponent =
   /*#__PURE__*/
   function (_ClassComponent) {
     _inherits(WDYRPatchedClassComponent, _ClassComponent);
 
     function WDYRPatchedClassComponent() {
+      var _this;
+
       _classCallCheck(this, WDYRPatchedClassComponent);
 
-      return _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedClassComponent).apply(this, arguments));
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedClassComponent).call(this));
+
+      if (_this.render && !ClassComponent.prototype.render) {
+        var origRender = _this.render;
+
+        _this.render = function () {
+          WDYRPatchedClassComponent.prototype.render.apply(_assertThisInitialized(_assertThisInitialized(_this)));
+          return origRender();
+        };
+      }
+
+      return _this;
     }
 
     _createClass(WDYRPatchedClassComponent, [{
@@ -516,7 +529,7 @@ var patchClassComponent = function patchClassComponent(ClassComponent, displayNa
         }));
         this._prevProps = this.props;
         this._prevState = this.state;
-        return _get(_getPrototypeOf(WDYRPatchedClassComponent.prototype), "render", this).call(this);
+        return _get(_getPrototypeOf(WDYRPatchedClassComponent.prototype), "render", this) && _get(_getPrototypeOf(WDYRPatchedClassComponent.prototype), "render", this).call(this);
       }
     }]);
 
@@ -527,9 +540,9 @@ var patchClassComponent = function patchClassComponent(ClassComponent, displayNa
     displayName: displayName
   });
   return WDYRPatchedClassComponent;
-};
+}
 
-var patchFunctionalComponent = function patchFunctionalComponent(FunctionalComponent, displayName, React, options) {
+function patchFunctionalComponent(FunctionalComponent, displayName, React, options) {
   var WDYRPatchedFunctionalComponent =
   /*#__PURE__*/
   function (_React$Component) {
@@ -565,10 +578,10 @@ var patchFunctionalComponent = function patchFunctionalComponent(FunctionalCompo
     displayName: displayName
   });
   return WDYRPatchedFunctionalComponent;
-};
+}
 
 function createPatchedComponent(componentsMapping, Component, displayName, React, options) {
-  if (Component.prototype && typeof Component.prototype.render === 'function') {
+  if (Component.prototype && Component.prototype.isReactComponent) {
     return patchClassComponent(Component, displayName, React, options);
   }
 
