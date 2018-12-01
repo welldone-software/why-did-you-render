@@ -155,6 +155,46 @@ describe('index', () => {
     expect(innerComponentDidUpdateCalled).toBe(true)
   })
 
+  test('With render as a binded function', () => {
+    class OwnTestComponent extends React.Component{
+      static whyDidYouRender = true
+      componentDidMount(){
+        this.setState({c: 'c'})
+      }
+      render = () => {
+        return <div>hi!</div>
+      }
+    }
+
+    const testRenderer = TestRenderer.create(
+      <OwnTestComponent a={1}/>
+    )
+
+    expect(updateInfo.reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: [{
+        diffType: diffTypes.different,
+        nextValue: 'c',
+        pathString: 'c',
+        prevValue: undefined
+      }]
+    })
+
+    testRenderer.update(
+      <OwnTestComponent a={2}/>
+    )
+
+    expect(updateInfo.reason).toEqual({
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.different,
+        prevValue: 1,
+        nextValue: 2
+      }],
+      stateDifferences: false
+    })
+  })
+
   it('With implemented "componentDidUpdate()" with a snapshot', () => {
     let resolve = false
     class OwnTestComponent extends React.Component{

@@ -3,8 +3,18 @@ import getDisplayName from './getDisplayName'
 import getUpdateInfo from './getUpdateInfo'
 import shouldTrack from './shouldTrack'
 
-const patchClassComponent = (ClassComponent, displayName, React, options) => {
+function patchClassComponent(ClassComponent, displayName, React, options){
   class WDYRPatchedClassComponent extends ClassComponent{
+    constructor(){
+      super()
+      if(this.render && !ClassComponent.prototype.render){
+        const origRender = this.render
+        this.render = () => {
+          WDYRPatchedClassComponent.prototype.render.apply(this)
+          return origRender()
+        }
+      }
+    }
     render(){
       options.notifier(getUpdateInfo({
         Component: ClassComponent,
@@ -16,7 +26,7 @@ const patchClassComponent = (ClassComponent, displayName, React, options) => {
       }))
       this._prevProps = this.props
       this._prevState = this.state
-      return super.render()
+      return super.render && super.render()
     }
   }
 
@@ -25,7 +35,7 @@ const patchClassComponent = (ClassComponent, displayName, React, options) => {
   return WDYRPatchedClassComponent
 }
 
-const patchFunctionalComponent = (FunctionalComponent, displayName, React, options) => {
+function patchFunctionalComponent(FunctionalComponent, displayName, React, options){
   class WDYRPatchedFunctionalComponent extends React.Component{
     componentDidUpdate(prevProps){
       options.notifier(getUpdateInfo({Component: FunctionalComponent, prevProps, nextProps: this.props, options}))
@@ -41,7 +51,7 @@ const patchFunctionalComponent = (FunctionalComponent, displayName, React, optio
 }
 
 function createPatchedComponent(componentsMapping, Component, displayName, React, options){
-  if(Component.prototype && typeof Component.prototype.render === 'function'){
+  if(Component.prototype && Component.prototype.isReactComponent){
     return patchClassComponent(Component, displayName, React, options)
   }
 

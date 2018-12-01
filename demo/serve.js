@@ -22,7 +22,7 @@ app.get('/ssrComponent', (req, res) => {
 })
 
 app.use(nollupDevServer(app, config, {
-  watch: 'demo/src',
+  watch: ['demo/src', 'src'],
   hot: true
 }))
 
