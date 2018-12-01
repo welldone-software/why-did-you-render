@@ -3,53 +3,60 @@ import getDisplayName from './getDisplayName'
 import getUpdateInfo from './getUpdateInfo'
 import shouldTrack from './shouldTrack'
 
-const patchClassComponent = (Component, options) => {
-  const PatchedComponent = class extends Component{
-    componentDidUpdate(prevProps, prevState, snapshot){
-      options.notifier(getUpdateInfo({Component, prevProps, prevState, nextProps: this.props, nextState: this.state, options}))
-      if(typeof Component.prototype.componentDidUpdate === 'function'){
-        Component.prototype.componentDidUpdate.call(this, prevProps, prevState, snapshot)
-      }
-    }
-  }
-
-  PatchedComponent.displayName = getDisplayName(Component)
-
-  return PatchedComponent
-}
-
-const patchFunctionalComponent = (Fn, React, options) => {
-  const PatchedComponent = class extends React.Component{
+const patchClassComponent = (ClassComponent, displayName, React, options) => {
+  class WDYRPatchedClassComponent extends ClassComponent{
     render(){
-      return Fn(this.props)
+      options.notifier(getUpdateInfo({
+        Component: ClassComponent,
+        prevProps: this._prevProps,
+        prevState: this._prevState,
+        nextProps: this.props,
+        nextState: this.state,
+        options
+      }))
+      this._prevProps = this.props
+      this._prevState = this.state
+      return super.render()
     }
+  }
+
+  Object.assign(WDYRPatchedClassComponent, ClassComponent, {displayName})
+
+  return WDYRPatchedClassComponent
+}
+
+const patchFunctionalComponent = (FunctionalComponent, displayName, React, options) => {
+  class WDYRPatchedFunctionalComponent extends React.Component{
     componentDidUpdate(prevProps){
-      options.notifier(getUpdateInfo({Component: Fn, prevProps, nextProps: this.props, options}))
+      options.notifier(getUpdateInfo({Component: FunctionalComponent, prevProps, nextProps: this.props, options}))
+    }
+    render(){
+      return FunctionalComponent(this.props)
     }
   }
 
-  PatchedComponent.displayName = getDisplayName(Fn)
+  Object.assign(WDYRPatchedFunctionalComponent, FunctionalComponent, {displayName})
 
-  return PatchedComponent
+  return WDYRPatchedFunctionalComponent
 }
 
-function createPatchedComponent(componentsMapping, Component, React, options){
+function createPatchedComponent(componentsMapping, Component, displayName, React, options){
   if(Component.prototype && typeof Component.prototype.render === 'function'){
-    return patchClassComponent(Component, options)
+    return patchClassComponent(Component, displayName, React, options)
   }
 
-  return patchFunctionalComponent(Component, React, options)
+  return patchFunctionalComponent(Component, displayName, React, options)
 }
 
-function getPatchedComponent(componentsMapping, Component, React, options){
+function getPatchedComponent(componentsMapping, Component, displayName, React, options){
   if(componentsMapping.has(Component)){
     return componentsMapping.get(Component)
   }
 
-  const PatchedComponent = createPatchedComponent(componentsMapping, Component, React, options)
+  const WDYRPatchedComponent = createPatchedComponent(componentsMapping, Component, displayName, React, options)
 
-  componentsMapping.set(Component, PatchedComponent)
-  return PatchedComponent
+  componentsMapping.set(Component, WDYRPatchedComponent)
+  return WDYRPatchedComponent
 }
 
 export default function whyDidYouRender(React, userOptions){
@@ -60,17 +67,19 @@ export default function whyDidYouRender(React, userOptions){
   const componentsMapping = new Map()
 
   React.createElement = function(componentNameOrComponent, ...rest){
+    const displayName = getDisplayName(componentNameOrComponent)
+
     const isShouldTrack = (
       typeof componentNameOrComponent === 'function' &&
-      shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
+      shouldTrack(componentNameOrComponent, displayName, options)
     )
 
     if(!isShouldTrack){
       return origCreateElement.apply(React, [componentNameOrComponent, ...rest])
     }
 
-    const PatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, React, options)
-    return origCreateElement.apply(React, [PatchedComponent, ...rest])
+    const WDYRPatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, displayName, React, options)
+    return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
   }
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
