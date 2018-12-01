@@ -4,7 +4,7 @@ import ReactDom from 'react-dom'
 import createStepLogger from '../createStepLogger'
 
 export default {
-  name: 'Props And State Changes',
+  description: 'Props And State Changes',
   fn({domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 

@@ -80,6 +80,7 @@ Optionally you can pass in options as a second parameter. The following options 
 - `logOnDifferentValues: false`
 - `onlyLogs: false`
 - `collapseGroups: false`
+- `hotReloadBufferMs: 500`
 - `notifier: ({Component, displayName, prevProps, prevState, nextProps, nextState, reason, options}) => void`
 
 #### include / exclude
@@ -107,6 +108,12 @@ If you don't want to use `console.group` to group logs by component, you can pri
 
 #### collapseGroups
 Grouped logs can start collapsed:
+
+#### hotReloadBufferMs
+Time in milliseconds to ignore updates after a hot reload is detected.
+
+We can't currently know exactly if a render was triggered by hot reload,
+so instead, we ignore all updates for `hotReloadBufferMs` (default: 500) after a hot reload.
 
 #### notifier
 A notifier can be provided if the default one does not suite your needs.

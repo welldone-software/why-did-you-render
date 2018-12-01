@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 
+import Menu from './Menu'
+
 import bigList from './bigList'
 import propsChanges from './propsChanges'
 import stateChanges from './stateChanges'
@@ -8,18 +10,22 @@ import bothChanges from './bothChanges'
 import noChanges from './noChanges'
 import specialChanges from './specialChanges'
 import ssr from './ssr'
+import hotReload from './hotReload'
 
 import whyDidYouRender from './whyDidYouRender'
 
-const demosList = [
+const demosList = {
   bigList,
   propsChanges,
   stateChanges,
   bothChanges,
   noChanges,
   specialChanges,
-  ssr
-]
+  ssr,
+  hotReload
+}
+
+const defaultDemoName = 'bigList'
 
 const domMenuElement = document.getElementById('menu')
 const domDemoElement = document.getElementById('demo')
@@ -33,23 +39,26 @@ function changeDemo(demoFn){
   }, 1)
 }
 
-changeDemo(demosList[6].fn)
+const demoFromHash = demosList[window.location.hash.substr(1)]
+const initialDemo = demoFromHash || demosList[defaultDemoName]
+if(!demoFromHash){
+  window.location.hash = defaultDemoName
+}
 
-const DemoLink = ({name, fn}) => (
-  <li><a href="#" onClick={() => changeDemo(fn)}>{name}</a></li>
+changeDemo(initialDemo.fn)
+
+const DemoLink = ({name, description, fn}) => (
+  <li><a href={`#${name}`} onClick={() => changeDemo(fn)}>{description}</a></li>
 )
 
-const Menu = () => (
-  <div>
-    <h1>whyDidYouRender Demos</h1>
-    <h3>
-      <span style={{backgroundColor: '#dad'}}>&nbsp;Open the console&nbsp;</span>
-      &nbsp;and click on one of the demos
-    </h3>
-    <ul>
-      {demosList.map(demoData => <DemoLink key={demoData.name} {...demoData}/>)}
-    </ul>
-  </div>
+const App = () => (
+  <Menu>
+    {
+      Object
+        .entries(demosList)
+        .map(([demoName, demoData]) => <DemoLink key={demoName} name={demoName} {...demoData}/>)
+    }
+  </Menu>
 )
 
-ReactDom.render(<Menu/>, domMenuElement)
+ReactDom.render(<App/>, domMenuElement)

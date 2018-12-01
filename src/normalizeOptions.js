@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import defaultNotifier from './defaultNotifier'
+import {createDefaultNotifier} from './defaultNotifier'
 
 const emptyFn = () => {}
 
@@ -15,10 +15,17 @@ export default function normalizeOptions(userOptions = {}){
     consoleGroupEnd = emptyFn
   }
 
+  const notifier = userOptions.notifier || (
+    createDefaultNotifier(
+      userOptions.hasOwnProperty('hotReloadBufferMs') ?
+        userOptions.hotReloadBufferMs : 500
+    )
+  )
+
   return {
     include: null,
     exclude: null,
-    notifier: defaultNotifier,
+    notifier,
     onlyLogs: false,
     consoleLog: console.log,
     consoleGroup,
