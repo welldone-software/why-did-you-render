@@ -177,8 +177,13 @@ var diffTypes = {
 var _diffTypesDescription;
 var moreInfoUrl = 'http://bit.ly/wdyr02';
 var diffTypesDescriptions = (_diffTypesDescription = {}, _defineProperty(_diffTypesDescription, diffTypes.different, 'different objects.'), _defineProperty(_diffTypesDescription, diffTypes.deepEquals, 'different objects that are equal by value.'), _defineProperty(_diffTypesDescription, diffTypes.date, 'different date objects with the same value.'), _defineProperty(_diffTypesDescription, diffTypes.regex, 'different regular expressions with the same value.'), _defineProperty(_diffTypesDescription, diffTypes.reactElement, 'different React elements with the same displayName.'), _defineProperty(_diffTypesDescription, diffTypes.function, 'different functions with the same name.'), _diffTypesDescription);
+var inHotReload = false;
 
 function shouldLog(reason, Component, options) {
+  if (inHotReload) {
+    return false;
+  }
+
   if (options.logOnDifferentValues) {
     return true;
   }
@@ -252,6 +257,22 @@ function defaultNotifier(updateInfo) {
 
   options.consoleGroupEnd();
 }
+function createDefaultNotifier(hotReloadBufferMs) {
+  if (hotReloadBufferMs) {
+    if (module && module.hot && module.hot.addStatusHandler) {
+      module.hot.addStatusHandler(function (status) {
+        if (status === 'idle') {
+          inHotReload = true;
+          setTimeout(function () {
+            inHotReload = false;
+          }, hotReloadBufferMs);
+        }
+      });
+    }
+  }
+
+  return defaultNotifier;
+}
 
 var emptyFn = function emptyFn() {};
 
@@ -267,10 +288,11 @@ function normalizeOptions() {
     consoleGroupEnd = emptyFn;
   }
 
+  var notifier = userOptions.notifier || createDefaultNotifier(userOptions.hasOwnProperty('hotReloadBufferMs') ? userOptions.hotReloadBufferMs : 500);
   return _objectSpread({
     include: null,
     exclude: null,
-    notifier: defaultNotifier,
+    notifier: notifier,
     onlyLogs: false,
     consoleLog: console.log,
     consoleGroup: consoleGroup,
@@ -280,7 +302,7 @@ function normalizeOptions() {
 }
 
 function getDisplayName(type) {
-  return _isString(type) ? type : type.displayName || type.name;
+  return type.displayName || type.name || (_isString(type) ? type : undefined);
 }
 
 var hasElementType = typeof Element !== 'undefined'; // copied from https://github.com/facebook/react/packages/shared/ReactSymbols.js
