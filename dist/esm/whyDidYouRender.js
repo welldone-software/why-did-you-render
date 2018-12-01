@@ -519,14 +519,17 @@ function patchClassComponent(ClassComponent, displayName, React, options) {
     _createClass(WDYRPatchedClassComponent, [{
       key: "render",
       value: function render() {
-        options.notifier(getUpdateInfo({
-          Component: ClassComponent,
-          prevProps: this._prevProps,
-          prevState: this._prevState,
-          nextProps: this.props,
-          nextState: this.state,
-          options: options
-        }));
+        if (this._prevProps) {
+          options.notifier(getUpdateInfo({
+            Component: ClassComponent,
+            prevProps: this._prevProps,
+            prevState: this._prevState,
+            nextProps: this.props,
+            nextState: this.state,
+            options: options
+          }));
+        }
+
         this._prevProps = this.props;
         this._prevState = this.state;
         return _get(_getPrototypeOf(WDYRPatchedClassComponent.prototype), "render", this) && _get(_getPrototypeOf(WDYRPatchedClassComponent.prototype), "render", this).call(this);
