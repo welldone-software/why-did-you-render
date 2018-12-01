@@ -7,7 +7,8 @@ function patchClassComponent(ClassComponent, displayName, React, options){
   class WDYRPatchedClassComponent extends ClassComponent{
     constructor(props, context){
       super(props, context)
-      if(this.render && !ClassComponent.prototype.render){
+      const renderIsAnArrowFunction = this.render && !ClassComponent.prototype.render
+      if(renderIsAnArrowFunction){
         const origRender = this.render
         this.render = () => {
           WDYRPatchedClassComponent.prototype.render.apply(this)
