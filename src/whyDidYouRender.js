@@ -16,14 +16,16 @@ function patchClassComponent(ClassComponent, displayName, React, options){
       }
     }
     render(){
-      options.notifier(getUpdateInfo({
-        Component: ClassComponent,
-        prevProps: this._prevProps,
-        prevState: this._prevState,
-        nextProps: this.props,
-        nextState: this.state,
-        options
-      }))
+      if(this._prevProps){
+        options.notifier(getUpdateInfo({
+          Component: ClassComponent,
+          prevProps: this._prevProps,
+          prevState: this._prevState,
+          nextProps: this.props,
+          nextState: this.state,
+          options
+        }))
+      }
       this._prevProps = this.props
       this._prevState = this.state
       return super.render && super.render()
