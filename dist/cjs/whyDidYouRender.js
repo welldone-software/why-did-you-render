@@ -575,7 +575,7 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
   return WDYRFunctionalComponent;
 }
 
-function createPatchedComponent(componentsMapping, Component, displayName, React, options) {
+function createPatchedComponent(componentsMap, Component, displayName, React, options) {
   if (Component.prototype && Component.prototype.isReactComponent) {
     return patchClassComponent(Component, displayName, React, options);
   }
@@ -583,20 +583,20 @@ function createPatchedComponent(componentsMapping, Component, displayName, React
   return patchFunctionalComponent(Component, displayName, React, options);
 }
 
-function getPatchedComponent(componentsMapping, Component, displayName, React, options) {
-  if (componentsMapping.has(Component)) {
-    return componentsMapping.get(Component);
+function getPatchedComponent(componentsMap, Component, displayName, React, options) {
+  if (componentsMap.has(Component)) {
+    return componentsMap.get(Component);
   }
 
-  var WDYRPatchedComponent = createPatchedComponent(componentsMapping, Component, displayName, React, options);
-  componentsMapping.set(Component, WDYRPatchedComponent);
+  var WDYRPatchedComponent = createPatchedComponent(componentsMap, Component, displayName, React, options);
+  componentsMap.set(Component, WDYRPatchedComponent);
   return WDYRPatchedComponent;
 }
 
 function whyDidYouRender(React, userOptions) {
   var options = normalizeOptions(userOptions);
   var origCreateElement = React.createElement;
-  var componentsMapping = new Map();
+  var componentsMap = new WeakMap();
 
   React.createElement = function (componentNameOrComponent) {
     var isShouldTrack = typeof componentNameOrComponent === 'function' && shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options);
@@ -610,14 +610,14 @@ function whyDidYouRender(React, userOptions) {
     }
 
     var displayName = componentNameOrComponent && componentNameOrComponent.whyDidYouRender && componentNameOrComponent.whyDidYouRender.customName || getDisplayName(componentNameOrComponent);
-    var WDYRPatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, displayName, React, options);
+    var WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options);
     return origCreateElement.apply(React, [WDYRPatchedComponent].concat(rest));
   };
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = function () {
     React.createElement = origCreateElement;
+    componentsMap = null;
     delete React.__REVERT_WHY_DID_YOU_RENDER__;
-    componentsMapping.clear();
   };
 
   return React;
