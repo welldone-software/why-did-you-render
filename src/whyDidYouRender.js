@@ -65,7 +65,7 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
   return WDYRFunctionalComponent
 }
 
-function createPatchedComponent(componentsMapping, Component, displayName, React, options){
+function createPatchedComponent(componentsMap, Component, displayName, React, options){
   if(Component.prototype && Component.prototype.isReactComponent){
     return patchClassComponent(Component, displayName, React, options)
   }
@@ -73,14 +73,14 @@ function createPatchedComponent(componentsMapping, Component, displayName, React
   return patchFunctionalComponent(Component, displayName, React, options)
 }
 
-function getPatchedComponent(componentsMapping, Component, displayName, React, options){
-  if(componentsMapping.has(Component)){
-    return componentsMapping.get(Component)
+function getPatchedComponent(componentsMap, Component, displayName, React, options){
+  if(componentsMap.has(Component)){
+    return componentsMap.get(Component)
   }
 
-  const WDYRPatchedComponent = createPatchedComponent(componentsMapping, Component, displayName, React, options)
+  const WDYRPatchedComponent = createPatchedComponent(componentsMap, Component, displayName, React, options)
 
-  componentsMapping.set(Component, WDYRPatchedComponent)
+  componentsMap.set(Component, WDYRPatchedComponent)
   return WDYRPatchedComponent
 }
 
@@ -89,7 +89,7 @@ export default function whyDidYouRender(React, userOptions){
 
   const origCreateElement = React.createElement
 
-  const componentsMapping = new Map()
+  let componentsMap = new WeakMap()
 
   React.createElement = function(componentNameOrComponent, ...rest){
     const isShouldTrack = (
@@ -108,14 +108,14 @@ export default function whyDidYouRender(React, userOptions){
       getDisplayName(componentNameOrComponent)
     )
 
-    const WDYRPatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, displayName, React, options)
+    const WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options)
     return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
   }
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     React.createElement = origCreateElement
+    componentsMap = null
     delete React.__REVERT_WHY_DID_YOU_RENDER__
-    componentsMapping.clear()
   }
 
   return React
