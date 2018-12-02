@@ -17,7 +17,7 @@ You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
 Common fixing scenarios this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
 
 ## Sandbox
-You can test the library in it's official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
+You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
 
 ## Setup
 ```
