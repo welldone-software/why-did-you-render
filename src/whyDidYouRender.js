@@ -20,6 +20,7 @@ function patchClassComponent(ClassComponent, displayName, React, options){
       if(this._prevProps){
         options.notifier(getUpdateInfo({
           Component: ClassComponent,
+          displayName,
           prevProps: this._prevProps,
           prevState: this._prevState,
           nextProps: this.props,
@@ -41,7 +42,13 @@ function patchClassComponent(ClassComponent, displayName, React, options){
 function patchFunctionalComponent(FunctionalComponent, displayName, React, options){
   class WDYRPatchedFunctionalComponent extends React.Component{
     componentDidUpdate(prevProps){
-      options.notifier(getUpdateInfo({Component: FunctionalComponent, prevProps, nextProps: this.props, options}))
+      options.notifier(getUpdateInfo({
+        Component: FunctionalComponent,
+        displayName,
+        prevProps,
+        nextProps: this.props,
+        options
+      }))
     }
     render(){
       return FunctionalComponent(this.props)
@@ -80,16 +87,21 @@ export default function whyDidYouRender(React, userOptions){
   const componentsMapping = new Map()
 
   React.createElement = function(componentNameOrComponent, ...rest){
-    const displayName = getDisplayName(componentNameOrComponent)
-
     const isShouldTrack = (
       typeof componentNameOrComponent === 'function' &&
-      shouldTrack(componentNameOrComponent, displayName, options)
+      shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
     )
 
     if(!isShouldTrack){
       return origCreateElement.apply(React, [componentNameOrComponent, ...rest])
     }
+
+    const displayName = (
+      componentNameOrComponent &&
+      componentNameOrComponent.whyDidYouRender &&
+      componentNameOrComponent.whyDidYouRender.customName ||
+      getDisplayName(componentNameOrComponent)
+    )
 
     const WDYRPatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, displayName, React, options)
     return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])

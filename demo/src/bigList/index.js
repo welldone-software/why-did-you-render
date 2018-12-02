@@ -8,7 +8,7 @@ export default {
     whyDidYouRender(React)
 
     class BigListPureComponent extends React.PureComponent{
-      static whyDidYouRender = true
+      static whyDidYouRender = {customName: 'BigList'}
       render(){
         return (
           <div style={this.props.style}>

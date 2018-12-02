@@ -1,6 +1,7 @@
 import React from 'react'
 import {diffTypes} from './consts'
 import getUpdateInfo from './getUpdateInfo'
+import getDisplayName from './getDisplayName'
 import normalizeOptions from './normalizeOptions'
 
 class TestComponent extends React.Component{
@@ -14,6 +15,7 @@ describe('getUpdateInfo', () => {
 
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {},
       prevState: null,
       nextProps: {},
@@ -36,6 +38,7 @@ describe('getUpdateInfo', () => {
   test('Same props', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {a: 1},
       prevState: null,
       nextProps: {a: 1},
@@ -58,6 +61,7 @@ describe('getUpdateInfo', () => {
   test('Same state', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {},
       prevState: {a: 1},
       nextProps: {},
@@ -80,6 +84,7 @@ describe('getUpdateInfo', () => {
   test('Same props and state', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {b: 1},
       prevState: {a: 1},
       nextProps: {b: 1},
@@ -102,6 +107,7 @@ describe('getUpdateInfo', () => {
   test('Props change', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {a: 1},
       prevState: null,
       nextProps: {a: 2},
@@ -131,6 +137,7 @@ describe('getUpdateInfo', () => {
   test('State change', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {},
       prevState: {a: 1},
       nextProps: {},
@@ -160,6 +167,7 @@ describe('getUpdateInfo', () => {
   test('Props and state change', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {b: 1},
       prevState: {a: 1},
       nextProps: {b: 2},
@@ -196,6 +204,7 @@ describe('getUpdateInfo', () => {
   test('Props change by ref', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {a: {b: 'b'}},
       prevState: null,
       nextProps: {a: {b: 'b'}},
@@ -225,6 +234,7 @@ describe('getUpdateInfo', () => {
   test('State changed by ref', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {},
       prevState: {a: {b: 'b'}},
       nextProps: {},
@@ -254,6 +264,7 @@ describe('getUpdateInfo', () => {
   test('Props and state different by ref', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {b: {c: 'c'}},
       prevState: {a: {d: 'd'}},
       nextProps: {b: {c: 'c'}},
@@ -290,6 +301,7 @@ describe('getUpdateInfo', () => {
   test('Props change by function', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {a: () => {}},
       prevState: null,
       nextProps: {a: () => {}},
@@ -319,6 +331,7 @@ describe('getUpdateInfo', () => {
   test('State changed by function ref', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {},
       prevState: {a: () => {}},
       nextProps: {},
@@ -348,6 +361,7 @@ describe('getUpdateInfo', () => {
   test('Props and state different by function', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {a: () => {}},
       prevState: {b: () => {}},
       nextProps: {a: () => {}},
@@ -384,6 +398,7 @@ describe('getUpdateInfo', () => {
   test('Mix of differences', () => {
     const input = {
       Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
       prevProps: {a: () => {}, b: '123', c: {d: 'e'}, f: 3},
       prevState: null,
       nextProps: {a: () => {}, b: '12345', c: {d: 'e'}, f: 3},
