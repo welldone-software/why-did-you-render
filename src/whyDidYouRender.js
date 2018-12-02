@@ -28,8 +28,10 @@ function patchClassComponent(ClassComponent, displayName, React, options){
           options
         }))
       }
+
       this._prevProps = this.props
       this._prevState = this.state
+
       return super.render && super.render()
     }
   }
@@ -40,24 +42,27 @@ function patchClassComponent(ClassComponent, displayName, React, options){
 }
 
 function patchFunctionalComponent(FunctionalComponent, displayName, React, options){
-  class WDYRPatchedFunctionalComponent extends React.Component{
-    componentDidUpdate(prevProps){
+  let _prevProps = undefined
+
+  function WDYRFunctionalComponent(props){
+    if(_prevProps){
       options.notifier(getUpdateInfo({
         Component: FunctionalComponent,
         displayName,
-        prevProps,
-        nextProps: this.props,
+        prevProps: _prevProps,
+        nextProps: props,
         options
       }))
     }
-    render(){
-      return FunctionalComponent(this.props)
-    }
+
+    _prevProps = props
+
+    return FunctionalComponent(props)
   }
 
-  Object.assign(WDYRPatchedFunctionalComponent, FunctionalComponent, {displayName})
+  Object.assign(WDYRFunctionalComponent, FunctionalComponent, {displayName})
 
-  return WDYRPatchedFunctionalComponent
+  return WDYRFunctionalComponent
 }
 
 function createPatchedComponent(componentsMapping, Component, displayName, React, options){
