@@ -10,15 +10,16 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 
 It can also help you to simply track when and why a certain component re-renders.
 
-You can read more about the library
-[>> HERE <<](http://bit.ly/wdyr1).
+## Read More
+You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
 
-And about common fixing scenarios this library can hep with
-[>> HERE <<](http://bit.ly/wdyr02).
+## Part 2 - Common Fixing Scenarios
+Common fixing scenarios this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
 
-You can test the library in it's sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
+## Sandbox
+You can test the library in it's official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
 
-### Setup
+## Setup
 ```
 npm install @welldone-software/why-did-you-render --save
 ```
@@ -27,8 +28,9 @@ or
 yarn add @welldone-software/why-did-you-render
 ```
 
-### Usage
+## Usage
 Execute `whyDidYouRender` with `React` as it's first argument.
+
 ```js
 import React from 'react';
 
@@ -37,12 +39,9 @@ if (process.env.NODE_ENV !== 'production') {
   whyDidYouRender(React);
 }
 ```
-Pass a second argument (options) with `include: [RegExp, ...]` to specify
-what components to track for unnecessary re-renders:
-```js
-  whyDidYouRender(React, {include: [/pure/]});
-```
-Or mark the components you want to be notified about their re-renders with `whyDidYouRender` like so:
+
+Then mark all the components you want to be notified about their re-renders with `whyDidYouRender` like so:
+
 ```js
 class BigListPureComponent extends React.PureComponent {
   static whyDidYouRender = true
@@ -53,7 +52,9 @@ class BigListPureComponent extends React.PureComponent {
   }
 }
 ```
+
 Or like this:
+
 ```js
 const BigListPureComponent = props => (
   <div>
@@ -62,18 +63,46 @@ const BigListPureComponent = props => (
 )
 BigListPureComponent.whyDidYouRender = true
 ```
-You can also pass an object to specify when do you want to be notified.
-We currently support only one option: `logOnDifferentValues`
-This option will notify you about the component's re-renders even if these which
-occurred because of changed props/state:
+
+You can also pass an object to specify more advanced settings:
+
 ```js
-BigListPureComponent.whyDidYouRender = {logOnDifferentValues: true}
-
+EnhancedMenu.whyDidYouRender = {
+  logOnDifferentValues: true,
+  customName: 'EnhancedMenu'
+}
 ```
-### Common Fixing Scenarios
-A list of common fixing scenarios can be found here: [>> HERE <<](https://goo.gl/hnfMPb)
 
-### Options
+- `logOnDifferentValues`:
+
+  Normally only re-renders that are caused by equal values in props / state trigger notifications:
+  ```js
+  render(<Menu a={1}/>)
+  render(<Menu a={1}/>)
+  ```
+  This option will trigger notifications even if they occurred because of different props / state (Thus, because of "legit" re-renders):
+  ```js
+  render(<Menu a={1}/>)
+  render(<Menu a={2}/>)
+  ```
+
+- `customName`:
+
+  Sometimes the name of the component can be very inconvenient. For example:
+
+  ```js
+  const EnhancedMenu = Connect(withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu))))))))))))))))))))))))
+  ```
+
+  will have the display name:
+
+  ```js
+  Connect(withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu))))))))))))))))))))))))
+  ```
+
+  To prevent polluting the console, and any other reason, you can change it using `customName`.
+
+## Options
 Optionally you can pass in options as a second parameter. The following options are available:
 - `include: [RegExp, ...]` (`null` by default)
 - `exclude: [RegExp, ...]` (`null` by default)
@@ -118,7 +147,7 @@ so instead, we ignore all updates for `hotReloadBufferMs` (default: 500) after a
 #### notifier
 A notifier can be provided if the default one does not suite your needs.
 
-### Credit
+## Credit
 
 Inspired by the following previous work:
 
@@ -126,6 +155,6 @@ https://github.com/maicki/why-did-you-update which i had the chance to maintain 
 
 https://github.com/garbles/why-did-you-update where [A deep dive into React perf debugging](http://benchling.engineering/deep-dive-react-perf-debugging/) is credited for the idea.
 
-### License
+## License
 
 This library is [MIT licensed](./LICENSE).

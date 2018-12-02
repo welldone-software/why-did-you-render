@@ -1,4 +1,3 @@
-import getDisplayName from './getDisplayName'
 import findObjectsDifferences from './findObjectsDifferences'
 
 function getUpdateReason(prevProps, prevState, nextProps, nextState){
@@ -8,8 +7,7 @@ function getUpdateReason(prevProps, prevState, nextProps, nextState){
   }
 }
 
-export default function getUpdateInfo({Component, prevProps, prevState, nextProps, nextState, options}){
-  const displayName = getDisplayName(Component)
+export default function getUpdateInfo({Component, displayName, prevProps, prevState, nextProps, nextState, options}){
   return {
     Component,
     displayName,
