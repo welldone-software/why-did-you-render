@@ -548,42 +548,27 @@ function patchClassComponent(ClassComponent, displayName, React, options) {
 }
 
 function patchFunctionalComponent(FunctionalComponent, displayName, React, options) {
-  var WDYRPatchedFunctionalComponent =
-  /*#__PURE__*/
-  function (_React$Component) {
-    _inherits(WDYRPatchedFunctionalComponent, _React$Component);
+  var _prevProps = undefined;
 
-    function WDYRPatchedFunctionalComponent() {
-      _classCallCheck(this, WDYRPatchedFunctionalComponent);
-
-      return _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedFunctionalComponent).apply(this, arguments));
+  function WDYRFunctionalComponent(props) {
+    if (_prevProps) {
+      options.notifier(getUpdateInfo({
+        Component: FunctionalComponent,
+        displayName: displayName,
+        prevProps: _prevProps,
+        nextProps: props,
+        options: options
+      }));
     }
 
-    _createClass(WDYRPatchedFunctionalComponent, [{
-      key: "componentDidUpdate",
-      value: function componentDidUpdate(prevProps) {
-        options.notifier(getUpdateInfo({
-          Component: FunctionalComponent,
-          displayName: displayName,
-          prevProps: prevProps,
-          nextProps: this.props,
-          options: options
-        }));
-      }
-    }, {
-      key: "render",
-      value: function render() {
-        return FunctionalComponent(this.props);
-      }
-    }]);
+    _prevProps = props;
+    return FunctionalComponent(props);
+  }
 
-    return WDYRPatchedFunctionalComponent;
-  }(React.Component);
-
-  Object.assign(WDYRPatchedFunctionalComponent, FunctionalComponent, {
+  Object.assign(WDYRFunctionalComponent, FunctionalComponent, {
     displayName: displayName
   });
-  return WDYRPatchedFunctionalComponent;
+  return WDYRFunctionalComponent;
 }
 
 function createPatchedComponent(componentsMapping, Component, displayName, React, options) {
