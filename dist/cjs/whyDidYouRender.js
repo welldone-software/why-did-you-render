@@ -457,12 +457,12 @@ function getUpdateReason(prevProps, prevState, nextProps, nextState) {
 
 function getUpdateInfo(_ref) {
   var Component = _ref.Component,
+      displayName = _ref.displayName,
       prevProps = _ref.prevProps,
       prevState = _ref.prevState,
       nextProps = _ref.nextProps,
       nextState = _ref.nextState,
       options = _ref.options;
-  var displayName = getDisplayName(Component);
   return {
     Component: Component,
     displayName: displayName,
@@ -507,8 +507,9 @@ function patchClassComponent(ClassComponent, displayName, React, options) {
       _classCallCheck(this, WDYRPatchedClassComponent);
 
       _this = _possibleConstructorReturn(this, _getPrototypeOf(WDYRPatchedClassComponent).call(this, props, context));
+      var renderIsAnArrowFunction = _this.render && !ClassComponent.prototype.render;
 
-      if (_this.render && !ClassComponent.prototype.render) {
+      if (renderIsAnArrowFunction) {
         var origRender = _this.render;
 
         _this.render = function () {
@@ -526,6 +527,7 @@ function patchClassComponent(ClassComponent, displayName, React, options) {
         if (this._prevProps) {
           options.notifier(getUpdateInfo({
             Component: ClassComponent,
+            displayName: displayName,
             prevProps: this._prevProps,
             prevState: this._prevState,
             nextProps: this.props,
@@ -566,6 +568,7 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
       value: function componentDidUpdate(prevProps) {
         options.notifier(getUpdateInfo({
           Component: FunctionalComponent,
+          displayName: displayName,
           prevProps: prevProps,
           nextProps: this.props,
           options: options
@@ -611,8 +614,7 @@ function whyDidYouRender(React, userOptions) {
   var componentsMapping = new Map();
 
   React.createElement = function (componentNameOrComponent) {
-    var displayName = getDisplayName(componentNameOrComponent);
-    var isShouldTrack = typeof componentNameOrComponent === 'function' && shouldTrack(componentNameOrComponent, displayName, options);
+    var isShouldTrack = typeof componentNameOrComponent === 'function' && shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options);
 
     for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       rest[_key - 1] = arguments[_key];
@@ -622,6 +624,7 @@ function whyDidYouRender(React, userOptions) {
       return origCreateElement.apply(React, [componentNameOrComponent].concat(rest));
     }
 
+    var displayName = componentNameOrComponent && componentNameOrComponent.whyDidYouRender && componentNameOrComponent.whyDidYouRender.customName || getDisplayName(componentNameOrComponent);
     var WDYRPatchedComponent = getPatchedComponent(componentsMapping, componentNameOrComponent, displayName, React, options);
     return origCreateElement.apply(React, [WDYRPatchedComponent].concat(rest));
   };
