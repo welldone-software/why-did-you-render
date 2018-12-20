@@ -11,6 +11,8 @@ import noChanges from './noChanges'
 import specialChanges from './specialChanges'
 import ssr from './ssr'
 import hotReload from './hotReload'
+import createFactory from './createFactory'
+import cloneElement from './cloneElement'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -22,7 +24,9 @@ const demosList = {
   noChanges,
   specialChanges,
   ssr,
-  hotReload
+  hotReload,
+  createFactory,
+  cloneElement
 }
 
 const defaultDemoName = 'bigList'

@@ -42,7 +42,8 @@
       "from": {"before": true, "after": true},
       "import": {"after": true},
       "return": {"after": true},
-      "export": {"after": true}
+      "export": {"after": true},
+      "default": {"after": true}
     }}],
     "space-before-blocks": ["error", "never"],
     "comma-dangle": ["error", "never"]

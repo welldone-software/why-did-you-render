@@ -88,6 +88,7 @@ export default function whyDidYouRender(React, userOptions){
   const options = normalizeOptions(userOptions)
 
   const origCreateElement = React.createElement
+  const origCreateFactory = React.createFactory
 
   let componentsMap = new WeakMap()
 
@@ -112,8 +113,19 @@ export default function whyDidYouRender(React, userOptions){
     return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
   }
 
+  Object.assign(React.createElement, origCreateElement)
+
+  React.createFactory = type => {
+    const factory = React.createElement.bind(null, type)
+    factory.type = type
+    return factory
+  }
+
+  Object.assign(React.createFactory, origCreateFactory)
+
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     React.createElement = origCreateElement
+    React.createFactory = origCreateFactory
     componentsMap = null
     delete React.__REVERT_WHY_DID_YOU_RENDER__
   }

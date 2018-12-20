@@ -279,4 +279,33 @@ describe('index', () => {
     })
     expect(innerComponentDidUpdateCalled).toBe(true)
   })
+
+  test('Element created with "createFactory"', () => {
+    const TestComponentElementCreator = React.createFactory(TestComponent)
+
+    const testRenderer = TestRenderer.create(
+      TestComponentElementCreator({a: 1})
+    )
+    testRenderer.update(
+      TestComponentElementCreator({a: 1})
+    )
+
+    expect(updateInfo.reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false
+    })
+  })
+
+  test('Element created with "cloneElement"', () => {
+    const testElement = <TestComponent a={1}/>
+    const testElement2 = React.cloneElement(testElement)
+
+    const testRenderer = TestRenderer.create(testElement)
+    testRenderer.update(testElement2)
+
+    expect(updateInfo.reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false
+    })
+  })
 })
