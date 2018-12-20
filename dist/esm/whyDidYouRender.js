@@ -1,7 +1,7 @@
 import _isString from 'lodash/isString';
 import _reduce from 'lodash/reduce';
-import _has from 'lodash/has';
 import _keys from 'lodash/keys';
+import _has from 'lodash/has';
 import _isFunction from 'lodash/isFunction';
 import _isRegExp from 'lodash/isRegExp';
 import _isDate from 'lodash/isDate';
@@ -437,7 +437,7 @@ function findObjectsDifferences(userPrevObj, userNextObj) {
     var deepEqualDiffs = calculateDeepEqualDiffs(prevObj[key], nextObj[key], key);
 
     if (deepEqualDiffs) {
-      result = _toConsumableArray(result || []).concat(_toConsumableArray(deepEqualDiffs));
+      result = [].concat(_toConsumableArray(result || []), _toConsumableArray(deepEqualDiffs));
     }
 
     return result;
@@ -592,6 +592,7 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
 function whyDidYouRender(React, userOptions) {
   var options = normalizeOptions(userOptions);
   var origCreateElement = React.createElement;
+  var origCreateFactory = React.createFactory;
   var componentsMap = new WeakMap();
 
   React.createElement = function (componentNameOrComponent) {
@@ -610,8 +611,19 @@ function whyDidYouRender(React, userOptions) {
     return origCreateElement.apply(React, [WDYRPatchedComponent].concat(rest));
   };
 
+  Object.assign(React.createElement, origCreateElement);
+
+  React.createFactory = function (type) {
+    var factory = React.createElement.bind(null, type);
+    factory.type = type;
+    return factory;
+  };
+
+  Object.assign(React.createFactory, origCreateFactory);
+
   React.__REVERT_WHY_DID_YOU_RENDER__ = function () {
     React.createElement = origCreateElement;
+    React.createFactory = origCreateFactory;
     componentsMap = null;
     delete React.__REVERT_WHY_DID_YOU_RENDER__;
   };
