@@ -8,14 +8,16 @@ module.exports = function(api){
   const presets = [
     ['@babel/preset-env', {
       modules: isTest ? 'commonjs' : false,
-      exclude: ['babel-plugin-transform-classes']
+      exclude: compact([
+        !isDevelopment && 'babel-plugin-transform-classes'
+      ])
     }],
     '@babel/preset-react'
   ]
 
   const plugins = compact([
     isDevelopment && 'react-hot-loader/babel',
-    !isDevelopment && 'babel-plugin-lodash',
+    'babel-plugin-lodash',
     (isDevelopment || isTest) && '@babel/plugin-proposal-class-properties'
   ])
 

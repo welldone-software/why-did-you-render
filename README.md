@@ -52,7 +52,7 @@ if (process.env.NODE_ENV !== 'production') {
 Not doing so will [result in a bug](https://github.com/welldone-software/why-did-you-render/issues/5)
 where a transpiled class tries to extend a native class:
 
-`class constructors must be invoked with |new|`.
+`Class constructors must be invoked with 'new'`.
 
 
 Then mark all the components you want to be notified about their re-renders with `whyDidYouRender` like so:

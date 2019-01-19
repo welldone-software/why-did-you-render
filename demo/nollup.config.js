@@ -1,14 +1,13 @@
 const replace = require('rollup-plugin-replace')
 const babel = require('rollup-plugin-babel')
 const node_resolve = require('rollup-plugin-node-resolve')
-const commonjs = require('./custom-rollup-plugin-commonjs')
+const commonjs = require('rollup-plugin-commonjs-alternate')
 
 module.exports = {
   input: 'demo/src/index.js',
-  experimentalCodeSplitting: true, // needed for asset emission
   output: {
     file: 'app._hash_.js',
-    format: 'iife',
+    format: 'esm',
     assetFileNames: '[name][extname]'
   },
   plugins: [
