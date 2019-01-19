@@ -7,7 +7,8 @@ module.exports = function(api){
 
   const presets = [
     ['@babel/preset-env', {
-      modules: isTest ? 'commonjs' : false
+      modules: isTest ? 'commonjs' : false,
+      exclude: ['babel-plugin-transform-classes']
     }],
     '@babel/preset-react'
   ]
