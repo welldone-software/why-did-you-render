@@ -5,6 +5,11 @@ import createReactClass from 'create-react-class'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
 
+const FunctionalTestComponent = () => (
+  <div>hi!</div>
+)
+FunctionalTestComponent.whyDidYouRender = true
+
 class TestComponent extends React.Component{
   static whyDidYouRender = true
   render(){
@@ -26,11 +31,11 @@ const createStateTestComponent = (initialState, newState) => {
 }
 
 describe('index', () => {
-  let updateInfo
+  let updateInfos = []
   beforeEach(() => {
-    updateInfo = null
+    updateInfos = []
     whyDidYouRender(React, {
-      notifier: _updateInfo => updateInfo = _updateInfo
+      notifier: updateInfo => updateInfos.push(updateInfo)
     })
   })
 
@@ -46,10 +51,11 @@ describe('index', () => {
       <TestComponent/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
     })
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('Same props', () => {
@@ -60,10 +66,11 @@ describe('index', () => {
       <TestComponent a={1}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
     })
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('Same state', () => {
@@ -74,10 +81,11 @@ describe('index', () => {
 
     return Promise.resolve()
       .then(() => {
-        expect(updateInfo.reason).toEqual({
+        expect(updateInfos[0].reason).toEqual({
           propsDifferences: false,
           stateDifferences: []
         })
+        expect(updateInfos).toHaveLength(1)
       })
   })
 
@@ -89,7 +97,7 @@ describe('index', () => {
       <TestComponent a={2}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.different,
@@ -98,6 +106,8 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
+
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('Inline component', () => {
@@ -113,7 +123,7 @@ describe('index', () => {
       <InlineComponent a={2}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.different,
@@ -122,6 +132,8 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
+
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('With implemented "componentDidUpdate()"', () => {
@@ -143,7 +155,7 @@ describe('index', () => {
       <OwnTestComponent a={2}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.different,
@@ -153,6 +165,7 @@ describe('index', () => {
       stateDifferences: false
     })
     expect(innerComponentDidUpdateCalled).toBe(true)
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('With render as a binded function', () => {
@@ -170,7 +183,7 @@ describe('index', () => {
       <OwnTestComponent a={1}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: false,
       stateDifferences: [{
         diffType: diffTypes.different,
@@ -184,7 +197,7 @@ describe('index', () => {
       <OwnTestComponent a={2}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[1].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.different,
@@ -193,6 +206,8 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
+
+    expect(updateInfos).toHaveLength(2)
   })
 
   it('With implemented "componentDidUpdate()" with a snapshot', () => {
@@ -217,6 +232,7 @@ describe('index', () => {
     )
 
     expect(resolve).toBe(true)
+    expect(updateInfos).toHaveLength(0)
   })
 
   test('Component created with "createReactClass"', () => {
@@ -236,7 +252,7 @@ describe('index', () => {
       <CreateReactClassComponent a={2}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.different,
@@ -245,6 +261,7 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('Component created with "createReactClass" with implemented "componentDidUpdate()"', () => {
@@ -268,7 +285,7 @@ describe('index', () => {
       <CreateReactClassComponent a={2}/>
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.different,
@@ -277,6 +294,7 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
+    expect(updateInfos).toHaveLength(1)
     expect(innerComponentDidUpdateCalled).toBe(true)
   })
 
@@ -290,10 +308,12 @@ describe('index', () => {
       TestComponentElementCreator({a: 1})
     )
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
     })
+
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('Element created with "cloneElement"', () => {
@@ -303,9 +323,91 @@ describe('index', () => {
     const testRenderer = TestRenderer.create(testElement)
     testRenderer.update(testElement2)
 
-    expect(updateInfo.reason).toEqual({
+    expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
     })
+
+    expect(updateInfos).toHaveLength(1)
+  })
+
+  test('Several class components', () => {
+    const testRenderer = TestRenderer.create(
+      <>
+        <TestComponent/>
+        <TestComponent a={{a: 'a'}}/>
+        <TestComponent/>
+      </>
+    )
+
+    testRenderer.update(
+      <>
+        <TestComponent/>
+        <TestComponent a={{a: 'a'}}/>
+        <TestComponent/>
+      </>
+    )
+
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false
+    })
+
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: [{
+        diffType: diffTypes.deepEquals,
+        pathString: 'a',
+        nextValue: {a: 'a'},
+        prevValue: {a: 'a'}
+      }],
+      stateDifferences: false
+    })
+
+    expect(updateInfos[2].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false
+    })
+
+    expect(updateInfos).toHaveLength(3)
+  })
+
+  test('Several functional components', () => {
+    const testRenderer = TestRenderer.create(
+      <>
+        <FunctionalTestComponent/>
+        <FunctionalTestComponent a={{a: 'a'}}/>
+        <FunctionalTestComponent/>
+      </>
+    )
+
+    testRenderer.update(
+      <>
+        <FunctionalTestComponent/>
+        <FunctionalTestComponent a={{a: 'a'}}/>
+        <FunctionalTestComponent/>
+      </>
+    )
+
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false
+    })
+
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: [{
+        diffType: diffTypes.deepEquals,
+        pathString: 'a',
+        nextValue: {a: 'a'},
+        prevValue: {a: 'a'}
+      }],
+      stateDifferences: false
+    })
+
+    expect(updateInfos[2].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false
+    })
+
+    expect(updateInfos).toHaveLength(3)
   })
 })

@@ -42,22 +42,23 @@ function patchClassComponent(ClassComponent, displayName, React, options){
 }
 
 function patchFunctionalComponent(FunctionalComponent, displayName, React, options){
-  let _prevProps = undefined
+  function WDYRFunctionalComponent(nextProps){
+    const prevCountRef = React.useRef()
 
-  function WDYRFunctionalComponent(props){
-    if(_prevProps){
+    const prevProps = prevCountRef.current
+    prevCountRef.current = nextProps
+
+    if(prevProps){
       options.notifier(getUpdateInfo({
         Component: FunctionalComponent,
         displayName,
-        prevProps: _prevProps,
-        nextProps: props,
+        prevProps,
+        nextProps,
         options
       }))
     }
 
-    _prevProps = props
-
-    return FunctionalComponent(props)
+    return FunctionalComponent(nextProps)
   }
 
   Object.assign(WDYRFunctionalComponent, FunctionalComponent, {displayName})
