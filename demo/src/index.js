@@ -6,6 +6,7 @@ import Menu from './Menu'
 import bigList from './bigList'
 import propsChanges from './propsChanges'
 import stateChanges from './stateChanges'
+import childOfPureComponent from './childOfPureComponent'
 import bothChanges from './bothChanges'
 import noChanges from './noChanges'
 import specialChanges from './specialChanges'
@@ -20,6 +21,7 @@ const demosList = {
   bigList,
   propsChanges,
   stateChanges,
+  childOfPureComponent,
   bothChanges,
   noChanges,
   specialChanges,
