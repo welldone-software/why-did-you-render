@@ -10,6 +10,11 @@ const FunctionalTestComponent = () => (
 )
 FunctionalTestComponent.whyDidYouRender = true
 
+const ReactMemoTestComponent = React.memo(() => (
+  <div>hi!</div>
+))
+ReactMemoTestComponent.whyDidYouRender = true
+
 class TestComponent extends React.Component{
   static whyDidYouRender = true
   render(){
@@ -409,5 +414,26 @@ describe('index', () => {
     })
 
     expect(updateInfos).toHaveLength(3)
+  })
+
+  test('Component memoized with React.memo', () => {
+    const testRenderer = TestRenderer.create(
+      <ReactMemoTestComponent a={1}/>
+    )
+    testRenderer.update(
+      <ReactMemoTestComponent a={2}/>
+    )
+
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.different,
+        prevValue: 1,
+        nextValue: 2
+      }],
+      stateDifferences: false
+    })
+
+    expect(updateInfos).toHaveLength(1)
   })
 })
