@@ -61,7 +61,7 @@ function logDifference(Component, displayName, prefixMessage, propsOrSate, diffe
 }
 
 export default function defaultNotifier(updateInfo){
-  const{Component, displayName, prevProps, prevState, nextProps, nextState, reason, options} = updateInfo
+  const {Component, displayName, prevProps, prevState, nextProps, nextState, reason, options} = updateInfo
 
   if(!shouldLog(reason, Component, options)){
     return
