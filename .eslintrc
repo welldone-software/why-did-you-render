@@ -37,6 +37,7 @@
     "eol-last": ["error"],
     "object-curly-spacing": ["error"],
     "react/prop-types": ["off"],
+    "react/display-name": ["off"],
     "space-before-function-paren": ["error", "never"],
     "keyword-spacing": ["error", {"before": false, "after": false, "overrides": {
       "from": {"before": true, "after": true},

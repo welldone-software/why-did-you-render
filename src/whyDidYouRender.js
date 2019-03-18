@@ -1,7 +1,12 @@
+import {defaults} from 'lodash'
+
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
 import getUpdateInfo from './getUpdateInfo'
 import shouldTrack from './shouldTrack'
+
+const hasSymbol = typeof Symbol === 'function' && Symbol.for
+const REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3
 
 function patchClassComponent(ClassComponent, displayName, React, options){
   class WDYRPatchedClassComponent extends ClassComponent{
@@ -36,7 +41,8 @@ function patchClassComponent(ClassComponent, displayName, React, options){
     }
   }
 
-  Object.assign(WDYRPatchedClassComponent, ClassComponent, {displayName})
+  WDYRPatchedClassComponent.displayName = displayName
+  defaults(WDYRPatchedClassComponent, ClassComponent)
 
   return WDYRPatchedClassComponent
 }
@@ -61,12 +67,43 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
     return FunctionalComponent(nextProps)
   }
 
-  Object.assign(WDYRFunctionalComponent, FunctionalComponent, {displayName})
+  WDYRFunctionalComponent.displayName = displayName
+  defaults(WDYRFunctionalComponent, FunctionalComponent)
+
+  return WDYRFunctionalComponent
+}
+
+function patchMemoComponent(MemoComponent, displayName, React, options){
+  const WDYRFunctionalComponent = React.memo(nextProps => {
+    const prevCountRef = React.useRef()
+
+    const prevProps = prevCountRef.current
+    prevCountRef.current = nextProps
+
+    if(prevProps){
+      options.notifier(getUpdateInfo({
+        Component: MemoComponent,
+        displayName,
+        prevProps,
+        nextProps,
+        options
+      }))
+    }
+
+    return MemoComponent.type(nextProps)
+  })
+
+  WDYRFunctionalComponent.displayName = displayName
+  defaults(WDYRFunctionalComponent, WDYRFunctionalComponent)
 
   return WDYRFunctionalComponent
 }
 
 function createPatchedComponent(componentsMap, Component, displayName, React, options){
+  if(Component.$$typeof === REACT_MEMO_TYPE){
+    return patchMemoComponent(Component, displayName, React, options)
+  }
+
   if(Component.prototype && Component.prototype.isReactComponent){
     return patchClassComponent(Component, displayName, React, options)
   }
@@ -95,7 +132,10 @@ export default function whyDidYouRender(React, userOptions){
 
   React.createElement = function(componentNameOrComponent, ...rest){
     const isShouldTrack = (
-      typeof componentNameOrComponent === 'function' &&
+      (
+        typeof componentNameOrComponent === 'function' ||
+        componentNameOrComponent.$$typeof === REACT_MEMO_TYPE
+      ) &&
       shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
     )
 

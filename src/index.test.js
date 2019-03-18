@@ -10,6 +10,12 @@ const FunctionalTestComponent = () => (
 )
 FunctionalTestComponent.whyDidYouRender = true
 
+const ReactMemoTestComponent = React.memo(() => (
+  <div>hi!</div>
+))
+ReactMemoTestComponent.whyDidYouRender = true
+ReactMemoTestComponent.dispalyName = 'ReactMemoTestComponent'
+
 class TestComponent extends React.Component{
   static whyDidYouRender = true
   render(){
@@ -210,7 +216,7 @@ describe('index', () => {
     expect(updateInfos).toHaveLength(2)
   })
 
-  it('With implemented "componentDidUpdate()" with a snapshot', () => {
+  it('With implemented "componentDidUpdate()" with a snapshot - not tracked', () => {
     let resolve = false
     class OwnTestComponent extends React.Component{
       getSnapshotBeforeUpdate(){
@@ -233,6 +239,32 @@ describe('index', () => {
 
     expect(resolve).toBe(true)
     expect(updateInfos).toHaveLength(0)
+  })
+
+  it('With implemented "componentDidUpdate()" with a snapshot', () => {
+    let resolve = false
+    class OwnTestComponent extends React.Component{
+      static whyDidYouRender = true
+      getSnapshotBeforeUpdate(){
+        return true
+      }
+      componentDidUpdate(prevProps, prevState, snapshot){
+        resolve = snapshot
+      }
+      render(){
+        return <div>hi!</div>
+      }
+    }
+
+    const testRenderer = TestRenderer.create(
+      <OwnTestComponent a={1}/>
+    )
+    testRenderer.update(
+      <OwnTestComponent a={1}/>
+    )
+
+    expect(resolve).toBe(true)
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('Component created with "createReactClass"', () => {
@@ -409,5 +441,37 @@ describe('index', () => {
     })
 
     expect(updateInfos).toHaveLength(3)
+  })
+
+  test('Component memoized with React.memo', () => {
+    const testRenderer = TestRenderer.create(
+      <ReactMemoTestComponent a={1}/>
+    )
+    testRenderer.update(
+      <ReactMemoTestComponent a={2}/>
+    )
+
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.different,
+        prevValue: 1,
+        nextValue: 2
+      }],
+      stateDifferences: false
+    })
+
+    expect(updateInfos).toHaveLength(1)
+  })
+
+  test('Component memoized with React.memo - no change', () => {
+    const testRenderer = TestRenderer.create(
+      <ReactMemoTestComponent a={1}/>
+    )
+    testRenderer.update(
+      <ReactMemoTestComponent a={1}/>
+    )
+
+    expect(updateInfos).toHaveLength(0)
   })
 })
