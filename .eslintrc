@@ -44,7 +44,8 @@
       "import": {"after": true},
       "return": {"after": true},
       "export": {"after": true},
-      "default": {"after": true}
+      "default": {"after": true},
+      "const": {"after": true}
     }}],
     "space-before-blocks": ["error", "never"],
     "comma-dangle": ["error", "never"]

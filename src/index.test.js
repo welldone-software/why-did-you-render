@@ -57,11 +57,11 @@ describe('index', () => {
       <TestComponent/>
     )
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
     })
-    expect(updateInfos).toHaveLength(1)
   })
 
   test('Same props', () => {
@@ -103,6 +103,7 @@ describe('index', () => {
       <TestComponent a={2}/>
     )
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
@@ -112,8 +113,6 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
-
-    expect(updateInfos).toHaveLength(1)
   })
 
   test('Inline component', () => {
@@ -129,6 +128,7 @@ describe('index', () => {
       <InlineComponent a={2}/>
     )
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
@@ -138,8 +138,6 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
-
-    expect(updateInfos).toHaveLength(1)
   })
 
   test('With implemented "componentDidUpdate()"', () => {
@@ -284,6 +282,7 @@ describe('index', () => {
       <CreateReactClassComponent a={2}/>
     )
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
@@ -293,7 +292,6 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
-    expect(updateInfos).toHaveLength(1)
   })
 
   test('Component created with "createReactClass" with implemented "componentDidUpdate()"', () => {
@@ -317,6 +315,7 @@ describe('index', () => {
       <CreateReactClassComponent a={2}/>
     )
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
@@ -326,7 +325,6 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
-    expect(updateInfos).toHaveLength(1)
     expect(innerComponentDidUpdateCalled).toBe(true)
   })
 
@@ -355,12 +353,11 @@ describe('index', () => {
     const testRenderer = TestRenderer.create(testElement)
     testRenderer.update(testElement2)
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
     })
-
-    expect(updateInfos).toHaveLength(1)
   })
 
   test('Several class components', () => {
@@ -380,6 +377,8 @@ describe('index', () => {
       </>
     )
 
+    expect(updateInfos).toHaveLength(3)
+
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
@@ -399,8 +398,6 @@ describe('index', () => {
       propsDifferences: [],
       stateDifferences: false
     })
-
-    expect(updateInfos).toHaveLength(3)
   })
 
   test('Several functional components', () => {
@@ -420,6 +417,8 @@ describe('index', () => {
       </>
     )
 
+    expect(updateInfos).toHaveLength(3)
+
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false
@@ -439,8 +438,6 @@ describe('index', () => {
       propsDifferences: [],
       stateDifferences: false
     })
-
-    expect(updateInfos).toHaveLength(3)
   })
 
   test('Component memoized with React.memo', () => {
@@ -451,6 +448,7 @@ describe('index', () => {
       <ReactMemoTestComponent a={2}/>
     )
 
+    expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [{
         pathString: 'a',
@@ -460,8 +458,6 @@ describe('index', () => {
       }],
       stateDifferences: false
     })
-
-    expect(updateInfos).toHaveLength(1)
   })
 
   test('Component memoized with React.memo - no change', () => {
@@ -473,5 +469,42 @@ describe('index', () => {
     )
 
     expect(updateInfos).toHaveLength(0)
+  })
+
+  test('Component with hooks', () => {
+    let effectCount = 0
+    const ComponentWithHooks = ({a}) => {
+      const [currentState] = React.useState({a: 'a'})
+
+      // change to useEffect when the following resolves:
+      // https://github.com/facebook/react/issues/14050#issuecomment-438173736
+      React.useLayoutEffect(() => {
+        effectCount = effectCount + 1
+      })
+
+      return (
+        <div>hi! {a} {currentState.a}</div>
+      )
+    }
+    ComponentWithHooks.whyDidYouRender = true
+
+    const testRenderer = TestRenderer.create(
+      <ComponentWithHooks a={1}/>
+    )
+    testRenderer.update(
+      <ComponentWithHooks a={2}/>
+    )
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.different,
+        prevValue: 1,
+        nextValue: 2
+      }],
+      stateDifferences: false
+    })
+    expect(effectCount).toBe(2)
   })
 })
