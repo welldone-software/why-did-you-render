@@ -1,6 +1,7 @@
 import {diffTypes} from './consts'
 
 const moreInfoUrl = 'http://bit.ly/wdyr02'
+const moreInfoHooksUrl = 'http://bit.ly/wdyr3'
 
 const diffTypesDescriptions = {
   [diffTypes.different]: 'different objects.',
@@ -32,17 +33,20 @@ function shouldLog(reason, Component, options){
   ) || (
     reason.stateDifferences &&
     reason.stateDifferences.some(diff => diff.diffType === diffTypes.different)
+  ) || (
+    reason.hookDifferences &&
+    reason.hookDifferences.some(diff => diff.diffType === diffTypes.different)
   ))
 
   return !hasDifferentValues
 }
 
-function logDifference(Component, displayName, prefixMessage, propsOrSate, differences, values, options){
+function logDifference({Component, displayName, hookName, prefixMessage, diffObjType, differences, values, options}){
   if(differences && differences.length > 0){
-    options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${propsOrSate} changes:`)
+    options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`)
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
-      options.consoleGroup(`%c${propsOrSate}.%c${pathString}%c`, 'color:blue;', 'color:red;', 'color:black;')
-      options.consoleLog(`${diffTypesDescriptions[diffType]} (more info at ${moreInfoUrl})`)
+      options.consoleGroup(`%c${diffObjType === 'hook' ? `hook ${hookName} ` : `${diffObjType}.`}%c${pathString}%c`, 'color:blue;', 'color:red;', 'color:black;')
+      options.consoleLog(`${diffTypesDescriptions[diffType]} (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`)
       options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue})
       options.consoleGroupEnd()
     })
@@ -50,18 +54,18 @@ function logDifference(Component, displayName, prefixMessage, propsOrSate, diffe
   else if(differences){
     options.consoleLog(
       {[displayName]: Component},
-      `${prefixMessage} the ${propsOrSate} object itself changed but it's values are all equal.`,
-      propsOrSate === 'props' ?
+      `${prefixMessage} the ${diffObjType} object itself changed but it's values are all equal.`,
+      diffObjType === 'props' ?
         'This could of been avoided by making the component pure, or by preventing it\'s father from re-rendering.' :
         'This usually means this component called setState when no changes in it\'s state actually occurred.',
       `more info at ${moreInfoUrl}`
     )
-    options.consoleLog(`prev ${propsOrSate}:`, values.prev, ' !== ', values.next, `:next ${propsOrSate}`)
+    options.consoleLog(`prev ${diffObjType}:`, values.prev, ' !== ', values.next, `:next ${diffObjType}`)
   }
 }
 
 export default function defaultNotifier(updateInfo){
-  const {Component, displayName, prevProps, prevState, nextProps, nextState, reason, options} = updateInfo
+  const {Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason, options} = updateInfo
 
   if(!shouldLog(reason, Component, options)){
     return
@@ -72,15 +76,44 @@ export default function defaultNotifier(updateInfo){
   let prefixMessage = 'Re-rendered because'
 
   if(reason.propsDifferences){
-    logDifference(Component, displayName, prefixMessage, 'props', reason.propsDifferences, {prev: prevProps, next: nextProps}, options)
+    logDifference({
+      Component,
+      displayName,
+      prefixMessage,
+      diffObjType: 'props',
+      differences: reason.propsDifferences,
+      values: {prev: prevProps, next: nextProps},
+      options
+    })
     prefixMessage = 'And because'
   }
 
   if(reason.stateDifferences){
-    logDifference(Component, displayName, prefixMessage, 'state', reason.stateDifferences, {prev: prevState, next: nextState}, options)
+    logDifference({
+      Component,
+      displayName,
+      prefixMessage,
+      diffObjType: 'state',
+      differences: reason.stateDifferences,
+      values: {prev: prevState, next: nextState},
+      options
+    })
   }
 
-  if(!reason.propsDifferences && !reason.stateDifferences){
+  if(reason.hookDifferences){
+    logDifference({
+      Component,
+      displayName,
+      prefixMessage,
+      diffObjType: 'hook',
+      differences: reason.hookDifferences,
+      values: {prev: prevHook, next: nextHook},
+      hookName,
+      options
+    })
+  }
+
+  if(!reason.propsDifferences && !reason.stateDifferences && !reason.hookDifferences){
     options.consoleLog(
       {[displayName]: Component},
       'Re-rendered although props and state objects are the same.',

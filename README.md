@@ -16,6 +16,9 @@ You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
 ## Part 2 - Common Fixing Scenarios
 Common fixing scenarios this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
 
+## Part 3 - Hooks
+Understand and fix hook issues [>> HERE <<](http://bit.ly/wdyr3).
+
 ## Sandbox
 You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
 

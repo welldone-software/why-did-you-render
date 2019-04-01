@@ -1,4 +1,4 @@
-import {defaults} from 'lodash'
+import {defaults, capitalize} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -49,19 +49,25 @@ function patchClassComponent(ClassComponent, displayName, React, options){
 
 function patchFunctionalComponent(FunctionalComponent, displayName, React, options){
   function WDYRFunctionalComponent(nextProps){
-    const prevCountRef = React.useRef()
+    const ref = React.useRef()
 
-    const prevProps = prevCountRef.current
-    prevCountRef.current = nextProps
+    const prevProps = ref.current
+    ref.current = nextProps
 
     if(prevProps){
-      options.notifier(getUpdateInfo({
+      const notification = getUpdateInfo({
         Component: FunctionalComponent,
         displayName,
         prevProps,
         nextProps,
         options
-      }))
+      })
+
+      // if a functional component re-rendered without a props change
+      // it was probably caused by a hook and we should not care about it
+      if(notification.reason.propsDifferences){
+        options.notifier(notification)
+      }
     }
 
     return FunctionalComponent(nextProps)
@@ -74,29 +80,80 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
 }
 
 function patchMemoComponent(MemoComponent, displayName, React, options){
-  const WDYRFunctionalComponent = React.memo(nextProps => {
-    const prevCountRef = React.useRef()
+  const WDYRMemoizedFunctionalComponent = React.memo(nextProps => {
+    const ref = React.useRef()
 
-    const prevProps = prevCountRef.current
-    prevCountRef.current = nextProps
+    const prevProps = ref.current
+    ref.current = nextProps
 
     if(prevProps){
-      options.notifier(getUpdateInfo({
+      const notification = getUpdateInfo({
         Component: MemoComponent,
         displayName,
         prevProps,
         nextProps,
         options
-      }))
+      })
+
+      // if a functional component re-rendered without a props change
+      // it was probably caused by a hook and we should not care about it
+      if(notification.reason.propsDifferences){
+        options.notifier(notification)
+      }
     }
 
     return MemoComponent.type(nextProps)
   })
 
-  WDYRFunctionalComponent.displayName = displayName
-  defaults(WDYRFunctionalComponent, WDYRFunctionalComponent)
+  WDYRMemoizedFunctionalComponent.displayName = displayName
+  defaults(WDYRMemoizedFunctionalComponent, MemoComponent)
 
-  return WDYRFunctionalComponent
+  return WDYRMemoizedFunctionalComponent
+}
+
+function getPatchedHook(hookName, hookConfig, React, options){
+  const newHook = function(...args){
+    const nextHook = hookConfig.fn(...args)
+
+    const Component = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
+    const displayName = getDisplayName(Component)
+
+    const isShouldTrack = shouldTrack(Component, displayName, options)
+    if(!isShouldTrack){
+      return nextHook
+    }
+
+    const ref = React.useRef()
+    const prevHook = ref.current
+    ref.current = nextHook
+
+    if(prevHook){
+      const notification = getUpdateInfo({
+        Component: Component,
+        displayName,
+        hookName,
+        prevHook,
+        nextHook,
+        options
+      })
+      const shouldNotifyHookDifference = (
+        notification.reason.hookDifferences && (
+          notification.reason.hookDifferences.length > 0 ||
+          !hookConfig.allowShallow
+        )
+      )
+      if(shouldNotifyHookDifference){
+        options.notifier(notification)
+      }
+    }
+
+    return ref.current
+  }
+
+  const newHookName = `patched${capitalize(hookName[0])}${hookName.substr(1)}`
+  Object.defineProperty(newHook, 'name', {value: newHookName})
+
+  return newHook
 }
 
 function createPatchedComponent(componentsMap, Component, displayName, React, options){
@@ -123,10 +180,11 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
 }
 
 export default function whyDidYouRender(React, userOptions){
-  const options = normalizeOptions(userOptions)
+  const options = normalizeOptions(userOptions, React)
 
   const origCreateElement = React.createElement
   const origCreateFactory = React.createFactory
+  const origHooks = {}
 
   let componentsMap = new WeakMap()
 
@@ -164,9 +222,19 @@ export default function whyDidYouRender(React, userOptions){
 
   Object.assign(React.createFactory, origCreateFactory)
 
+  if(options.trackHooks){
+    Object.entries(options.trackHooks).forEach(([hookName, hookConfig]) => {
+      origHooks[hookName] = React[hookName]
+      React[hookName] = getPatchedHook(hookName, hookConfig, React, options)
+    })
+  }
+
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
-    React.createElement = origCreateElement
-    React.createFactory = origCreateFactory
+    Object.assign(React, {
+      createElement: origCreateElement,
+      createFactory: origCreateFactory,
+      ...origHooks
+    })
     componentsMap = null
     delete React.__REVERT_WHY_DID_YOU_RENDER__
   }
