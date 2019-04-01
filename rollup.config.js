@@ -15,7 +15,7 @@ Generated at <%= moment().format('YYYY-MM-DD') %>
 `
 export default flatMap(['none', 'shouldMinify', 'noClassesTranspile', 'both'], buildMode => {
   const shouldMinify = buildMode === 'shouldMinify' || buildMode === 'both'
-  const shouldTranspileClasses = buildMode !== 'noClassesTranspile' || buildMode === 'both'
+  const shouldTranspileClasses = buildMode === 'none' || buildMode === 'both'
 
   const babelPlugins = compact([
     shouldTranspileClasses && '@babel/plugin-transform-classes'
