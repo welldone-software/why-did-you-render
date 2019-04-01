@@ -126,9 +126,9 @@ Optionally you can pass in options as a second parameter. The following options 
 - `exclude: [RegExp, ...]` (`null` by default)
 - `trackHooks: true`
 - `logOnDifferentValues: false`
+- `hotReloadBufferMs: 500`
 - `onlyLogs: false`
 - `collapseGroups: false`
-- `hotReloadBufferMs: 500`
 - `titleColor`
 - `diffNameColor`
 - `diffPathColor`
@@ -159,20 +159,23 @@ render(<BigListPureComponent a={2}/>)
 // this will only cause whyDidYouRender notifications for {logOnDifferentValues: true}
 ```
 
-#### onlyLogs
-If you don't want to use `console.group` to group logs by component, you can print them as simple logs.
-
-#### collapseGroups
-Grouped logs can start collapsed:
-
 #### hotReloadBufferMs
 Time in milliseconds to ignore updates after a hot reload is detected.
 
 We can't currently know exactly if a render was triggered by hot reload,
 so instead, we ignore all updates for `hotReloadBufferMs` (default: 500) after a hot reload.
 
+#### onlyLogs
+If you don't want to use `console.group` to group logs by component, you can print them as simple logs.
+
+#### collapseGroups
+Grouped logs can start collapsed:
+
+#### titleColor / diffNameColor / diffPathColor
+Controls the colors used in the console notifications
+
 #### notifier
-A notifier can be provided if the default one does not suite your needs.
+You can create a custom notifier if the default one does not suite your needs.
 
 ## Credit
 
