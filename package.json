@@ -1,6 +1,6 @@
 {
   "name": "@welldone-software/why-did-you-render",
-  "version": "3.0.0-beta.1",
+  "version": "3.0.0-beta.2",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
   "main": "dist/cjs/whyDidYouRender.min.js",
   "module": "dist/esm/whyDidYouRender.min.js",
