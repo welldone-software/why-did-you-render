@@ -3,7 +3,7 @@ import {createDefaultNotifier} from './defaultNotifier'
 
 const emptyFn = () => {}
 
-export default function normalizeOptions(userOptions = {}, React){
+export default function normalizeOptions(userOptions = {}){
   let consoleGroup = console.group
   let consoleGroupEnd = console.groupEnd
 
@@ -31,16 +31,7 @@ export default function normalizeOptions(userOptions = {}, React){
     consoleGroup,
     consoleGroupEnd,
     logOnDifferentValues: false,
-    trackHooks: {
-      useState: {
-        fn: React.useState,
-        allowShallow: true
-      },
-      useReducer: {
-        fn: React.useReducer
-      },
-      ...userOptions.userHooks
-    },
+    trackHooks: true,
     ...userOptions
   }
 }

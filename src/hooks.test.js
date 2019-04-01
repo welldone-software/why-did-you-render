@@ -1,16 +1,16 @@
-import React from 'react/cjs/react.development'
+import React, {useState, useLayoutEffect} from 'react'
 import TestRenderer from 'react-test-renderer'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
 
-describe('no track hooks setting', () => {
+describe('do not track hooks', () => {
   let updateInfos = []
 
   beforeEach(() => {
     updateInfos = []
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo),
-      trackHooks: {}
+      trackHooks: false
     })
   })
 
@@ -20,11 +20,6 @@ describe('no track hooks setting', () => {
 
   describe('simple component with hooks', () => {
     test('do no track component', () => {
-      React.__REVERT_WHY_DID_YOU_RENDER__()
-      whyDidYouRender(React, {
-        notifier: updateInfo => updateInfos.push(updateInfo)
-      })
-
       const ComponentWithHooks = ({a}) => {
         const [currentState] = React.useState({b: 'b'})
 
@@ -113,7 +108,37 @@ describe('track hooks', () => {
   })
 
   afterEach(() => {
+    if(React.__REVERT_WHY_DID_YOU_RENDER__){
+      React.__REVERT_WHY_DID_YOU_RENDER__()
+    }
+  })
+
+  test('cancel tracking', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__()
+
+    let effectCalled = false
+
+    const ComponentWithHooks = ({a}) => {
+      const [currentState, setCurrentState] = React.useState({b: 'b'})
+
+      React.useLayoutEffect(() => {
+        effectCalled = true
+        setCurrentState({b: 'b'})
+      }, [])
+
+      return (
+        <div>hi! {a} {currentState.b}</div>
+      )
+    }
+
+    ComponentWithHooks.whyDidYouRender = true
+
+    TestRenderer.create(
+      <ComponentWithHooks a={1}/>
+    )
+
+    expect(updateInfos).toHaveLength(0)
+    expect(effectCalled).toBeTruthy()
   })
 
   describe('simple component with hooks', () => {
@@ -202,6 +227,38 @@ describe('track hooks', () => {
         const [currentState, setCurrentState] = React.useState({b: 'b'})
 
         React.useLayoutEffect(() => {
+          setCurrentState({b: 'b'})
+        }, [])
+
+        return (
+          <div>hi! {a} {currentState.b}</div>
+        )
+      }
+
+      ComponentWithHooks.whyDidYouRender = true
+
+      TestRenderer.create(
+        <ComponentWithHooks a={1}/>
+      )
+
+      expect(updateInfos).toHaveLength(1)
+      expect(updateInfos[0].reason).toEqual({
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '0',
+          nextValue: {b: 'b'},
+          prevValue: {b: 'b'}
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      })
+    })
+
+    test('deep equals direct import', () => {
+      const ComponentWithHooks = ({a}) => {
+        const [currentState, setCurrentState] = useState({b: 'b'})
+
+        useLayoutEffect(() => {
           setCurrentState({b: 'b'})
         }, [])
 

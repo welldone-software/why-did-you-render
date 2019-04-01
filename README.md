@@ -124,6 +124,7 @@ EnhancedMenu.whyDidYouRender = {
 Optionally you can pass in options as a second parameter. The following options are available:
 - `include: [RegExp, ...]` (`null` by default)
 - `exclude: [RegExp, ...]` (`null` by default)
+- `trackHooks: true`
 - `logOnDifferentValues: false`
 - `onlyLogs: false`
 - `collapseGroups: false`
@@ -138,6 +139,11 @@ by their displayName with the `include` and `exclude` options.
 ```js
 whyDidYouRender(React, { include: [/^pure/], exclude: [/^Connect/] });
 ```
+
+#### trackHooks
+You can turn off tracking of hooks changes.
+
+Understand and fix hook issues [>> HERE <<](http://bit.ly/wdyr3).
 
 #### logOnDifferentValues
 Normally, you only want notifications about component re-renders when their props and state

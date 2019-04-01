@@ -1,4 +1,4 @@
-import {defaults, capitalize} from 'lodash'
+import {defaults} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -111,49 +111,42 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
   return WDYRMemoizedFunctionalComponent
 }
 
-function getPatchedHook(hookName, hookConfig, React, options){
-  const newHook = function(...args){
-    const nextHook = hookConfig.fn(...args)
+function trackHookChanges(hookName, hookConfig, hookResult, React, options){
+  const nextHook = hookResult
 
-    const Component = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
-    const displayName = getDisplayName(Component)
+  const Component = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
+  const displayName = getDisplayName(Component)
 
-    const isShouldTrack = shouldTrack(Component, displayName, options)
-    if(!isShouldTrack){
-      return nextHook
-    }
-
-    const ref = React.useRef()
-    const prevHook = ref.current
-    ref.current = nextHook
-
-    if(prevHook){
-      const notification = getUpdateInfo({
-        Component: Component,
-        displayName,
-        hookName,
-        prevHook,
-        nextHook,
-        options
-      })
-      const shouldNotifyHookDifference = (
-        notification.reason.hookDifferences && (
-          notification.reason.hookDifferences.length > 0 ||
-          !hookConfig.allowShallow
-        )
-      )
-      if(shouldNotifyHookDifference){
-        options.notifier(notification)
-      }
-    }
-
-    return ref.current
+  const isShouldTrack = shouldTrack(Component, displayName, options)
+  if(!isShouldTrack){
+    return nextHook
   }
 
-  const newHookName = `patched${capitalize(hookName[0])}${hookName.substr(1)}`
-  Object.defineProperty(newHook, 'name', {value: newHookName})
+  const ref = React.useRef()
+  const prevHook = ref.current
+  ref.current = nextHook
 
-  return newHook
+  if(prevHook){
+    const notification = getUpdateInfo({
+      Component: Component,
+      displayName,
+      hookName,
+      prevHook,
+      nextHook,
+      options
+    })
+    const shouldNotifyHookDifference = (
+      notification.reason.hookDifferences && (
+        notification.reason.hookDifferences.length > 0 ||
+        !hookConfig.allowShallow
+      )
+    )
+    if(shouldNotifyHookDifference){
+      options.notifier(notification)
+    }
+  }
+
+  return ref.current
 }
 
 function createPatchedComponent(componentsMap, Component, displayName, React, options){
@@ -179,12 +172,16 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
   return WDYRPatchedComponent
 }
 
+const hooksConfig = {
+  useState: {allowShallow: true},
+  useReducer: true
+}
+
 export default function whyDidYouRender(React, userOptions){
-  const options = normalizeOptions(userOptions, React)
+  const options = normalizeOptions(userOptions)
 
   const origCreateElement = React.createElement
   const origCreateFactory = React.createFactory
-  const origHooks = {}
 
   let componentsMap = new WeakMap()
 
@@ -223,19 +220,44 @@ export default function whyDidYouRender(React, userOptions){
   Object.assign(React.createFactory, origCreateFactory)
 
   if(options.trackHooks){
-    Object.entries(options.trackHooks).forEach(([hookName, hookConfig]) => {
-      origHooks[hookName] = React[hookName]
-      React[hookName] = getPatchedHook(hookName, hookConfig, React, options)
-    })
+    let currentDispatcher
+
+    Object.defineProperty(
+      React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
+      'current',
+      {
+        set(_currentDispatcher){
+          currentDispatcher = _currentDispatcher
+        },
+        get(){
+          return Object
+            .entries(hooksConfig)
+            .reduce((result, [hookName, hookConfig]) => {
+              result[hookName] = (...args) => {
+                const hookResult = currentDispatcher[hookName](...args)
+                if(hookConfig){
+                  trackHookChanges(hookName, hookConfig === true ? {} : hookConfig, hookResult, React, options)
+                }
+                return hookResult
+              }
+              return result
+            }, {...currentDispatcher})
+        }
+      }
+    )
   }
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     Object.assign(React, {
       createElement: origCreateElement,
-      createFactory: origCreateFactory,
-      ...origHooks
+      createFactory: origCreateFactory
     })
     componentsMap = null
+    Object.defineProperty(
+      React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
+      'current',
+      {writable: true}
+    )
     delete React.__REVERT_WHY_DID_YOU_RENDER__
   }
 

@@ -119,7 +119,7 @@ describe('defaultNotifier', () => {
           prevState: null,
           nextProps: null,
           nextState: null,
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -138,7 +138,7 @@ describe('defaultNotifier', () => {
           prevState: null,
           nextProps: {a: 'aa'},
           nextState: null,
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -157,7 +157,7 @@ describe('defaultNotifier', () => {
           prevState: {a: 'aa'},
           nextProps: null,
           nextState: {a: 'aa'},
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -176,7 +176,7 @@ describe('defaultNotifier', () => {
           prevState: {a: 'aa'},
           nextProps: {a: 'aa'},
           nextState: {a: 'aa'},
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -193,7 +193,7 @@ describe('defaultNotifier', () => {
           Component: TestComponent,
           prevHook: {a: 'aa'},
           nextHook: {a: 'aa'},
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -212,7 +212,7 @@ describe('defaultNotifier', () => {
           prevState: null,
           nextProps: {a: {b: 'b'}},
           nextState: null,
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -231,7 +231,7 @@ describe('defaultNotifier', () => {
           prevState: {a: {b: 'b'}},
           nextProps: null,
           nextState: {a: {b: 'b'}},
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -250,7 +250,7 @@ describe('defaultNotifier', () => {
           prevState: {a: {b: 'b'}},
           nextProps: {a: {b: 'b'}},
           nextState: {a: {b: 'b'}},
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -269,7 +269,7 @@ describe('defaultNotifier', () => {
           prevState: null,
           nextProps: {fn: function something(){}},
           nextState: null,
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -288,7 +288,7 @@ describe('defaultNotifier', () => {
           prevState: {a: {b: 'b'}},
           nextProps: {fn: function something(){}},
           nextState: {a: {b: 'b'}},
-          options: normalizeOptions(userOptions, React)
+          options: normalizeOptions(userOptions)
         })
 
         defaultNotifier(updateInfo)
@@ -308,7 +308,7 @@ describe('defaultNotifier', () => {
         nextState: null,
         options: normalizeOptions({
           onlyLogs: true
-        }, React)
+        })
       })
 
       defaultNotifier(updateInfo)
@@ -325,7 +325,7 @@ describe('defaultNotifier', () => {
         nextState: {a: 'bbbb'},
         options: normalizeOptions({
           onlyLogs: true
-        }, React)
+        })
       })
 
       defaultNotifier(updateInfo)
@@ -343,7 +343,7 @@ describe('defaultNotifier', () => {
         options: normalizeOptions({
           logOnDifferentValues: true,
           onlyLogs: true
-        }, React)
+        })
       })
 
       defaultNotifier(updateInfo)
@@ -372,7 +372,7 @@ describe('defaultNotifier', () => {
         nextState: null,
         options: normalizeOptions({
           onlyLogs: true
-        }, React)
+        })
       })
 
       defaultNotifier(updateInfo)

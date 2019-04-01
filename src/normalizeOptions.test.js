@@ -1,10 +1,9 @@
 /*  eslint-disable no-console */
-import React from 'react'
 import normalizeOptions from './normalizeOptions'
 
 describe('normalizeOptions', () => {
   test('Empty options works', () => {
-    const options = normalizeOptions(undefined, React)
+    const options = normalizeOptions()
     expect(options.consoleLog).toBe(console.log)
   })
 
@@ -13,7 +12,7 @@ describe('normalizeOptions', () => {
     const userOptions = {
       notifier: ownNotifier
     }
-    const options = normalizeOptions(userOptions, React)
+    const options = normalizeOptions(userOptions)
     expect(options.notifier).toBe(ownNotifier)
     expect(options.consoleLog).toBe(console.log)
   })
