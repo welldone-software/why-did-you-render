@@ -60,7 +60,8 @@ describe('index', () => {
     expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -74,7 +75,8 @@ describe('index', () => {
 
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
     expect(updateInfos).toHaveLength(1)
   })
@@ -89,7 +91,8 @@ describe('index', () => {
       .then(() => {
         expect(updateInfos[0].reason).toEqual({
           propsDifferences: false,
-          stateDifferences: []
+          stateDifferences: [],
+          hookDifferences: false
         })
         expect(updateInfos).toHaveLength(1)
       })
@@ -111,7 +114,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -136,7 +140,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -166,7 +171,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
     expect(innerComponentDidUpdateCalled).toBe(true)
     expect(updateInfos).toHaveLength(1)
@@ -194,7 +200,8 @@ describe('index', () => {
         nextValue: 'c',
         pathString: 'c',
         prevValue: undefined
-      }]
+      }],
+      hookDifferences: false
     })
 
     testRenderer.update(
@@ -208,7 +215,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
 
     expect(updateInfos).toHaveLength(2)
@@ -290,7 +298,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -323,7 +332,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
     expect(innerComponentDidUpdateCalled).toBe(true)
   })
@@ -340,7 +350,8 @@ describe('index', () => {
 
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
 
     expect(updateInfos).toHaveLength(1)
@@ -356,7 +367,8 @@ describe('index', () => {
     expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -381,7 +393,8 @@ describe('index', () => {
 
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
 
     expect(updateInfos[1].reason).toEqual({
@@ -391,12 +404,14 @@ describe('index', () => {
         nextValue: {a: 'a'},
         prevValue: {a: 'a'}
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
 
     expect(updateInfos[2].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -421,7 +436,8 @@ describe('index', () => {
 
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
 
     expect(updateInfos[1].reason).toEqual({
@@ -431,12 +447,14 @@ describe('index', () => {
         nextValue: {a: 'a'},
         prevValue: {a: 'a'}
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
 
     expect(updateInfos[2].reason).toEqual({
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -456,7 +474,8 @@ describe('index', () => {
         prevValue: 1,
         nextValue: 2
       }],
-      stateDifferences: false
+      stateDifferences: false,
+      hookDifferences: false
     })
   })
 
@@ -469,42 +488,5 @@ describe('index', () => {
     )
 
     expect(updateInfos).toHaveLength(0)
-  })
-
-  test('Component with hooks', () => {
-    let effectCount = 0
-    const ComponentWithHooks = ({a}) => {
-      const [currentState] = React.useState({a: 'a'})
-
-      // change to useEffect when the following resolves:
-      // https://github.com/facebook/react/issues/14050#issuecomment-438173736
-      React.useLayoutEffect(() => {
-        effectCount = effectCount + 1
-      })
-
-      return (
-        <div>hi! {a} {currentState.a}</div>
-      )
-    }
-    ComponentWithHooks.whyDidYouRender = true
-
-    const testRenderer = TestRenderer.create(
-      <ComponentWithHooks a={1}/>
-    )
-    testRenderer.update(
-      <ComponentWithHooks a={2}/>
-    )
-
-    expect(updateInfos).toHaveLength(1)
-    expect(updateInfos[0].reason).toEqual({
-      propsDifferences: [{
-        pathString: 'a',
-        diffType: diffTypes.different,
-        prevValue: 1,
-        nextValue: 2
-      }],
-      stateDifferences: false
-    })
-    expect(effectCount).toBe(2)
   })
 })

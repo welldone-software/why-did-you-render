@@ -20,7 +20,7 @@ describe('getUpdateInfo', () => {
       prevState: null,
       nextProps: {},
       nextState: null,
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -30,7 +30,8 @@ describe('getUpdateInfo', () => {
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
-        stateDifferences: false
+        stateDifferences: false,
+        hookDifferences: false
       }
     })
   })
@@ -43,7 +44,7 @@ describe('getUpdateInfo', () => {
       prevState: null,
       nextProps: {a: 1},
       nextState: null,
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -53,7 +54,8 @@ describe('getUpdateInfo', () => {
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
-        stateDifferences: false
+        stateDifferences: false,
+        hookDifferences: false
       }
     })
   })
@@ -66,7 +68,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: 1},
       nextProps: {},
       nextState: {a: 1},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -76,7 +78,8 @@ describe('getUpdateInfo', () => {
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
-        stateDifferences: []
+        stateDifferences: [],
+        hookDifferences: false
       }
     })
   })
@@ -89,7 +92,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: 1},
       nextProps: {b: 1},
       nextState: {a: 1},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -99,7 +102,8 @@ describe('getUpdateInfo', () => {
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
-        stateDifferences: []
+        stateDifferences: [],
+        hookDifferences: false
       }
     })
   })
@@ -112,7 +116,7 @@ describe('getUpdateInfo', () => {
       prevState: null,
       nextProps: {a: 2},
       nextState: null,
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -129,7 +133,8 @@ describe('getUpdateInfo', () => {
             nextValue: input.nextProps.a
           }
         ],
-        stateDifferences: false
+        stateDifferences: false,
+        hookDifferences: false
       }
     })
   })
@@ -142,7 +147,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: 1},
       nextProps: {},
       nextState: {a: 2},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -159,7 +164,8 @@ describe('getUpdateInfo', () => {
             prevValue: input.prevState.a,
             nextValue: input.nextState.a
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })
@@ -172,7 +178,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: 1},
       nextProps: {b: 2},
       nextState: {a: 2},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -196,7 +202,8 @@ describe('getUpdateInfo', () => {
             prevValue: input.prevState.a,
             nextValue: input.nextState.a
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })
@@ -209,7 +216,7 @@ describe('getUpdateInfo', () => {
       prevState: null,
       nextProps: {a: {b: 'b'}},
       nextState: null,
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -226,7 +233,8 @@ describe('getUpdateInfo', () => {
             nextValue: input.nextProps.a
           }
         ],
-        stateDifferences: false
+        stateDifferences: false,
+        hookDifferences: false
       }
     })
   })
@@ -239,7 +247,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: {b: 'b'}},
       nextProps: {},
       nextState: {a: {b: 'b'}},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -256,7 +264,8 @@ describe('getUpdateInfo', () => {
             prevValue: input.prevState.a,
             nextValue: input.nextState.a
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })
@@ -269,7 +278,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: {d: 'd'}},
       nextProps: {b: {c: 'c'}},
       nextState: {a: {d: 'd'}},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -293,7 +302,8 @@ describe('getUpdateInfo', () => {
             prevValue: input.prevState.a,
             nextValue: input.nextState.a
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })
@@ -306,7 +316,7 @@ describe('getUpdateInfo', () => {
       prevState: null,
       nextProps: {a: () => {}},
       nextState: null,
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -323,7 +333,8 @@ describe('getUpdateInfo', () => {
             nextValue: input.nextProps.a
           }
         ],
-        stateDifferences: false
+        stateDifferences: false,
+        hookDifferences: false
       }
     })
   })
@@ -336,7 +347,7 @@ describe('getUpdateInfo', () => {
       prevState: {a: () => {}},
       nextProps: {},
       nextState: {a: () => {}},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -353,7 +364,8 @@ describe('getUpdateInfo', () => {
             prevValue: input.prevState.a,
             nextValue: input.nextState.a
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })
@@ -366,7 +378,7 @@ describe('getUpdateInfo', () => {
       prevState: {b: () => {}},
       nextProps: {a: () => {}},
       nextState: {b: () => {}},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -390,7 +402,8 @@ describe('getUpdateInfo', () => {
             prevValue: input.prevState.b,
             nextValue: input.nextState.b
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })
@@ -403,7 +416,7 @@ describe('getUpdateInfo', () => {
       prevState: null,
       nextProps: {a: () => {}, b: '12345', c: {d: 'e'}, f: 3},
       nextState: {a: 4},
-      options: normalizeOptions()
+      options: normalizeOptions(undefined, React)
     }
 
     const updateInfo = getUpdateInfo(input)
@@ -439,7 +452,8 @@ describe('getUpdateInfo', () => {
             prevValue: undefined,
             nextValue: input.nextState.a
           }
-        ]
+        ],
+        hookDifferences: false
       }
     })
   })

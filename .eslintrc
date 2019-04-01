@@ -45,7 +45,8 @@
       "return": {"after": true},
       "export": {"after": true},
       "default": {"after": true},
-      "const": {"after": true}
+      "const": {"after": true},
+      "case": {"after": true}
     }}],
     "space-before-blocks": ["error", "never"],
     "comma-dangle": ["error", "never"]
