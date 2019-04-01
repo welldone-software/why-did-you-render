@@ -129,6 +129,9 @@ Optionally you can pass in options as a second parameter. The following options 
 - `onlyLogs: false`
 - `collapseGroups: false`
 - `hotReloadBufferMs: 500`
+- `titleColor`
+- `diffNameColor`
+- `diffPathColor`
 - `notifier: ({Component, displayName, prevProps, prevState, nextProps, nextState, reason, options}) => void`
 
 #### include / exclude

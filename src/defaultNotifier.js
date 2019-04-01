@@ -45,8 +45,13 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
   if(differences && differences.length > 0){
     options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`)
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
-      options.consoleGroup(`%c${diffObjType === 'hook' ? `hook ${hookName} ` : `${diffObjType}.`}%c${pathString}%c`, 'color:blue;', 'color:red;', 'color:black;')
-      options.consoleLog(`${diffTypesDescriptions[diffType]} (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`)
+      options.consoleGroup(
+        `%c${diffObjType === 'hook' ? `hook ${hookName} ` : `${diffObjType}.`}%c${pathString}%c`,
+        `color:${options.diffNameColor};`, `color:${options.diffPathColor};`, 'color:default;'
+      )
+      options.consoleLog(
+        `${diffTypesDescriptions[diffType]} (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
+      )
       options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue})
       options.consoleGroupEnd()
     })
@@ -71,7 +76,7 @@ export default function defaultNotifier(updateInfo){
     return
   }
 
-  options.consoleGroup(`%c${displayName}`, 'color: #058;')
+  options.consoleGroup(`%c${displayName}`, `color: ${options.titleColor};`)
 
   let prefixMessage = 'Re-rendered because'
 

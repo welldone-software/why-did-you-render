@@ -32,6 +32,9 @@ export default function normalizeOptions(userOptions = {}){
     consoleGroupEnd,
     logOnDifferentValues: false,
     trackHooks: true,
+    titleColor: '#058',
+    diffNameColor: 'blue',
+    diffPathColor: 'red',
     ...userOptions
   }
 }
