@@ -16,6 +16,7 @@ import createFactory from './createFactory'
 import cloneElement from './cloneElement'
 import useState from './hooks/useState'
 import useContext from './hooks/useContext'
+import useMemo from './hooks/useMemo'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -32,7 +33,8 @@ const demosList = {
   createFactory,
   cloneElement,
   useState,
-  useContext
+  useContext,
+  useMemo
 }
 
 const defaultDemoName = 'bigList'

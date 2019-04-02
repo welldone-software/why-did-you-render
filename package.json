@@ -16,13 +16,14 @@
     "start": "cross-env PORT=3003 NODE_ENV=development node demo/serve",
     "build": "cross-env NODE_ENV=production rollup --config",
     "test": "cross-env NODE_ENV=test jest",
-    "test:watch": "npm run test -- --watchAll",
+    "test:watch": "yarn test -- --watchAll",
     "lint": "esw . --ext=js --cache --cache-location .temp/eslint-cache",
-    "lint:fix": "npm run lint -- --fix",
-    "lint:watch": "npm run lint -- --watch",
+    "lint:fix": "yarn lint -- --fix",
+    "lint:watch": "yarn lint -- --watch",
     "clear": "rimraf .temp dist demo/dist",
     "watch": "concurrently --names \"Serve,Lint,Test\" \"npm:start\" \"npm:lint:watch\" \"npm:test:watch\"",
-    "version": "npm run lint && npm run test && npm run build && git add --all dist",
+    "checkHealth": "yarn lint && yarn test",
+    "version": "yarn checkHealth && yarn build && git add --all dist",
     "postversion": "git push && git push --tags"
   },
   "husky": {

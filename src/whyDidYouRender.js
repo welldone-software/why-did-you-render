@@ -177,7 +177,8 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
 const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
-  useContext: true
+  useContext: true,
+  useMemo: true
 }
 
 export default function whyDidYouRender(React, userOptions){
