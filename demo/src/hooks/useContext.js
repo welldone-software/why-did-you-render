@@ -20,7 +20,11 @@ export default {
     const MemoizedComponentWithContextHook = React.memo(ComponentWithContextHook)
     MemoizedComponentWithContextHook.whyDidYouRender = true
 
-    const MemoizedComponent = React.memo(() => <div>{'Memoized component that doesn\'t use context'}</div>)
+    const MemoizedParent = React.memo(() => (
+      <div>
+        <ComponentWithContextHook/>
+      </div>
+    ))
 
     function Main(){
       const [currentState, setCurrentState] = React.useState({c: 'context value'})
@@ -39,7 +43,7 @@ export default {
           <div>
             <ComponentWithContextHook />
             <MemoizedComponentWithContextHook />
-            <MemoizedComponent />
+            <MemoizedParent />
           </div>
         </MyContext.Provider>
       )
