@@ -1,4 +1,4 @@
-import {defaults} from 'lodash'
+import {defaults, omit, get} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -80,7 +80,7 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
 }
 
 function patchMemoComponent(MemoComponent, displayName, React, options){
-  const WDYRMemoizedFunctionalComponent = React.memo(nextProps => {
+  function InnerWDYRMemoizedFunctionalComponent(nextProps){
     const ref = React.useRef()
 
     const prevProps = ref.current
@@ -95,15 +95,22 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
         options
       })
 
-      // if a functional component re-rendered without a props change
+      // if a memoized functional component re-rendered without props change / prop values change
       // it was probably caused by a hook and we should not care about it
-      if(notification.reason.propsDifferences){
+      if(notification.reason.propsDifferences && notification.reason.propsDifferences.length > 0){
         options.notifier(notification)
       }
     }
 
     return MemoComponent.type(nextProps)
-  })
+  }
+
+  const WDYRMemoizedFunctionalComponent = React.memo(InnerWDYRMemoizedFunctionalComponent)
+
+  const MemoComponentExtra = omit(MemoComponent, Object.keys(WDYRMemoizedFunctionalComponent))
+
+  InnerWDYRMemoizedFunctionalComponent.displayName = displayName
+  defaults(InnerWDYRMemoizedFunctionalComponent, MemoComponentExtra)
 
   WDYRMemoizedFunctionalComponent.displayName = displayName
   defaults(WDYRMemoizedFunctionalComponent, MemoComponent)
@@ -111,7 +118,7 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
   return WDYRMemoizedFunctionalComponent
 }
 
-function trackHookChanges(hookName, hookConfig, hookResult, React, options){
+function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
   const nextHook = hookResult
 
   const Component = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
@@ -131,17 +138,12 @@ function trackHookChanges(hookName, hookConfig, hookResult, React, options){
       Component: Component,
       displayName,
       hookName,
-      prevHook,
-      nextHook,
+      prevHook: hookPath ? get(prevHook, hookPath) : prevHook,
+      nextHook: hookPath ? get(nextHook, hookPath) : nextHook,
       options
     })
-    const shouldNotifyHookDifference = (
-      notification.reason.hookDifferences && (
-        notification.reason.hookDifferences.length > 0 ||
-        !hookConfig.allowShallow
-      )
-    )
-    if(shouldNotifyHookDifference){
+
+    if(notification.reason.hookDifferences){
       options.notifier(notification)
     }
   }
@@ -173,8 +175,9 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
 }
 
 const hooksConfig = {
-  useState: {allowShallow: true},
-  useReducer: true
+  useState: {path: '0'},
+  useReducer: {path: '0'},
+  useContext: true
 }
 
 export default function whyDidYouRender(React, userOptions){

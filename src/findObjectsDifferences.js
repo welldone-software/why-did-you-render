@@ -3,9 +3,13 @@ import calculateDeepEqualDiffs from './calculateDeepEqualDiffs'
 
 const emptyObject = {}
 
-export default function findObjectsDifferences(userPrevObj, userNextObj){
+export default function findObjectsDifferences(userPrevObj, userNextObj, {shallow = true} = {}){
   if(userPrevObj === userNextObj){
     return false
+  }
+
+  if(!shallow){
+    return calculateDeepEqualDiffs(userPrevObj, userNextObj)
   }
 
   const prevObj = userPrevObj || emptyObject

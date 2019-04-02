@@ -14,7 +14,8 @@ import ssr from './ssr'
 import hotReload from './hotReload'
 import createFactory from './createFactory'
 import cloneElement from './cloneElement'
-import hooks from './hooks'
+import useState from './hooks/useState'
+import useContext from './hooks/useContext'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -30,7 +31,8 @@ const demosList = {
   hotReload,
   createFactory,
   cloneElement,
-  hooks
+  useState,
+  useContext
 }
 
 const defaultDemoName = 'bigList'

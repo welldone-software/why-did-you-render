@@ -4,7 +4,7 @@ function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, n
   return {
     propsDifferences: findObjectsDifferences(prevProps, nextProps),
     stateDifferences: findObjectsDifferences(prevState, nextState),
-    hookDifferences: findObjectsDifferences(prevHook, nextHook)
+    hookDifferences: findObjectsDifferences(prevHook, nextHook, {shallow: false})
   }
 }
 

@@ -19,10 +19,6 @@ module.exports = {
       exclude: 'node_modules/**'
     }),
     node_resolve(),
-    commonjs({
-      namedExports: {
-        'node_modules/react/index.js': ['useState']
-      }
-    })
+    commonjs()
   ]
 }

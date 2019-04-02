@@ -198,7 +198,7 @@ describe('defaultNotifier', () => {
 
         defaultNotifier(updateInfo)
 
-        expectLogTypes(['title', 'changedObjects'], expects)
+        expectLogTypes(['title', 'changedObjectValues'], expects)
       })
     })
   })

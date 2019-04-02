@@ -1,15 +1,15 @@
 /* eslint-disable no-console */
-import React, {useState} from 'react'
+import React from 'react'
 import ReactDom from 'react-dom'
 
 export default {
-  description: 'Hooks',
+  description: 'Hooks - useState',
   fn({domElement, whyDidYouRender}){
     whyDidYouRender(React)
 
     function BrokenHooksComponent(){
       console.log('render BrokenHooksComponent')
-      const [numObj, setNumObj] = useState({num: 0})
+      const [numObj, setNumObj] = React.useState({num: 0})
       return (
         <>
           <p>{'Will cause a re-render since {num: 0} !== {num: 0}'}</p>
@@ -23,7 +23,7 @@ export default {
 
     function CorrectHooksComponent(){
       console.log('render CorrectHooksComponent')
-      const [num, setNum] = useState(0)
+      const [num, setNum] = React.useState(0)
       return (
         <>
           <p>{'Will NOT cause a re-render since 0 === 0'}</p>

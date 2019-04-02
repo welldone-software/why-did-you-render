@@ -1,7 +1,7 @@
 import findObjectsDifferences from './findObjectsDifferences'
 import {diffTypes} from './consts'
 
-describe('findObjectsDifferences', () => {
+describe('findObjectsDifferences shallow', () => {
   test('for empty values', () => {
     const prev = null
     const next = null
@@ -33,8 +33,8 @@ describe('findObjectsDifferences', () => {
   test('For next empty value', () => {
     const prev = {prop: 'value'}
     const next = null
-    const diff = findObjectsDifferences(prev, next)
-    expect(diff).toEqual([
+    const diffs = findObjectsDifferences(prev, next)
+    expect(diffs).toEqual([
       {
         pathString: 'prop',
         diffType: diffTypes.different,
@@ -48,15 +48,15 @@ describe('findObjectsDifferences', () => {
     const prop2 = {a: 'a'}
     const prev = {prop: 'value', prop2}
     const next = {prop: 'value', prop2}
-    const diff = findObjectsDifferences(prev, next)
-    expect(diff).toEqual([])
+    const diffs = findObjectsDifferences(prev, next)
+    expect(diffs).toEqual([])
   })
 
   test('For props inside the object different by reference but equal by value', () => {
     const prev = {prop: {a: 'a'}}
     const next = {prop: {a: 'a'}}
-    const diff = findObjectsDifferences(prev, next)
-    expect(diff).toEqual([
+    const diffs = findObjectsDifferences(prev, next)
+    expect(diffs).toEqual([
       {
         pathString: 'prop',
         diffType: diffTypes.deepEquals,
@@ -69,8 +69,8 @@ describe('findObjectsDifferences', () => {
   test('For functions inside the object with the same name', () => {
     const prev = {fn: function something(){}}
     const next = {fn: function something(){}}
-    const diff = findObjectsDifferences(prev, next)
-    expect(diff).toEqual([
+    const diffs = findObjectsDifferences(prev, next)
+    expect(diffs).toEqual([
       {
         pathString: 'fn',
         diffType: diffTypes.function,
@@ -83,8 +83,8 @@ describe('findObjectsDifferences', () => {
   test('Mix of differences inside the objects', () => {
     const prev = {prop: 'value', prop2: {a: 'a'}, prop3: 'AA', fn: function something(){}}
     const next = {prop: 'value', prop2: {a: 'a'}, prop3: 'ZZ', fn: function something(){}}
-    const diff = findObjectsDifferences(prev, next)
-    expect(diff).toEqual([
+    const diffs = findObjectsDifferences(prev, next)
+    expect(diffs).toEqual([
       {
         pathString: 'prop2',
         diffType: diffTypes.deepEquals,
@@ -102,6 +102,65 @@ describe('findObjectsDifferences', () => {
         diffType: diffTypes.function,
         prevValue: prev.fn,
         nextValue: next.fn
+      }
+    ])
+  })
+})
+
+describe('findObjectsDifferences not shallow', () => {
+  test('for empty values', () => {
+    const prev = null
+    const next = null
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual(false)
+  })
+
+  test('For no differences', () => {
+    const prev = {prop: 'value'}
+    const next = prev
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual(false)
+  })
+
+  test('For prev empty value', () => {
+    const prev = null
+    const next = {prop: 'value'}
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        diffType: diffTypes.different,
+        prevValue: null,
+        nextValue: {prop: 'value'}
+      }
+    ])
+  })
+
+  test('For next empty value', () => {
+    const prev = {prop: 'value'}
+    const next = null
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        diffType: diffTypes.different,
+        prevValue: {prop: 'value'},
+        nextValue: null
+      }
+    ])
+  })
+
+  test('For objects different by reference but equal by value', () => {
+    const prop2 = {a: 'a'}
+    const prev = {prop: 'value', prop2}
+    const next = {prop: 'value', prop2}
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        diffType: diffTypes.deepEquals,
+        prevValue: {prop: 'value', prop2},
+        nextValue: {prop: 'value', prop2}
       }
     ])
   })
