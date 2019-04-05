@@ -31,7 +31,7 @@ or
 yarn add @welldone-software/why-did-you-render
 ```
 
-## Usage
+## Installation
 Execute `whyDidYouRender` with `React` as it's first argument.
 
 ```js
@@ -57,8 +57,8 @@ where a transpiled class tries to extend a native class:
 
 `Class constructors must be invoked with 'new'`.
 
-
-Then mark all the components you want to be notified about their re-renders with `whyDidYouRender` like so:
+## Usage
+Mark all the components you want to be notified about their re-renders with `whyDidYouRender` like so:
 
 ```js
 class BigListPureComponent extends React.PureComponent {
