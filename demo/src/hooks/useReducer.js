@@ -21,7 +21,7 @@ export default {
       }
     }
 
-    const initialState = {count: 0}
+    const initialState = {count: '0'}
 
     function Main(){
       const [state, dispatch] = React.useReducer(reducer, initialState)
@@ -47,6 +47,8 @@ export default {
           >
             correct set count
           </button>
+          <br />
+          <button onClick={() => console.clear()}>clear console</button>
         </div>
       )
     }
