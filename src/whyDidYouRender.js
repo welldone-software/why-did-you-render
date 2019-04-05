@@ -244,13 +244,17 @@ export default function whyDidYouRender(React, userOptions){
       React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
       'current',
       {
-        set(_origHooks){
-          origHooks = _origHooks
+        set(newHooks){
+          origHooks = newHooks && {
+            ...newHooks,
+            ...newHooks.origHooks
+          }
         },
         get(){
-          return {
+          return origHooks && {
             ...origHooks,
-            ...patchedHooks
+            ...patchedHooks,
+            origHooks
           }
         }
       }

@@ -317,6 +317,86 @@ describe('track hooks', () => {
       })
     })
 
+    test('many deep equals direct import', () => {
+      const ComponentWithHooks = ({a}) => {
+        const [currentStateA, setCurrentStateA] = useState({a: 'a'})
+        const [currentStateB, setCurrentStateB] = useState({b: 'b'})
+        const [currentStateC, setCurrentStateC] = useState({c: 'c'})
+        const [currentStateD, setCurrentStateD] = useState({d: 'd'})
+        const [currentStateE, setCurrentStateE] = useState({e: 'e'})
+
+        useLayoutEffect(() => {
+          setCurrentStateA({a: 'a'})
+          setCurrentStateB({b: 'b'})
+          setCurrentStateC({c: 'c'})
+          setCurrentStateD({d: 'd'})
+          setCurrentStateE({e: 'e'})
+        }, [])
+
+        return (
+          <div>hi! {a} {currentStateA.a} {currentStateB.b} {currentStateC.c} {currentStateD.d} {currentStateE.e}</div>
+        )
+      }
+
+      ComponentWithHooks.whyDidYouRender = true
+
+      TestRenderer.create(
+        <ComponentWithHooks a={1}/>
+      )
+
+      expect(updateInfos).toHaveLength(5)
+      expect(updateInfos[0].reason).toEqual({
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: {a: 'a'},
+          prevValue: {a: 'a'}
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      })
+      expect(updateInfos[1].reason).toEqual({
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: {b: 'b'},
+          prevValue: {b: 'b'}
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      })
+      expect(updateInfos[2].reason).toEqual({
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: {c: 'c'},
+          prevValue: {c: 'c'}
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      })
+      expect(updateInfos[3].reason).toEqual({
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: {d: 'd'},
+          prevValue: {d: 'd'}
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      })
+      expect(updateInfos[4].reason).toEqual({
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: {e: 'e'},
+          prevValue: {e: 'e'}
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      })
+    })
+
     test('deep equals functional use', () => {
       const ComponentWithHooks = ({a}) => {
         const [currentState, setCurrentState] = React.useState({b: 'b'})
