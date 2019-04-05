@@ -15,6 +15,7 @@ import hotReload from './hotReload'
 import createFactory from './createFactory'
 import cloneElement from './cloneElement'
 import useState from './hooks/useState'
+import useReducer from './hooks/useReducer'
 import useContext from './hooks/useContext'
 import useMemo from './hooks/useMemo'
 
@@ -33,6 +34,7 @@ const demosList = {
   createFactory,
   cloneElement,
   useState,
+  useReducer,
   useContext,
   useMemo
 }
