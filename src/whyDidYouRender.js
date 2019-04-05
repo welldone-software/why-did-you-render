@@ -1,4 +1,4 @@
-import {defaults, omit, get} from 'lodash'
+import {defaults, omit, get, mapValues} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -174,7 +174,7 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
   return WDYRPatchedComponent
 }
 
-const hooksConfig = {
+export const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
   useContext: true,
@@ -223,29 +223,35 @@ export default function whyDidYouRender(React, userOptions){
 
   Object.assign(React.createFactory, origCreateFactory)
 
+  let origHooks
+
   if(options.trackHooks){
-    let currentDispatcher
+    const patchedHooks = mapValues(hooksConfig, (hookConfig, hookName) => {
+      return (...args) => {
+        const origHook = origHooks[hookName]
+        if(!origHook){
+          throw new Error('[WhyDidYouRender] A problem with React Hooks patching occurred.')
+        }
+        const hookResult = origHook(...args)
+        if(hookConfig){
+          trackHookChanges(hookName, hookConfig === true ? {} : hookConfig, hookResult, React, options)
+        }
+        return hookResult
+      }
+    })
 
     Object.defineProperty(
       React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
       'current',
       {
-        set(_currentDispatcher){
-          currentDispatcher = _currentDispatcher
+        set(_origHooks){
+          origHooks = _origHooks
         },
         get(){
-          return Object
-            .entries(hooksConfig)
-            .reduce((result, [hookName, hookConfig]) => {
-              result[hookName] = (...args) => {
-                const hookResult = currentDispatcher[hookName](...args)
-                if(hookConfig){
-                  trackHookChanges(hookName, hookConfig === true ? {} : hookConfig, hookResult, React, options)
-                }
-                return hookResult
-              }
-              return result
-            }, {...currentDispatcher})
+          return {
+            ...origHooks,
+            ...patchedHooks
+          }
         }
       }
     )
@@ -260,7 +266,10 @@ export default function whyDidYouRender(React, userOptions){
     Object.defineProperty(
       React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
       'current',
-      {writable: true}
+      {
+        writable: true,
+        value: origHooks
+      }
     )
     delete React.__REVERT_WHY_DID_YOU_RENDER__
   }
