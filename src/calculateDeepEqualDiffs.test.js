@@ -229,6 +229,12 @@ describe('calculateDeepEqualDiffs', () => {
 
     expect(diffs).toEqual([
       {
+        pathString: '.a.props',
+        prevValue: {children: 'hi!'},
+        nextValue: {children: 'hi!'},
+        diffType: diffTypes.deepEquals
+      },
+      {
         pathString: '.a',
         prevValue: prevValue.a,
         nextValue: nextValue.a,
@@ -260,6 +266,49 @@ describe('calculateDeepEqualDiffs', () => {
 
     expect(diffs).toEqual([
       {
+        pathString: '.a.props',
+        prevValue: {},
+        nextValue: {},
+        diffType: diffTypes.deepEquals
+      },
+      {
+        pathString: '.a',
+        prevValue: prevValue.a,
+        nextValue: nextValue.a,
+        diffType: diffTypes.reactElement
+      },
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.deepEquals
+      }
+    ])
+  })
+
+  test('react class pure component instance', () => {
+    class MyComponent extends React.PureComponent{
+      render(){
+        return <div>hi!</div>
+      }
+    }
+
+    const tooltip = <MyComponent/>
+    const tooltip2 = <MyComponent/>
+
+    const prevValue = {a: tooltip}
+    const nextValue = {a: tooltip2}
+
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
+
+    expect(diffs).toEqual([
+      {
+        pathString: '.a.props',
+        prevValue: {},
+        nextValue: {},
+        diffType: diffTypes.deepEquals
+      },
+      {
         pathString: '.a',
         prevValue: prevValue.a,
         nextValue: nextValue.a,
@@ -288,6 +337,47 @@ describe('calculateDeepEqualDiffs', () => {
     const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
     expect(diffs).toEqual([
+      {
+        pathString: '.a.props',
+        prevValue: {},
+        nextValue: {},
+        diffType: diffTypes.deepEquals
+      },
+      {
+        pathString: '.a',
+        prevValue: prevValue.a,
+        nextValue: nextValue.a,
+        diffType: diffTypes.reactElement
+      },
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.deepEquals
+      }
+    ])
+  })
+
+  test('react memoized functional component instance', () => {
+    const MyFunctionalComponent = React.memo(() => (
+      <div>hi!</div>
+    ))
+
+    const tooltip = <MyFunctionalComponent a={1}/>
+    const tooltip2 = <MyFunctionalComponent a={1}/>
+
+    const prevValue = {a: tooltip}
+    const nextValue = {a: tooltip2}
+
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
+
+    expect(diffs).toEqual([
+      {
+        pathString: '.a.props',
+        prevValue: {a: 1},
+        nextValue: {a: 1},
+        diffType: diffTypes.deepEquals
+      },
       {
         pathString: '.a',
         prevValue: prevValue.a,
@@ -363,6 +453,12 @@ describe('calculateDeepEqualDiffs', () => {
     const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
     expect(diffs).toEqual([
+      {
+        pathString: '.b[0].tooltip.props',
+        prevValue: {children: 'hi'},
+        nextValue: {children: 'hi'},
+        diffType: diffTypes.deepEquals
+      },
       {
         pathString: '.b[0].tooltip',
         prevValue: prevValue.b[0].tooltip,

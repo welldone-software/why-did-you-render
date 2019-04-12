@@ -63,9 +63,18 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
   }
 
   if(isReactElement(a) && isReactElement(b)){
-    return a.type === b.type ?
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.reactElement) :
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+    if(a.type !== b.type){
+      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+    }
+
+    else{
+      const reactElementPropsAreDeepEqual =
+        accumulateDeepEqualDiffs(a.props, b.props, diffsAccumulator, `${pathString}.props`)
+
+      return reactElementPropsAreDeepEqual ?
+        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.reactElement) :
+        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+    }
   }
 
   if(isFunction(a) && isFunction(b)){

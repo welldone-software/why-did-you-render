@@ -19,6 +19,7 @@ import useReducer from './hooks/useReducer'
 import useContext from './hooks/useContext'
 import useMemo from './hooks/useMemo'
 import strict from './strict'
+import reactRedux from './reactRedux'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -38,7 +39,8 @@ const demosList = {
   useReducer,
   useContext,
   useMemo,
-  strict
+  strict,
+  reactRedux
 }
 
 const defaultDemoName = 'bigList'

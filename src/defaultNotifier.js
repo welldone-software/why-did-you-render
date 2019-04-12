@@ -46,7 +46,7 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
     options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`)
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
       options.consoleGroup(
-        `%c${diffObjType === 'hook' ? `hook ${hookName} ` : `${diffObjType}.`}%c${pathString}%c`,
+        `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
         `color:${options.diffNameColor};`, `color:${options.diffPathColor};`, 'color:default;'
       )
       options.consoleLog(
