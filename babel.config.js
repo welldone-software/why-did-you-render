@@ -2,8 +2,10 @@
 const compact = require('lodash/compact')
 
 module.exports = function(api){
-  const isDevelopment = api.env('development')
-  const isTest = api.env('test')
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  const isTest = process.env.TEST === 'true'
+
+  api.cache(false)
 
   const presets = [
     ['@babel/preset-env', {
@@ -16,9 +18,9 @@ module.exports = function(api){
   ]
 
   const plugins = compact([
-    isDevelopment && 'react-hot-loader/babel',
+    (isDevelopment && !isTest) && 'react-hot-loader/babel',
     'babel-plugin-lodash',
-    (isDevelopment || isTest) && '@babel/plugin-proposal-class-properties'
+    isDevelopment && '@babel/plugin-proposal-class-properties'
   ])
 
   return {presets, plugins}

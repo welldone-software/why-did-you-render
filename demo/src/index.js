@@ -18,6 +18,7 @@ import useState from './hooks/useState'
 import useReducer from './hooks/useReducer'
 import useContext from './hooks/useContext'
 import useMemo from './hooks/useMemo'
+import strict from './strict'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -36,7 +37,8 @@ const demosList = {
   useState,
   useReducer,
   useContext,
-  useMemo
+  useMemo,
+  strict
 }
 
 const defaultDemoName = 'bigList'

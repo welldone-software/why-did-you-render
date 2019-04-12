@@ -489,4 +489,66 @@ describe('index', () => {
 
     expect(updateInfos).toHaveLength(0)
   })
+
+  test('Strict mode- no props change', () => {
+    const Main = props => (
+      <React.StrictMode>
+        <FunctionalTestComponent {...props}/>
+      </React.StrictMode>
+    )
+    const testRenderer = TestRenderer.create(
+      <Main a={1}/>
+    )
+
+    testRenderer.update(
+      <Main a={1}/>
+    )
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+  })
+
+  test('Strict mode- props change', () => {
+    const Main = props => (
+      <React.StrictMode>
+        <TestComponent {...props}/>
+      </React.StrictMode>
+    )
+
+    const testRenderer = TestRenderer.create(
+      <Main a={{b: 'c'}}/>
+    )
+
+    testRenderer.update(
+      <Main a={{b: 'd'}}/>
+    )
+
+    return Promise.resolve()
+      .then(() => {
+        expect(updateInfos).toHaveLength(1)
+        expect(updateInfos[0].reason).toEqual({
+          propsDifferences: [
+            {
+              pathString: 'a.b',
+              diffType: diffTypes.different,
+              prevValue: 'c',
+              nextValue: 'd'
+            },
+            {
+              pathString: 'a',
+              diffType: diffTypes.different,
+              prevValue: {b: 'c'},
+              nextValue: {b: 'd'}
+            }
+          ],
+          stateDifferences: false,
+          hookDifferences: false
+        })
+      })
+
+  })
 })
