@@ -1,24 +1,25 @@
 import React, {useState, useLayoutEffect} from 'react'
+import {cloneDeep} from 'lodash'
 import TestRenderer from 'react-test-renderer'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
 
 describe('do not track hooks', () => {
-  let updateInfos = []
-
-  beforeEach(() => {
-    updateInfos = []
-    whyDidYouRender(React, {
-      notifier: updateInfo => updateInfos.push(updateInfo),
-      trackHooks: false
-    })
-  })
-
-  afterEach(() => {
-    React.__REVERT_WHY_DID_YOU_RENDER__()
-  })
-
   describe('simple component with hooks', () => {
+    let updateInfos = []
+
+    beforeEach(() => {
+      updateInfos = []
+      whyDidYouRender(React, {
+        notifier: updateInfo => updateInfos.push(updateInfo),
+        trackHooks: false
+      })
+    })
+
+    afterEach(() => {
+      React.__REVERT_WHY_DID_YOU_RENDER__()
+    })
+
     test('do no track component', () => {
       const ComponentWithHooks = ({a}) => {
         const [currentState] = React.useState({b: 'b'})
@@ -93,6 +94,43 @@ describe('do not track hooks', () => {
 
       expect(updateInfos).toHaveLength(0)
       expect(effectCalled).toBeTruthy()
+    })
+  })
+
+  describe('when Hooks api is not available', () => {
+    let updateInfos = []
+    let ReactOld = cloneDeep(React)
+
+    beforeEach(() => {
+      updateInfos = []
+      ReactOld.version = '16.7' 
+      whyDidYouRender(ReactOld, {
+        notifier: updateInfo => updateInfos.push(updateInfo),
+        trackHooks: true
+      })
+    })
+
+    afterEach(() => {
+      ReactOld.__REVERT_WHY_DID_YOU_RENDER__()
+    })
+    
+    test('do no track component', () => {
+      const ComponentWithHooks = ({a}) => {
+        const [currentState] = React.useState({b: 'b'})
+
+        return (
+          <div>hi! {a} {currentState.b}</div>
+        )
+      }
+
+      const testRenderer = TestRenderer.create(
+        <ComponentWithHooks a={1}/>
+      )
+      testRenderer.update(
+        <ComponentWithHooks a={2}/>
+      )
+
+      expect(updateInfos).toHaveLength(0)
     })
   })
 })
