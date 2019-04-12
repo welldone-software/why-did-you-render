@@ -224,8 +224,9 @@ export default function whyDidYouRender(React, userOptions){
   Object.assign(React.createFactory, origCreateFactory)
 
   let origHooks
-
-  if(options.trackHooks){
+	const hasHooksVersion = parseInt(React.version.split('.').slice(0, 2).join('')) >= 168
+	
+  if(hasHooksVersion && React.useState && options.trackHooks){
     const patchedHooks = mapValues(hooksConfig, (hookConfig, hookName) => {
       return (...args) => {
         const origHook = origHooks[hookName]

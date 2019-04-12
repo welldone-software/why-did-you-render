@@ -17,6 +17,11 @@ You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
 Common fixing scenarios this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
 
 ## Part 3 - Hooks
+
+Hooks wasn't available in React versions below the `16.8.0` version. This feature started to be developed in earliers versions.
+However, to avoid instabilities and issues with unnoficial release of Hooks. The minimum version to use this feature is `>= 16.8.0`.
+If you pass `trackHooks: true`(**default**) in the options, it will check your React version too.
+
 Understand and fix hook issues [>> HERE <<](http://bit.ly/wdyr3).
 
 ## Sandbox
