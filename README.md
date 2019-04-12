@@ -31,7 +31,7 @@ or
 yarn add @welldone-software/why-did-you-render
 ```
 
-> *Notice: the required React version to use the library is **>=16.8***
+> *Notice: the required **React version** for the library is **>=16.8** but it might work with older versions by using `trackHooks: false` in `whyDidYouRender`'s init options.*
 
 ## Installation
 Execute `whyDidYouRender` with `React` as it's first argument.
