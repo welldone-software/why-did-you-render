@@ -11,7 +11,7 @@ Provider = Provider.default
 export default {
   description: 'React Redux',
   fn({domElement, whyDidYouRender}){
-    whyDidYouRender(React)
+    whyDidYouRender(React, {include: [/^ConnectFunction$/]})
 
     const initialState = {a: {b: 'c'}}
 
@@ -48,8 +48,6 @@ export default {
         sameObj: () => ({type: 'sameObj'})
       })
     )(SimpleComponent)
-
-    ConnectedSimpleComponent.whyDidYouRender = true
 
     const Main = () => (
       <Provider store={store}>
