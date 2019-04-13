@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const compact = require('lodash/compact')
 
 module.exports = function(api){

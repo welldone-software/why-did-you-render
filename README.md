@@ -11,13 +11,10 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Read More
-You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
-
-## Part 2 - Common Fixing Scenarios
-Common fixing scenarios this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
-
-## Part 3 - Hooks
-Understand and fix hook issues [>> HERE <<](http://bit.ly/wdyr3).
+* You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
+* Part 2 - **Common fixing scenarios** this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
+* Part 3 - **React Hooks** - Understand and fix hooks issues [>> HERE <<](http://bit.ly/wdyr3).
+* Part 4 - **React-Redux** - Understand and fix react-redux issues [>> HERE <<](http://bit.ly/wdyr04).
 
 ## Sandbox
 You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
@@ -141,8 +138,10 @@ You can include or exclude tracking for re-renders for components
 by their displayName with the `include` and `exclude` options.
 
 *Notice: **exclude** takes priority over both `include` and `whyDidYouRender` statics on components.*
+
+For example, the following code is used to [track all redundant re-renders that are caused by React-Redux](http://bit.ly/wdyr04):
 ```js
-whyDidYouRender(React, { include: [/^pure/], exclude: [/^Connect/] });
+whyDidYouRender(React, { include: [/^ConnectFunction/] });
 ```
 
 #### trackHooks
