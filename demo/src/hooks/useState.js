@@ -21,6 +21,10 @@ export default {
     }
     BrokenHooksComponent.whyDidYouRender = true
 
+    const BrokenHooksPureComponent = React.memo(BrokenHooksComponent)
+    BrokenHooksPureComponent.displayName = 'BrokenHooksPureComponent'
+    BrokenHooksPureComponent.whyDidYouRender = true
+
     function CorrectHooksComponent(){
       console.log('render CorrectHooksComponent')
       const [num, setNum] = React.useState(0)
@@ -64,10 +68,19 @@ export default {
     function Main(){
       return (
         <div>
+          BrokenHooksPureComponent
+          <BrokenHooksPureComponent />
+          <br />
+          <br />
+          BrokenHooksComponent
           <BrokenHooksComponent />
           <br />
+          <br />
+          CorrectHooksComponent
           <CorrectHooksComponent />
           <br />
+          <br />
+          SmartHooksComponent
           <SmartHooksComponent />
         </div>
       )

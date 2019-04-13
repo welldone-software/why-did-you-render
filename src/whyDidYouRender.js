@@ -74,6 +74,7 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
   }
 
   WDYRFunctionalComponent.displayName = displayName
+  WDYRFunctionalComponent.ComponentForHooksTracking = FunctionalComponent
   defaults(WDYRFunctionalComponent, FunctionalComponent)
 
   return WDYRFunctionalComponent
