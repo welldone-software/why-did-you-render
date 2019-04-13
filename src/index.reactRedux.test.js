@@ -144,7 +144,7 @@ describe('react-redux', () => {
       </Provider>
     )
 
-    const tester = rtl.render(<Main/>)
+    rtl.render(<Main/>)
 
     expect(store.getState().a.b).toBe('c')
 
@@ -153,7 +153,6 @@ describe('react-redux', () => {
     })
 
     expect(store.getState().a.b).toBe('c')
-    expect(tester.getByTestId('foo')).toHaveTextContent('c')
 
     expect(updateInfos).toHaveLength(4)
     expect(updateInfos[0].reason).toEqual({
@@ -199,6 +198,13 @@ describe('react-redux using include', () => {
       return cloneDeep(state)
     }
 
+    if(action.type === 'additionalObj'){
+      return {
+        ...state,
+        x: 'y'
+      }
+    }
+
     return state
   }
 
@@ -237,7 +243,7 @@ describe('react-redux using include', () => {
       </Provider>
     )
 
-    const tester = rtl.render(<Main/>)
+    rtl.render(<Main/>)
 
     expect(store.getState().a.b).toBe('c')
 
@@ -246,7 +252,6 @@ describe('react-redux using include', () => {
     })
 
     expect(store.getState().a.b).toBe('c')
-    expect(tester.getByTestId('foo')).toHaveTextContent('c')
 
     expect(updateInfos).toHaveLength(4)
     expect(updateInfos[0].reason).toEqual({
@@ -277,5 +282,98 @@ describe('react-redux using include', () => {
         expect.objectContaining({diffType: diffTypes.deepEquals})
       ])
     })
+  })
+
+  test('bad connect that re-creates objects', () => {
+    const SimpleComponent = ({c}) => (
+      <div data-testid="foo">
+        {c.a.b}
+      </div>
+    )
+
+    const ConnectedSimpleComponent = connect(
+      state => ({c: {a: state.a}})
+    )(SimpleComponent)
+
+    const Main = () => (
+      <Provider store={store}>
+        <ConnectedSimpleComponent/>
+      </Provider>
+    )
+
+    rtl.render(<Main/>)
+
+    expect(store.getState().a.b).toBe('c')
+
+    rtl.act(() => {
+      store.dispatch({type: 'additionalObj'})
+    })
+
+    expect(store.getState().a.b).toBe('c')
+    expect(store.getState().x).toBe('y')
+
+    expect(updateInfos).toHaveLength(4)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: expect.not.arrayContaining([
+        expect.objectContaining({diffType: diffTypes.deepEquals})
+      ])
+    })
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: expect.arrayContaining([
+        expect.objectContaining({
+          diffType: diffTypes.deepEquals,
+          pathString: '.c'
+        })
+      ])
+    })
+    expect(updateInfos[2].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: expect.arrayContaining([
+        expect.objectContaining({diffType: diffTypes.deepEquals})
+      ])
+    })
+    expect(updateInfos[3].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: expect.arrayContaining([
+        expect.objectContaining({diffType: diffTypes.deepEquals})
+      ])
+    })
+  })
+
+  test('right connect that doesn\'t re-creates objects', () => {
+    const SimpleComponent = ({a}) => (
+      <div data-testid="foo">
+        {a.b}
+      </div>
+    )
+
+    const ConnectedSimpleComponent = connect(
+      state => ({a: state.a})
+    )(SimpleComponent)
+
+    const Main = () => (
+      <Provider store={store}>
+        <ConnectedSimpleComponent/>
+      </Provider>
+    )
+
+    rtl.render(<Main/>)
+
+    expect(store.getState().a.b).toBe('c')
+
+    rtl.act(() => {
+      store.dispatch({type: 'additionalObj'})
+    })
+
+    expect(store.getState().a.b).toBe('c')
+    expect(store.getState().x).toBe('y')
+
+    expect(updateInfos).toHaveLength(0)
   })
 })
