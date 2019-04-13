@@ -19,6 +19,8 @@ module.exports = {
       exclude: 'node_modules/**'
     }),
     node_resolve(),
-    commonjs()
+    commonjs({
+      exclude: ['node_modules/react-redux/**']
+    })
   ]
 }

@@ -1,4 +1,4 @@
-import {defaults, omit, get, mapValues} from 'lodash'
+import {defaults, get, mapValues} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -80,7 +80,9 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
 }
 
 function patchMemoComponent(MemoComponent, displayName, React, options){
-  function InnerWDYRMemoizedFunctionalComponent(nextProps){
+  const {type: WrappedFunctionalComponent} = MemoComponent
+
+  function WDYRWrappedByMemoFunctionalComponent(nextProps){
     const ref = React.useRef()
 
     const prevProps = ref.current
@@ -102,15 +104,14 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
       }
     }
 
-    return MemoComponent.type(nextProps)
+    return WrappedFunctionalComponent(nextProps)
   }
 
-  const WDYRMemoizedFunctionalComponent = React.memo(InnerWDYRMemoizedFunctionalComponent)
+  WDYRWrappedByMemoFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)
+  WDYRWrappedByMemoFunctionalComponent.ComponentForHooksTracking = MemoComponent
+  defaults(WDYRWrappedByMemoFunctionalComponent, WrappedFunctionalComponent)
 
-  const MemoComponentExtra = omit(MemoComponent, Object.keys(WDYRMemoizedFunctionalComponent))
-
-  InnerWDYRMemoizedFunctionalComponent.displayName = displayName
-  defaults(InnerWDYRMemoizedFunctionalComponent, MemoComponentExtra)
+  const WDYRMemoizedFunctionalComponent = React.memo(WDYRWrappedByMemoFunctionalComponent, MemoComponent.compare)
 
   WDYRMemoizedFunctionalComponent.displayName = displayName
   defaults(WDYRMemoizedFunctionalComponent, MemoComponent)
@@ -121,7 +122,9 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
   const nextHook = hookResult
 
-  const Component = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
+  const ComponentHookDispatchedFrom = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
+
+  const Component = ComponentHookDispatchedFrom.ComponentForHooksTracking || ComponentHookDispatchedFrom
   const displayName = getDisplayName(Component)
 
   const isShouldTrack = shouldTrack(Component, displayName, options)
