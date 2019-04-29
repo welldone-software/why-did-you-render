@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 
-`why-did-you-render` monkey patches `React` to notify you about avoidable re-renders.
+`why-did-you-render` monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
 
 For example, when you pass `style={{width: '100%'}}` to a big pure component and make it always re-render:
 
