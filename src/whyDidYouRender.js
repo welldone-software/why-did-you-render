@@ -123,9 +123,13 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
   const nextHook = hookResult
 
-  const ComponentHookDispatchedFrom = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current.type
+  const ComponentHookDispatchedFromInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
 
-  const Component = ComponentHookDispatchedFrom.ComponentForHooksTracking || ComponentHookDispatchedFrom
+  if(!ComponentHookDispatchedFromInstance){
+    return nextHook
+  }
+
+  const Component = ComponentHookDispatchedFromInstance.type.ComponentForHooksTracking || ComponentHookDispatchedFromInstance.type
   const displayName = getDisplayName(Component)
 
   const isShouldTrack = shouldTrack(Component, displayName, options)
