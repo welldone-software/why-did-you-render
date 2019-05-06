@@ -81,7 +81,7 @@ function patchFunctionalComponent(FunctionalComponent, displayName, React, optio
 }
 
 function patchMemoComponent(MemoComponent, displayName, React, options){
-  const {type: WrappedFunctionalComponent} = MemoComponent
+  const {type: WrappedFunctionalComponent = MemoComponent} = MemoComponent
 
   function WDYRWrappedByMemoFunctionalComponent(nextProps){
     const ref = React.useRef()
