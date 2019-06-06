@@ -2,7 +2,7 @@ import React from 'react'
 import {createStore} from 'redux'
 import {connect, Provider} from 'react-redux'
 import {cloneDeep} from 'lodash'
-import * as rtl from 'react-testing-library'
+import * as rtl from '@testing-library/react'
 import 'jest-dom/extend-expect'
 import {diffTypes} from './consts'
 
