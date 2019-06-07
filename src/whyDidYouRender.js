@@ -12,9 +12,10 @@ function patchClassComponent(ClassComponent, displayName, React, options){
   class WDYRPatchedClassComponent extends ClassComponent{
     constructor(props, context){
       super(props, context)
-      const renderIsAnArrowFunction = this.render && !ClassComponent.prototype.render
-      if(renderIsAnArrowFunction){
-        const origRender = this.render
+      const origRender = super.render || this.render
+      // this probably means render is an arrow function or this.render.bind(this) was called on the original class
+      const renderIsABindedFunction = origRender !== ClassComponent.prototype.render
+      if(renderIsABindedFunction){
         this.render = () => {
           WDYRPatchedClassComponent.prototype.render.apply(this)
           return origRender()
@@ -37,7 +38,7 @@ function patchClassComponent(ClassComponent, displayName, React, options){
       this._prevProps = this.props
       this._prevState = this.state
 
-      return super.render && super.render()
+      return super.render ? super.render() : null
     }
   }
 
