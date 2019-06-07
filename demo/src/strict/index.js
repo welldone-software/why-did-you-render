@@ -10,10 +10,12 @@ export default {
 
     whyDidYouRender(React)
 
-    const ClassDemo = () => (
-      <div>Props Changes</div>
-    )
-    ClassDemo.whyDidYouRender = true
+    class ClassDemo extends React.Component{
+      static whyDidYouRender = true
+      render(){
+        return <div>Props Changes</div>
+      }
+    }
 
     const Main = props => (
       <React.StrictMode>

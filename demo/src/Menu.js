@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactHotLoader from 'react-hot-loader'
 
 let Menu = ({children}) => (
   <div>
@@ -13,7 +12,5 @@ let Menu = ({children}) => (
     </ul>
   </div>
 )
-
-Menu = ReactHotLoader.hot(module)(Menu)
 
 export default Menu

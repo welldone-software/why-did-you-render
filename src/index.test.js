@@ -72,6 +72,19 @@ describe('index', () => {
     })
   })
 
+  test('dont swallow errors', () => {
+    const BrokenComponent = React.memo(null)
+    BrokenComponent.whyDidYouRender = true
+
+    const mountBrokenComponent = () => {
+      rtl.render(
+        <BrokenComponent/>
+      )
+    }
+
+    expect(mountBrokenComponent).toThrowError('Cannot read property \'propTypes\' of null')
+  })
+
   test('Same props', () => {
     const {rerender} = rtl.render(
       <TestComponent a={1}/>

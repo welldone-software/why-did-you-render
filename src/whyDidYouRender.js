@@ -214,27 +214,45 @@ export default function whyDidYouRender(React, userOptions){
   let componentsMap = new WeakMap()
 
   React.createElement = function(componentNameOrComponent, ...rest){
-    const isShouldTrack = (
-      (
-        typeof componentNameOrComponent === 'function' ||
-        componentNameOrComponent.$$typeof === REACT_MEMO_TYPE
-      ) &&
-      shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
-    )
+    let isShouldTrack = null
+    let displayName = null
+    let WDYRPatchedComponent = null
 
-    if(!isShouldTrack){
-      return origCreateElement.apply(React, [componentNameOrComponent, ...rest])
+    try{
+      isShouldTrack = (
+        (
+          typeof componentNameOrComponent === 'function' ||
+          componentNameOrComponent.$$typeof === REACT_MEMO_TYPE
+        ) &&
+        shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
+      )
+
+      if(isShouldTrack){
+        displayName = (
+          componentNameOrComponent &&
+          componentNameOrComponent.whyDidYouRender &&
+          componentNameOrComponent.whyDidYouRender.customName ||
+          getDisplayName(componentNameOrComponent)
+        )
+
+        WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options)
+        return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
+      }
+    }
+    catch(e){
+      options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
+        errorInfo: {
+          componentNameOrComponent,
+          rest,
+          options,
+          isShouldTrack,
+          displayName,
+          WDYRPatchedComponent
+        }
+      })
     }
 
-    const displayName = (
-      componentNameOrComponent &&
-      componentNameOrComponent.whyDidYouRender &&
-      componentNameOrComponent.whyDidYouRender.customName ||
-      getDisplayName(componentNameOrComponent)
-    )
-
-    const WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options)
-    return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
+    return origCreateElement.apply(React, [componentNameOrComponent, ...rest])
   }
 
   Object.assign(React.createElement, origCreateElement)
