@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react'
-import TestRenderer from 'react-test-renderer'
+import * as rtl from '@testing-library/react'
 import createReactClass from 'create-react-class'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
@@ -50,10 +50,10 @@ describe('index', () => {
   })
 
   test('Empty props and state', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <TestComponent/>
     )
-    testRenderer.update(
+    rerender(
       <TestComponent/>
     )
 
@@ -66,10 +66,10 @@ describe('index', () => {
   })
 
   test('Same props', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <TestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <TestComponent a={1}/>
     )
 
@@ -83,7 +83,7 @@ describe('index', () => {
 
   test('Same state', () => {
     const StateTestComponent = createStateTestComponent({a: 1}, {a: 1})
-    TestRenderer.create(
+    rtl.render(
       <StateTestComponent/>
     )
 
@@ -99,10 +99,10 @@ describe('index', () => {
   })
 
   test('Props change', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <TestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <TestComponent a={2}/>
     )
 
@@ -125,10 +125,10 @@ describe('index', () => {
     )
     InlineComponent.whyDidYouRender = true
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <InlineComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <InlineComponent a={2}/>
     )
 
@@ -157,10 +157,10 @@ describe('index', () => {
       }
     }
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <OwnTestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <OwnTestComponent a={2}/>
     )
 
@@ -178,7 +178,7 @@ describe('index', () => {
     expect(updateInfos).toHaveLength(1)
   })
 
-  test('With render as a binded function', () => {
+  test('With render as an arrow function', () => {
     class OwnTestComponent extends React.Component{
       static whyDidYouRender = true
       componentDidMount(){
@@ -189,7 +189,7 @@ describe('index', () => {
       }
     }
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <OwnTestComponent a={1}/>
     )
 
@@ -204,7 +204,55 @@ describe('index', () => {
       hookDifferences: false
     })
 
-    testRenderer.update(
+    rerender(
+      <OwnTestComponent a={2}/>
+    )
+
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.different,
+        prevValue: 1,
+        nextValue: 2
+      }],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+
+    expect(updateInfos).toHaveLength(2)
+  })
+
+  test('With render as a binded function', () => {
+    class OwnTestComponent extends React.Component{
+      static whyDidYouRender = true
+      constructor(props, context){
+        super(props, context)
+        this.render = this.render.bind(this)
+      }
+      componentDidMount(){
+        this.setState({c: 'c'})
+      }
+      render(){
+        return <div>hi!</div>
+      }
+    }
+
+    const {rerender} = rtl.render(
+      <OwnTestComponent a={1}/>
+    )
+
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: [{
+        diffType: diffTypes.different,
+        nextValue: 'c',
+        pathString: 'c',
+        prevValue: undefined
+      }],
+      hookDifferences: false
+    })
+
+    rerender(
       <OwnTestComponent a={2}/>
     )
 
@@ -236,10 +284,10 @@ describe('index', () => {
       }
     }
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <OwnTestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <OwnTestComponent a={1}/>
     )
 
@@ -262,10 +310,10 @@ describe('index', () => {
       }
     }
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <OwnTestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <OwnTestComponent a={1}/>
     )
 
@@ -283,10 +331,10 @@ describe('index', () => {
 
     CreateReactClassComponent.whyDidYouRender = true
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <CreateReactClassComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <CreateReactClassComponent a={2}/>
     )
 
@@ -317,10 +365,10 @@ describe('index', () => {
 
     CreateReactClassComponent.whyDidYouRender = true
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <CreateReactClassComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <CreateReactClassComponent a={2}/>
     )
 
@@ -341,10 +389,10 @@ describe('index', () => {
   test('Element created with "createFactory"', () => {
     const TestComponentElementCreator = React.createFactory(TestComponent)
 
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       TestComponentElementCreator({a: 1})
     )
-    testRenderer.update(
+    rerender(
       TestComponentElementCreator({a: 1})
     )
 
@@ -361,8 +409,8 @@ describe('index', () => {
     const testElement = <TestComponent a={1}/>
     const testElement2 = React.cloneElement(testElement)
 
-    const testRenderer = TestRenderer.create(testElement)
-    testRenderer.update(testElement2)
+    const {rerender} = rtl.render(testElement)
+    rerender(testElement2)
 
     expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
@@ -373,7 +421,7 @@ describe('index', () => {
   })
 
   test('Several class components', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <>
         <TestComponent/>
         <TestComponent a={{a: 'a'}}/>
@@ -381,7 +429,7 @@ describe('index', () => {
       </>
     )
 
-    testRenderer.update(
+    rerender(
       <>
         <TestComponent/>
         <TestComponent a={{a: 'a'}}/>
@@ -416,7 +464,7 @@ describe('index', () => {
   })
 
   test('Several functional components', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <>
         <FunctionalTestComponent/>
         <FunctionalTestComponent a={{a: 'a'}}/>
@@ -424,7 +472,7 @@ describe('index', () => {
       </>
     )
 
-    testRenderer.update(
+    rerender(
       <>
         <FunctionalTestComponent/>
         <FunctionalTestComponent a={{a: 'a'}}/>
@@ -459,10 +507,10 @@ describe('index', () => {
   })
 
   test('Component memoized with React.memo', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <ReactMemoTestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <ReactMemoTestComponent a={2}/>
     )
 
@@ -480,10 +528,10 @@ describe('index', () => {
   })
 
   test('Component memoized with React.memo - no change', () => {
-    const testRenderer = TestRenderer.create(
+    const {rerender} = rtl.render(
       <ReactMemoTestComponent a={1}/>
     )
-    testRenderer.update(
+    rerender(
       <ReactMemoTestComponent a={1}/>
     )
 
@@ -491,16 +539,20 @@ describe('index', () => {
   })
 
   test('Strict mode- no props change', () => {
-    const Main = props => (
-      <React.StrictMode>
-        <FunctionalTestComponent {...props}/>
-      </React.StrictMode>
-    )
-    const testRenderer = TestRenderer.create(
+    const Main = props => {
+      return (
+        <React.StrictMode>
+          <div>
+            <FunctionalTestComponent {...props}/>
+          </div>
+        </React.StrictMode>
+      )
+    }
+    const {rerender} = rtl.render(
       <Main a={1}/>
     )
 
-    testRenderer.update(
+    rerender(
       <Main a={1}/>
     )
 
@@ -512,43 +564,68 @@ describe('index', () => {
     })
   })
 
+  test('Strict mode- memo', () => {
+    const Main = props => {
+      return (
+        <React.StrictMode>
+          <div>
+            <ReactMemoTestComponent {...props}/>
+          </div>
+        </React.StrictMode>
+      )
+    }
+    const {rerender} = rtl.render(
+      <Main a={1} b={[]}/>
+    )
+
+    rerender(
+      <Main a={1} b={[]}/>
+    )
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [{
+        diffType: diffTypes.deepEquals,
+        prevValue: [],
+        nextValue: [],
+        pathString: 'b'
+      }],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+  })
+
   test('Strict mode- props change', () => {
-    const Main = props => (
+    const {rerender} = rtl.render(
       <React.StrictMode>
-        <TestComponent {...props}/>
+        <TestComponent a={{b: 'c'}}/>
       </React.StrictMode>
     )
 
-    const testRenderer = TestRenderer.create(
-      <Main a={{b: 'c'}}/>
+    rerender(
+      <React.StrictMode>
+        <TestComponent a={{b: 'd'}}/>
+      </React.StrictMode>
     )
 
-    testRenderer.update(
-      <Main a={{b: 'd'}}/>
-    )
-
-    return Promise.resolve()
-      .then(() => {
-        expect(updateInfos).toHaveLength(1)
-        expect(updateInfos[0].reason).toEqual({
-          propsDifferences: [
-            {
-              pathString: 'a.b',
-              diffType: diffTypes.different,
-              prevValue: 'c',
-              nextValue: 'd'
-            },
-            {
-              pathString: 'a',
-              diffType: diffTypes.different,
-              prevValue: {b: 'c'},
-              nextValue: {b: 'd'}
-            }
-          ],
-          stateDifferences: false,
-          hookDifferences: false
-        })
-      })
-
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [
+        {
+          pathString: 'a.b',
+          diffType: diffTypes.different,
+          prevValue: 'c',
+          nextValue: 'd'
+        },
+        {
+          pathString: 'a',
+          diffType: diffTypes.different,
+          prevValue: {b: 'c'},
+          nextValue: {b: 'd'}
+        }
+      ],
+      stateDifferences: false,
+      hookDifferences: false
+    })
   })
 })

@@ -1,5 +1,5 @@
 import React, {useState, useLayoutEffect} from 'react'
-import TestRenderer from 'react-test-renderer'
+import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
 
@@ -28,16 +28,15 @@ describe('do not track hooks', () => {
         )
       }
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={2}/>
       )
 
       expect(updateInfos).toHaveLength(0)
     })
-
     test('track component', () => {
       const ComponentWithHooks = ({a}) => {
         const [currentState] = React.useState({b: 'b'})
@@ -49,10 +48,10 @@ describe('do not track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={2}/>
       )
 
@@ -87,7 +86,7 @@ describe('do not track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -133,7 +132,7 @@ describe('track hooks', () => {
 
     ComponentWithHooks.whyDidYouRender = true
 
-    TestRenderer.create(
+    rtl.render(
       <ComponentWithHooks a={1}/>
     )
 
@@ -151,10 +150,10 @@ describe('track hooks', () => {
         )
       }
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={2}/>
       )
 
@@ -172,10 +171,10 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={2}/>
       )
 
@@ -203,10 +202,10 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={2}/>
       )
 
@@ -245,7 +244,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -268,7 +267,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -300,7 +299,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -340,7 +339,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -412,7 +411,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -454,7 +453,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -485,7 +484,7 @@ describe('track hooks', () => {
 
       ComponentWithHooks.whyDidYouRender = true
 
-      TestRenderer.create(
+      rtl.render(
         <ComponentWithHooks a={1}/>
       )
 
@@ -533,7 +532,7 @@ describe('track hooks', () => {
         )
       }
 
-      TestRenderer.create(
+      rtl.render(
         <OuterComponent/>
       )
 
@@ -568,7 +567,7 @@ describe('track hooks', () => {
         )
       }
 
-      TestRenderer.create(
+      rtl.render(
         <OuterComponent/>
       )
 
@@ -613,7 +612,7 @@ describe('track hooks', () => {
         )
       }
 
-      TestRenderer.create(
+      rtl.render(
         <OuterComponent/>
       )
 
@@ -647,10 +646,10 @@ describe('track hooks', () => {
       }
       ComponentWithHooks.whyDidYouRender = true
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={1}/>
       )
 
@@ -672,10 +671,10 @@ describe('track hooks', () => {
       }
       ComponentWithHooks.whyDidYouRender = true
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={1}/>
       )
 
@@ -709,10 +708,10 @@ describe('track hooks', () => {
       }
       ComponentWithHooks.whyDidYouRender = true
 
-      const testRenderer = TestRenderer.create(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       )
-      testRenderer.update(
+      rerender(
         <ComponentWithHooks a={1}/>
       )
 
