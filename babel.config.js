@@ -19,7 +19,7 @@ module.exports = function(api){
   const plugins = compact([
     (isDevelopment && !isTest) && 'react-hot-loader/babel',
     'babel-plugin-lodash',
-    isDevelopment && '@babel/plugin-proposal-class-properties'
+    (isDevelopment || isTest) && '@babel/plugin-proposal-class-properties'
   ])
 
   return {presets, plugins}
