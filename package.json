@@ -34,12 +34,6 @@
   "jest": {
     "cacheDirectory": ".temp/jest-cache"
   },
-  "packageComments": {
-    "rollup-plugin-node-resolve@4.2.3": [
-      "version 5 is not compatible with nollup right now.",
-      "update this package when it fixed."
-    ]
-  },
   "dependencies": {
     "lodash": "^4"
   },
@@ -73,7 +67,7 @@
     "jest-cli": "^24.8.0",
     "jest-dom": "^3.5.0",
     "magic-string": "^0.25.2",
-    "nollup": "^0.6.1",
+    "nollup": "^0.6.2",
     "react": "^16.8.6",
     "react-dom": "npm:@hot-loader/react-dom@^16.8.6",
     "react-hot-loader": "^4.9.0",
@@ -85,7 +79,7 @@
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-commonjs-alternate": "^0.0.5",
     "rollup-plugin-license": "^0.9.0",
-    "rollup-plugin-node-resolve": "4.2.3",
+    "rollup-plugin-node-resolve": "^5.0.1",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.0.0"
   },
