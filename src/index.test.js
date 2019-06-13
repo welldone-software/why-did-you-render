@@ -46,6 +46,8 @@ const createStateTestComponent = (initialState, newState) => {
 describe('index', () => {
   let updateInfos = []
   beforeEach(() => {
+		jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn())
+		jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn())
     updateInfos = []
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo)
@@ -73,16 +75,18 @@ describe('index', () => {
   })
 
   test('dont swallow errors', () => {
-    const BrokenComponent = React.memo(null)
+		const BrokenComponent = React.memo(null)
     BrokenComponent.whyDidYouRender = true
 
-    const mountBrokenComponent = () => {
+		const mountBrokenComponent = () => {
       rtl.render(
         <BrokenComponent/>
       )
     }
 
-    expect(mountBrokenComponent).toThrowError('Cannot read property \'propTypes\' of null')
+    expect(mountBrokenComponent).toThrow('Cannot read property \'propTypes\' of null')
+		expect(console.error).toHaveBeenCalled()
+		expect(console.log).toHaveBeenCalled()
   })
 
   test('Same props', () => {
