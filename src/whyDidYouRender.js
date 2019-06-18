@@ -242,6 +242,7 @@ export default function whyDidYouRender(React, userOptions){
     catch(e){
       options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
         errorInfo: {
+          error: e,
           componentNameOrComponent,
           rest,
           options,
