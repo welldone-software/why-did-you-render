@@ -59,11 +59,11 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
   else if(differences){
     options.consoleLog(
       {[displayName]: Component},
-      `${prefixMessage} the ${diffObjType} object itself changed but it's values are all equal.`,
+      `${prefixMessage} the ${diffObjType} object itself changed but its values are all equal.`,
       diffObjType === 'props' ?
-        'This could of been avoided by making the component pure, or by preventing it\'s father from re-rendering.' :
-        'This usually means this component called setState when no changes in it\'s state actually occurred.',
-      `more info at ${moreInfoUrl}`
+        'This could have been avoided by making the component pure, or by preventing its father from re-rendering.' :
+        'This usually means this component called setState when no changes in its state actually occurred.',
+      `More info at ${moreInfoUrl}`
     )
     options.consoleLog(`prev ${diffObjType}:`, values.prev, ' !== ', values.next, `:next ${diffObjType}`)
   }
