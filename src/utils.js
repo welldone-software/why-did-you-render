@@ -5,7 +5,7 @@ const StrictMode = 0b010
 // notice: this is only used for class components. functional components doesn't re-rendered inside strict mode
 export function checkIfInsideAStrictModeTree(reactComponentInstance){
   let reactInternalFiber = reactComponentInstance._reactInternalFiber
-  while(reactInternalFiber !== null){
+  while(reactInternalFiber){
     if(reactInternalFiber.mode & StrictMode){
       return true
     }
