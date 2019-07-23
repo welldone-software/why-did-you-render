@@ -17,8 +17,7 @@ export default function normalizeOptions(userOptions = {}){
 
   const notifier = userOptions.notifier || (
     createDefaultNotifier(
-      userOptions.hasOwnProperty('hotReloadBufferMs') ?
-        userOptions.hotReloadBufferMs : 500
+      ('hotReloadBufferMs' in userOptions) ? userOptions.hotReloadBufferMs : 500
     )
   )
 

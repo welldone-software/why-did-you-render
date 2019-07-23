@@ -3,7 +3,7 @@ import {createStore} from 'redux'
 import {connect, Provider} from 'react-redux'
 import {cloneDeep} from 'lodash'
 import * as rtl from '@testing-library/react'
-import 'jest-dom/extend-expect'
+import '@testing-library/jest-dom/extend-expect'
 import {diffTypes} from './consts'
 
 import whyDidYouRender from './index'
