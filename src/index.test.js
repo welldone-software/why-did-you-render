@@ -779,4 +779,36 @@ describe('index', () => {
       hookDifferences: false
     })
   })
+
+  test('forward ref + memo', () => {
+    const MyComponent = React.forwardRef(() => {
+      return <div>My component!!!</div>
+    })
+
+    const MyMemoizedComponent = React.memo(MyComponent)
+
+    MyMemoizedComponent.whyDidYouRender = true
+
+    const {rerender} = rtl.render(
+      <MyMemoizedComponent a={[]}/>
+    )
+
+    rerender(
+      <MyMemoizedComponent a={[]}/>
+    )
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [
+        {
+          pathString: 'a',
+          diffType: diffTypes.deepEquals,
+          prevValue: [],
+          nextValue: []
+        }
+      ],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+  })
 })
