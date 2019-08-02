@@ -3,12 +3,13 @@ import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from '../index'
 import {diffTypes} from '../consts'
+import errorOnConsoleOutput from '../utils/errorOnConsoleOutput'
 
-describe('index', () => {
+describe('patch component with forward ref', () => {
+  errorOnConsoleOutput()
+
   let updateInfos = []
   beforeEach(() => {
-    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn())
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn())
     updateInfos = []
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo)

@@ -1,6 +1,6 @@
 {
   "name": "@welldone-software/why-did-you-render",
-  "version": "3.3.0",
+  "version": "3.3.1-alpha.0",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
   "main": "dist/cjs/whyDidYouRender.min.js",
   "types": "src/whyDidYouRender.d.ts",
@@ -33,7 +33,7 @@
     }
   },
   "jest": {
-    "cacheDirectory": ".temp/jest-cache"
+    "cacheDirectory": ".cache/jest-cache"
   },
   "dependencies": {
     "lodash": "^4"
@@ -83,7 +83,8 @@
     "rollup-plugin-license": "^0.10.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-terser": "^5.1.1"
+    "rollup-plugin-terser": "^5.1.1",
+    "styled-components": "^4.3.2"
   },
   "authors": [
     "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"
