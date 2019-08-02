@@ -6,8 +6,10 @@ import getUpdateInfo from './getUpdateInfo'
 import shouldTrack from './shouldTrack'
 import {checkIfInsideAStrictModeTree} from './utils'
 
+// copied from packages/shared/ReactSymbols.js in https://github.com/facebook/react
 const hasSymbol = typeof Symbol === 'function' && Symbol.for
 const REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3
+const REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0
 
 function patchClassComponent(ClassComponent, displayName, React, options){
   class WDYRPatchedClassComponent extends ClassComponent{
@@ -136,6 +138,48 @@ function patchMemoComponent(MemoComponent, displayName, React, options){
   return WDYRMemoizedFunctionalComponent
 }
 
+function patchReactForwardRef(ForwardRefComponent, displayName, React, options){
+  const {render: WrappedFunctionalComponent} = ForwardRefComponent
+
+  //debugger
+
+  function WDYRWrappedByReactForwardRefFunctionalComponent(nextProps, refFn){
+    const ref = React.useRef()
+
+    const prevProps = ref.current
+    ref.current = nextProps
+
+    if(prevProps){
+      const notification = getUpdateInfo({
+        Component: ForwardRefComponent,
+        displayName,
+        prevProps,
+        nextProps,
+        options
+      })
+
+      // if a memoized functional component re-rendered without props change / prop values change
+      // it was probably caused by a hook and we should not care about it
+      if(notification.reason.propsDifferences && notification.reason.propsDifferences.length > 0){
+        options.notifier(notification)
+      }
+    }
+
+    return WrappedFunctionalComponent(nextProps, refFn)
+  }
+
+  WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)
+  WDYRWrappedByReactForwardRefFunctionalComponent.ComponentForHooksTracking = WrappedFunctionalComponent
+  defaults(WDYRWrappedByReactForwardRefFunctionalComponent, WrappedFunctionalComponent)
+
+  const WDYRMemoizedFunctionalComponent = React.forwardRef(WDYRWrappedByReactForwardRefFunctionalComponent)
+
+  WDYRMemoizedFunctionalComponent.displayName = displayName
+  defaults(WDYRMemoizedFunctionalComponent, ForwardRefComponent)
+
+  return WDYRMemoizedFunctionalComponent
+}
+
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
   const nextHook = hookResult
 
@@ -180,6 +224,10 @@ function createPatchedComponent(componentsMap, Component, displayName, React, op
     return patchMemoComponent(Component, displayName, React, options)
   }
 
+  if(Component.$$typeof === REACT_FORWARD_REF_TYPE){
+    return patchReactForwardRef(Component, displayName, React, options)
+  }
+
   if(Component.prototype && Component.prototype.isReactComponent){
     return patchClassComponent(Component, displayName, React, options)
   }
@@ -222,7 +270,8 @@ export default function whyDidYouRender(React, userOptions){
       isShouldTrack = (
         (
           typeof componentNameOrComponent === 'function' ||
-          componentNameOrComponent.$$typeof === REACT_MEMO_TYPE
+          componentNameOrComponent.$$typeof === REACT_MEMO_TYPE ||
+          componentNameOrComponent.$$typeof === REACT_FORWARD_REF_TYPE
         ) &&
         shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
       )

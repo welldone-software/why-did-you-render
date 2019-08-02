@@ -780,22 +780,36 @@ describe('index', () => {
     })
   })
 
-  test('forward ref + memo', () => {
-    const MyComponent = React.forwardRef(() => {
-      return <div>My component!!!</div>
+  test('forward ref', () => {
+    const content = 'My component!!!'
+
+    const MyComponent = React.forwardRef((props, ref) => {
+      return <div ref={ref}>{content}</div>
     })
 
-    const MyMemoizedComponent = React.memo(MyComponent)
+    MyComponent.whyDidYouRender = true
 
-    MyMemoizedComponent.whyDidYouRender = true
+    let componentContentFromRef = null
+    let timesRefWasCalled = 0
+
+    const handleRef = ref => {
+      if(!ref){
+        return
+      }
+      timesRefWasCalled++
+      componentContentFromRef = ref.innerHTML
+    }
 
     const {rerender} = rtl.render(
-      <MyMemoizedComponent a={[]}/>
+      <MyComponent a={[]} ref={handleRef}/>
     )
 
     rerender(
-      <MyMemoizedComponent a={[]}/>
+      <MyComponent a={[]} ref={handleRef}/>
     )
+
+    expect(componentContentFromRef).toBe(content)
+    expect(timesRefWasCalled).toBe(1)
 
     expect(updateInfos).toHaveLength(1)
     expect(updateInfos[0].reason).toEqual({
@@ -811,4 +825,5 @@ describe('index', () => {
       hookDifferences: false
     })
   })
+
 })
