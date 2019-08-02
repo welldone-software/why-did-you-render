@@ -3,6 +3,7 @@ import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from '../index'
 import {diffTypes} from '../consts'
+import {errorOnConsoleOutput} from '../testUtils'
 
 const ReactMemoTestComponent = React.memo(() => (
   <div>hi!</div>
@@ -10,11 +11,10 @@ const ReactMemoTestComponent = React.memo(() => (
 ReactMemoTestComponent.whyDidYouRender = true
 ReactMemoTestComponent.dispalyName = 'ReactMemoTestComponent'
 
-describe('index', () => {
+describe('patch memoized component', () => {
+  errorOnConsoleOutput()
   let updateInfos = []
   beforeEach(() => {
-    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn())
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn())
     updateInfos = []
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo)

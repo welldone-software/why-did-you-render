@@ -3,7 +3,7 @@ import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
 
-describe('do not track hooks', () => {
+describe('hooks', () => {
   let updateInfos = []
 
   beforeEach(() => {

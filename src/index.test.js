@@ -2,12 +2,13 @@
 import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
+import {errorOnConsoleOutput} from './testUtils'
 
 describe('index', () => {
+  const flushConsoleMessages = errorOnConsoleOutput()
+
   let updateInfos = []
   beforeEach(() => {
-		jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn())
-		jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn())
     updateInfos = []
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo)
@@ -29,7 +30,33 @@ describe('index', () => {
     }
 
     expect(mountBrokenComponent).toThrow('Cannot read property \'propTypes\' of null')
-		expect(console.error).toHaveBeenCalled()
-		expect(console.log).toHaveBeenCalled()
+
+    expect(flushConsoleMessages()).toEqual([
+      {
+        // console.error('Warning: memo: The first argument must be a component. Instead received: %s', 'null')
+        level: 'error',
+        args: expect.arrayContaining([
+          expect.stringContaining('Warning: memo: The first argument must be a component')
+        ])
+      },
+      {
+        level: 'log',
+        args: expect.arrayContaining([
+          expect.stringContaining('whyDidYouRender error')
+        ])
+      },
+      {
+        level: 'error',
+        args: expect.arrayContaining([
+          expect.stringContaining('propTypes')
+        ])
+      },
+      {
+        level: 'error',
+        args: expect.arrayContaining([
+          expect.stringContaining('Consider adding an error boundary')
+        ])
+      }
+    ])
   })
 })

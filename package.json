@@ -33,7 +33,7 @@
     }
   },
   "jest": {
-    "cacheDirectory": ".temp/jest-cache"
+    "cacheDirectory": ".cache/jest-cache"
   },
   "dependencies": {
     "lodash": "^4"

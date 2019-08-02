@@ -4,6 +4,7 @@ import * as rtl from '@testing-library/react'
 import createReactClass from 'create-react-class'
 import whyDidYouRender from '../index'
 import {diffTypes} from '../consts'
+import {errorOnConsoleOutput} from '../testUtils'
 
 class TestComponent extends React.Component{
   static whyDidYouRender = true
@@ -32,11 +33,11 @@ const createStateTestComponent = (initialState, newState) => {
   }
 }
 
-describe('index', () => {
+describe('patch class component', () => {
+  errorOnConsoleOutput()
+
   let updateInfos = []
   beforeEach(() => {
-    jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn())
-    jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn())
     updateInfos = []
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo)
