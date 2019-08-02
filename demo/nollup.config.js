@@ -1,6 +1,6 @@
 const replace = require('rollup-plugin-replace')
 const babel = require('rollup-plugin-babel')
-const node_resolve = require('rollup-plugin-node-resolve')
+const nodeResolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs-alternate')
 
 module.exports = {
@@ -18,9 +18,9 @@ module.exports = {
     babel({
       exclude: 'node_modules/**'
     }),
-    node_resolve(),
-    commonjs({
-      exclude: ['node_modules/react-redux/**']
-    })
+    nodeResolve({
+      mainFields: ['module', 'browser', 'main']
+    }),
+    commonjs()
   ]
 }
