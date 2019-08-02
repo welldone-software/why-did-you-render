@@ -83,7 +83,8 @@
     "rollup-plugin-license": "^0.10.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-terser": "^5.1.1"
+    "rollup-plugin-terser": "^5.1.1",
+    "styled-components": "^4.3.2"
   },
   "authors": [
     "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"

@@ -4,9 +4,9 @@ import {connect, Provider} from 'react-redux'
 import {cloneDeep} from 'lodash'
 import * as rtl from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import {diffTypes} from './consts'
+import {diffTypes} from '../consts'
 
-import whyDidYouRender from './index'
+import whyDidYouRender from '../index'
 
 describe('react-redux', () => {
   const initialState = {a: {b: 'c'}}
