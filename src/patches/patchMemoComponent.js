@@ -11,7 +11,8 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
   const isInnerMemoComponentForwardRefs = InnerMemoComponent.$$typeof === REACT_FORWARD_REF_TYPE
   const WrappedFunctionalComponent = isInnerMemoComponentForwardRefs ? InnerMemoComponent.render : InnerMemoComponent
 
-  function WDYRWrappedByMemoFunctionalComponent(nextProps, ...otherArgs){
+  function WDYRWrappedByMemoFunctionalComponent(){
+    const nextProps = arguments[0]
     const ref = React.useRef()
 
     const prevProps = ref.current
@@ -33,7 +34,7 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
       }
     }
 
-    return WrappedFunctionalComponent(nextProps, ...otherArgs)
+    return WrappedFunctionalComponent(...arguments)
   }
 
   WDYRWrappedByMemoFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)

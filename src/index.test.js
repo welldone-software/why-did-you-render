@@ -2,7 +2,7 @@
 import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
-import {errorOnConsoleOutput} from './testUtils'
+import errorOnConsoleOutput from './utils/errorOnConsoleOutput'
 
 describe('index', () => {
   const flushConsoleMessages = errorOnConsoleOutput()

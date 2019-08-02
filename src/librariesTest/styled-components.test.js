@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from '../index'
 import {diffTypes} from '../consts'
-import {errorOnConsoleOutput} from '../testUtils'
+import errorOnConsoleOutput from '../utils/errorOnConsoleOutput'
 
 describe('styled-components', () => {
   errorOnConsoleOutput()

@@ -5,7 +5,7 @@ export class UnexpectedConsoleOutput extends Error{
   }
 }
 
-export function errorOnConsoleOutput(){
+export default function errorOnConsoleOutput(){
   let consoleMessages = []
 
   beforeEach(() => {
