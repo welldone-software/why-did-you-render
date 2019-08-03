@@ -7,24 +7,26 @@ export default {
   fn({domElement, whyDidYouRender}){
     whyDidYouRender(React)
 
-    const SimpleComponent = () => {
+    const SimpleComponent = (props) => {
       return (
-        <div>
+        <div {...props}>
           styled-components
         </div>
       )
     }
 
     const StyledSimpleComponent = styled(SimpleComponent)`
-      background-color: #ddd;
+      background-color: #ff96ae;
+      font-style: italic;
     `
 
     StyledSimpleComponent.whyDidYouRender = true
 
     const Main = () => (
-      <StyledSimpleComponent/>
+      <StyledSimpleComponent a={[]}/>
     )
 
+    ReactDom.render(<Main/>, domElement)
     ReactDom.render(<Main/>, domElement)
   }
 }
