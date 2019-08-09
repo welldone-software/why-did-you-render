@@ -39,7 +39,7 @@
     "lodash": "^4"
   },
   "peerDependencies": {
-    "react": ">=16.8"
+    "react": ">=16.9"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
@@ -48,8 +48,8 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@testing-library/jest-dom": "^4.0.0",
-    "@testing-library/react": "^8.0.7",
-    "@types/react": "^16.8.24",
+    "@testing-library/react": "^8.0.9",
+    "@types/react": "^16.9.0",
     "acorn-walk": "^6.2.0",
     "astring": "^1.4.1",
     "babel-core": "^7.0.0-bridge.0",
@@ -60,12 +60,12 @@
     "create-react-class": "^15.6.3",
     "cross-env": "^5.2.0",
     "eslint": "^6.1.0",
-    "eslint-plugin-jest": "^22.14.1",
+    "eslint-plugin-jest": "^22.15.0",
     "eslint-plugin-react": "^7.14.3",
     "eslint-watch": "^6.0.0",
     "express": "^4.17.1",
     "express-history-api-fallback": "^2.2.1",
-    "husky": "^3.0.2",
+    "husky": "^3.0.3",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
     "magic-string": "^0.25.3",
@@ -76,11 +76,11 @@
     "react-redux": "^7.1.0",
     "redux": "^4.0.4",
     "rimraf": "^2.6.3",
-    "rollup": "^1.18.0",
+    "rollup": "^1.19.4",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-commonjs-alternate": "^0.0.6",
-    "rollup-plugin-license": "^0.10.0",
+    "rollup-plugin-license": "^0.11.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.1.1",
