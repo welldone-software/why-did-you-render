@@ -10,6 +10,9 @@
     "react",
     "jest"
   ],
+  "globals": {
+    "flushConsoleOutput": true
+  },
   "settings": {
     "react": {
       "version": "16"

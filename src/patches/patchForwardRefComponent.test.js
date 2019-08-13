@@ -3,7 +3,7 @@ import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from '../index'
 import {diffTypes} from '../consts'
-import errorOnConsoleOutput from '../utils/errorOnConsoleOutput'
+import errorOnConsoleOutput from '../../testUtils/errorOnConsoleOutput'
 
 describe('patch component with forward ref', () => {
   errorOnConsoleOutput()

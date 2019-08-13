@@ -2,11 +2,8 @@
 import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
-import errorOnConsoleOutput from './utils/errorOnConsoleOutput'
 
 describe('index', () => {
-  const flushConsoleMessages = errorOnConsoleOutput()
-
   let updateInfos = []
   beforeEach(() => {
     updateInfos = []
@@ -31,7 +28,7 @@ describe('index', () => {
 
     expect(mountBrokenComponent).toThrow('Cannot read property \'propTypes\' of null')
 
-    expect(flushConsoleMessages()).toEqual([
+    expect(global.flushConsoleOutput()).toEqual([
       {
         // console.error('Warning: memo: The first argument must be a component. Instead received: %s', 'null')
         level: 'error',

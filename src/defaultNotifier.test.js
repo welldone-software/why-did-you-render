@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react'
 
 import defaultNotifier from './defaultNotifier'
@@ -92,24 +91,19 @@ function calculateNumberOfExpectedLogs(expectedLogTypes, expectedCounts){
 }
 
 function expectLogTypes(expectedLogTypes, expects){
-  expect(console.log)
-    .toHaveBeenCalledTimes(calculateNumberOfExpectedLogs(expectedLogTypes, expects.logsCount))
+  const consoleOutputs = flushConsoleOutput()
 
-  expect(console.group)
-    .toHaveBeenCalledTimes(calculateNumberOfExpectedLogs(expectedLogTypes, expects.groupLogsCount))
+  expect(consoleOutputs.filter(o => o.level === 'log'))
+    .toHaveLength(calculateNumberOfExpectedLogs(expectedLogTypes, expects.logsCount))
 
-  expect(console.groupCollapsed)
-    .toHaveBeenCalledTimes(calculateNumberOfExpectedLogs(expectedLogTypes, expects.groupCollapsedLogsCount))
+  expect(consoleOutputs.filter(o => o.level === 'group'))
+    .toHaveLength(calculateNumberOfExpectedLogs(expectedLogTypes, expects.groupLogsCount))
+
+  expect(consoleOutputs.filter(o => o.level === 'groupCollapsed'))
+    .toHaveLength(calculateNumberOfExpectedLogs(expectedLogTypes, expects.groupCollapsedLogsCount))
 }
 
 describe('defaultNotifier', () => {
-
-  beforeEach(() => {
-    console.log = jest.fn()
-    console.group = jest.fn()
-    console.groupCollapsed = jest.fn()
-  })
-
   describe('For no differences', () => {
     Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
       test(description, () => {
@@ -313,7 +307,8 @@ describe('defaultNotifier', () => {
 
       defaultNotifier(updateInfo)
 
-      expect(console.log).not.toHaveBeenCalled()
+      const consoleOutputs = flushConsoleOutput()
+      expect(consoleOutputs).toHaveLength(0)
     })
 
     test('For different state', () => {
@@ -330,7 +325,8 @@ describe('defaultNotifier', () => {
 
       defaultNotifier(updateInfo)
 
-      expect(console.log).not.toHaveBeenCalled()
+      const consoleOutputs = flushConsoleOutput()
+      expect(consoleOutputs).toHaveLength(0)
     })
 
     test('For different props with logOnDifferentValues', () => {
@@ -348,7 +344,8 @@ describe('defaultNotifier', () => {
 
       defaultNotifier(updateInfo)
 
-      expect(console.log).toHaveBeenCalledTimes(
+      const consoleOutputs = flushConsoleOutput()
+      expect(consoleOutputs).toHaveLength(
         calculateNumberOfExpectedLogs(
           ['title', 'changedObjectValues'],
           testInputAndExpects.onlyLogs.expects.logsCount
@@ -377,7 +374,8 @@ describe('defaultNotifier', () => {
 
       defaultNotifier(updateInfo)
 
-      expect(console.log).toHaveBeenCalledTimes(
+      const consoleOutputs = flushConsoleOutput()
+      expect(consoleOutputs).toHaveLength(
         calculateNumberOfExpectedLogs(
           ['title', 'changedObjectValues'],
           testInputAndExpects.onlyLogs.expects.logsCount
