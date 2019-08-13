@@ -3,7 +3,7 @@ import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
 import {diffTypes} from './consts'
 
-describe('hooks', () => {
+describe('hooks - simple', () => {
   let updateInfos = []
 
   beforeEach(() => {
@@ -747,5 +747,4 @@ describe('track hooks', () => {
       })
     })
   })
-
 })

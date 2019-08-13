@@ -8,7 +8,7 @@ import {diffTypes} from '../consts'
 
 import whyDidYouRender from '../index'
 
-describe('react-redux', () => {
+describe('react-redux - simple', () => {
   const initialState = {a: {b: 'c'}}
 
   const rootReducer = (state, action) => {

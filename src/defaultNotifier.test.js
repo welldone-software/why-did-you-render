@@ -103,284 +103,282 @@ function expectLogTypes(expectedLogTypes, expects){
     .toHaveLength(calculateNumberOfExpectedLogs(expectedLogTypes, expects.groupCollapsedLogsCount))
 }
 
-describe('defaultNotifier', () => {
-  describe('For no differences', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: null,
-          prevState: null,
-          nextProps: null,
-          nextState: null,
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'emptyValues'], expects)
-      })
-    })
-  })
-
-  describe('For different props eq by ref', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: {a: 'aa'},
-          prevState: null,
-          nextProps: {a: 'aa'},
-          nextState: null,
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjects'], expects)
-      })
-    })
-  })
-
-  describe('For equal state eq by ref', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: null,
-          prevState: {a: 'aa'},
-          nextProps: null,
-          nextState: {a: 'aa'},
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjects'], expects)
-      })
-    })
-  })
-
-  describe('For different state and props', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: {a: 'aa'},
-          prevState: {a: 'aa'},
-          nextProps: {a: 'aa'},
-          nextState: {a: 'aa'},
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjects', 'changedObjects'], expects)
-      })
-    })
-  })
-
-  describe('For different hook', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevHook: {a: 'aa'},
-          nextHook: {a: 'aa'},
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjectValues'], expects)
-      })
-    })
-  })
-
-  describe('For different deep equal props', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: {a: {b: 'b'}},
-          prevState: null,
-          nextProps: {a: {b: 'b'}},
-          nextState: null,
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjectValues'], expects)
-      })
-    })
-  })
-
-  describe('For different deep equal state', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: null,
-          prevState: {a: {b: 'b'}},
-          nextProps: null,
-          nextState: {a: {b: 'b'}},
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjectValues'], expects)
-      })
-    })
-  })
-
-  describe('For different deep equal state and props', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: {a: {b: 'b'}},
-          prevState: {a: {b: 'b'}},
-          nextProps: {a: {b: 'b'}},
-          nextState: {a: {b: 'b'}},
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjectValues', 'changedObjectValues'], expects)
-      })
-    })
-  })
-
-  describe('For different functions by the same name', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: {fn: function something(){}},
-          prevState: null,
-          nextProps: {fn: function something(){}},
-          nextState: null,
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjectValues'], expects)
-      })
-    })
-  })
-
-  describe('Mix of changes', () => {
-    Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
-      test(description, () => {
-        const updateInfo = getUpdateInfo({
-          Component: TestComponent,
-          prevProps: {fn: function something(){}},
-          prevState: {a: {b: 'b'}},
-          nextProps: {fn: function something(){}},
-          nextState: {a: {b: 'b'}},
-          options: normalizeOptions(userOptions)
-        })
-
-        defaultNotifier(updateInfo)
-
-        expectLogTypes(['title', 'changedObjectValues', 'changedObjectValues'], expects)
-      })
-    })
-  })
-
-  describe('logOnDifferentProps option', () => {
-    test('For different props', () => {
-      const updateInfo = getUpdateInfo({
-        Component: TestComponent,
-        prevProps: {a: 'aaaa'},
-        prevState: null,
-        nextProps: {a: 'bbbb'},
-        nextState: null,
-        options: normalizeOptions({
-          onlyLogs: true
-        })
-      })
-
-      defaultNotifier(updateInfo)
-
-      const consoleOutputs = flushConsoleOutput()
-      expect(consoleOutputs).toHaveLength(0)
-    })
-
-    test('For different state', () => {
+describe('For no differences', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
         prevProps: null,
-        prevState: {a: 'aaaa'},
+        prevState: null,
         nextProps: null,
-        nextState: {a: 'bbbb'},
-        options: normalizeOptions({
-          onlyLogs: true
-        })
+        nextState: null,
+        options: normalizeOptions(userOptions)
       })
 
       defaultNotifier(updateInfo)
 
-      const consoleOutputs = flushConsoleOutput()
-      expect(consoleOutputs).toHaveLength(0)
+      expectLogTypes(['title', 'emptyValues'], expects)
     })
+  })
+})
 
-    test('For different props with logOnDifferentValues', () => {
+describe('For different props eq by ref', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: {a: 'aaaa'},
+        prevProps: {a: 'aa'},
         prevState: null,
-        nextProps: {a: 'bbbb'},
+        nextProps: {a: 'aa'},
         nextState: null,
-        options: normalizeOptions({
-          logOnDifferentValues: true,
-          onlyLogs: true
-        })
+        options: normalizeOptions(userOptions)
       })
 
       defaultNotifier(updateInfo)
 
-      const consoleOutputs = flushConsoleOutput()
-      expect(consoleOutputs).toHaveLength(
-        calculateNumberOfExpectedLogs(
-          ['title', 'changedObjectValues'],
-          testInputAndExpects.onlyLogs.expects.logsCount
-        )
-      )
+      expectLogTypes(['title', 'changedObjects'], expects)
     })
+  })
+})
 
-    test('For different props with logOnDifferentValues for a specific component', () => {
-      class OwnTestComponent extends React.Component{
-        static whyDidYouRender = {logOnDifferentValues: true}
-        render(){
-          return <div>hi!</div>
-        }
-      }
-
+describe('For equal state eq by ref', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
       const updateInfo = getUpdateInfo({
-        Component: OwnTestComponent,
-        prevProps: {a: 'aaaa'},
-        prevState: null,
-        nextProps: {a: 'bbbb'},
-        nextState: null,
-        options: normalizeOptions({
-          onlyLogs: true
-        })
+        Component: TestComponent,
+        prevProps: null,
+        prevState: {a: 'aa'},
+        nextProps: null,
+        nextState: {a: 'aa'},
+        options: normalizeOptions(userOptions)
       })
 
       defaultNotifier(updateInfo)
 
-      const consoleOutputs = flushConsoleOutput()
-      expect(consoleOutputs).toHaveLength(
-        calculateNumberOfExpectedLogs(
-          ['title', 'changedObjectValues'],
-          testInputAndExpects.onlyLogs.expects.logsCount
-        )
-      )
+      expectLogTypes(['title', 'changedObjects'], expects)
     })
+  })
+})
+
+describe('For different state and props', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevProps: {a: 'aa'},
+        prevState: {a: 'aa'},
+        nextProps: {a: 'aa'},
+        nextState: {a: 'aa'},
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjects', 'changedObjects'], expects)
+    })
+  })
+})
+
+describe('For different hook', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevHook: {a: 'aa'},
+        nextHook: {a: 'aa'},
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjectValues'], expects)
+    })
+  })
+})
+
+describe('For different deep equal props', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevProps: {a: {b: 'b'}},
+        prevState: null,
+        nextProps: {a: {b: 'b'}},
+        nextState: null,
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjectValues'], expects)
+    })
+  })
+})
+
+describe('For different deep equal state', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevProps: null,
+        prevState: {a: {b: 'b'}},
+        nextProps: null,
+        nextState: {a: {b: 'b'}},
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjectValues'], expects)
+    })
+  })
+})
+
+describe('For different deep equal state and props', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevProps: {a: {b: 'b'}},
+        prevState: {a: {b: 'b'}},
+        nextProps: {a: {b: 'b'}},
+        nextState: {a: {b: 'b'}},
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjectValues', 'changedObjectValues'], expects)
+    })
+  })
+})
+
+describe('For different functions by the same name', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevProps: {fn: function something(){}},
+        prevState: null,
+        nextProps: {fn: function something(){}},
+        nextState: null,
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjectValues'], expects)
+    })
+  })
+})
+
+describe('Mix of changes', () => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
+    test(description, () => {
+      const updateInfo = getUpdateInfo({
+        Component: TestComponent,
+        prevProps: {fn: function something(){}},
+        prevState: {a: {b: 'b'}},
+        nextProps: {fn: function something(){}},
+        nextState: {a: {b: 'b'}},
+        options: normalizeOptions(userOptions)
+      })
+
+      defaultNotifier(updateInfo)
+
+      expectLogTypes(['title', 'changedObjectValues', 'changedObjectValues'], expects)
+    })
+  })
+})
+
+describe('logOnDifferentProps option', () => {
+  test('For different props', () => {
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      prevProps: {a: 'aaaa'},
+      prevState: null,
+      nextProps: {a: 'bbbb'},
+      nextState: null,
+      options: normalizeOptions({
+        onlyLogs: true
+      })
+    })
+
+    defaultNotifier(updateInfo)
+
+    const consoleOutputs = flushConsoleOutput()
+    expect(consoleOutputs).toHaveLength(0)
+  })
+
+  test('For different state', () => {
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      prevProps: null,
+      prevState: {a: 'aaaa'},
+      nextProps: null,
+      nextState: {a: 'bbbb'},
+      options: normalizeOptions({
+        onlyLogs: true
+      })
+    })
+
+    defaultNotifier(updateInfo)
+
+    const consoleOutputs = flushConsoleOutput()
+    expect(consoleOutputs).toHaveLength(0)
+  })
+
+  test('For different props with logOnDifferentValues', () => {
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      prevProps: {a: 'aaaa'},
+      prevState: null,
+      nextProps: {a: 'bbbb'},
+      nextState: null,
+      options: normalizeOptions({
+        logOnDifferentValues: true,
+        onlyLogs: true
+      })
+    })
+
+    defaultNotifier(updateInfo)
+
+    const consoleOutputs = flushConsoleOutput()
+    expect(consoleOutputs).toHaveLength(
+      calculateNumberOfExpectedLogs(
+        ['title', 'changedObjectValues'],
+        testInputAndExpects.onlyLogs.expects.logsCount
+      )
+    )
+  })
+
+  test('For different props with logOnDifferentValues for a specific component', () => {
+    class OwnTestComponent extends React.Component{
+      static whyDidYouRender = {logOnDifferentValues: true}
+      render(){
+        return <div>hi!</div>
+      }
+    }
+
+    const updateInfo = getUpdateInfo({
+      Component: OwnTestComponent,
+      prevProps: {a: 'aaaa'},
+      prevState: null,
+      nextProps: {a: 'bbbb'},
+      nextState: null,
+      options: normalizeOptions({
+        onlyLogs: true
+      })
+    })
+
+    defaultNotifier(updateInfo)
+
+    const consoleOutputs = flushConsoleOutput()
+    expect(consoleOutputs).toHaveLength(
+      calculateNumberOfExpectedLogs(
+        ['title', 'changedObjectValues'],
+        testInputAndExpects.onlyLogs.expects.logsCount
+      )
+    )
   })
 })
