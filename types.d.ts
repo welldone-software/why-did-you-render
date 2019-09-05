@@ -40,3 +40,9 @@ declare module '@welldone-software/why-did-you-render' {
 
   export default function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
 }
+
+declare namespace React {
+  interface FunctionComponent<P = {}> {
+    whyDidYouRender?: boolean;
+  }
+}
