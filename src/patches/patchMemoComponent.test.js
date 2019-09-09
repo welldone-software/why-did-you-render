@@ -151,3 +151,71 @@ test('memo a forward ref component', () => {
     hookDifferences: false
   })
 })
+
+test('memo a class component', () => {
+  class ClassComponent extends React.Component{
+    render(){
+      return <div>hi!</div>
+    }
+  }
+
+  const MyComponent = React.memo(ClassComponent)
+
+  MyComponent.whyDidYouRender = true
+
+  const {rerender} = rtl.render(
+    <MyComponent a={[]}/>
+  )
+
+  rerender(
+    <MyComponent a={[]}/>
+  )
+
+  expect(updateInfos).toHaveLength(1)
+  expect(updateInfos[0].reason).toEqual({
+    propsDifferences: [
+      {
+        pathString: 'a',
+        diffType: diffTypes.deepEquals,
+        prevValue: [],
+        nextValue: []
+      }
+    ],
+    stateDifferences: false,
+    hookDifferences: false
+  })
+})
+
+test('memo a pure class component', () => {
+  class ClassComponent extends React.PureComponent{
+    render(){
+      return <div>hi!</div>
+    }
+  }
+
+  const MyComponent = React.memo(ClassComponent)
+
+  MyComponent.whyDidYouRender = true
+
+  const {rerender} = rtl.render(
+    <MyComponent a={[]}/>
+  )
+
+  rerender(
+    <MyComponent a={[]}/>
+  )
+
+  expect(updateInfos).toHaveLength(1)
+  expect(updateInfos[0].reason).toEqual({
+    propsDifferences: [
+      {
+        pathString: 'a',
+        diffType: diffTypes.deepEquals,
+        prevValue: [],
+        nextValue: []
+      }
+    ],
+    stateDifferences: false,
+    hookDifferences: false
+  })
+})
