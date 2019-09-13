@@ -68,6 +68,7 @@
     "@testing-library/jest-dom": "^4.1.0",
     "@testing-library/react": "^9.1.4",
     "@types/react": "^16.9.2",
+    "@welldone-software/jest-console-handler": "^0.1.0",
     "acorn-walk": "^7.0.0",
     "astring": "^1.4.1",
     "babel-core": "^7.0.0-bridge.0",

@@ -10,7 +10,7 @@ import patchFunctionalComponent from './patches/patchFunctionalComponent'
 import patchMemoComponent from './patches/patchMemoComponent'
 import patchForwardRefComponent from './patches/patchForwardRefComponent'
 
-import {REACT_MEMO_TYPE, REACT_FORWARD_REF_TYPE} from './consts'
+import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
 
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
   const nextHook = hookResult
@@ -52,19 +52,19 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
 }
 
 function createPatchedComponent(componentsMap, Component, displayName, React, options){
-  if(Component.$$typeof === REACT_MEMO_TYPE){
+  if(isMemoComponent(Component)){
     return patchMemoComponent(Component, displayName, React, options)
   }
 
-  if(Component.$$typeof === REACT_FORWARD_REF_TYPE){
+  if(isForwardRefComponent(Component)){
     return patchForwardRefComponent(Component, displayName, React, options)
   }
 
-  if(Component.prototype && Component.prototype.isReactComponent){
+  if(isReactClassComponent(Component)){
     return patchClassComponent(Component, displayName, React, options)
   }
 
-  return patchFunctionalComponent(Component, displayName, React, options)
+  return patchFunctionalComponent(Component, false, displayName, React, options)
 }
 
 function getPatchedComponent(componentsMap, Component, displayName, React, options){
@@ -102,8 +102,8 @@ export default function whyDidYouRender(React, userOptions){
       isShouldTrack = (
         (
           typeof componentNameOrComponent === 'function' ||
-          componentNameOrComponent.$$typeof === REACT_MEMO_TYPE ||
-          componentNameOrComponent.$$typeof === REACT_FORWARD_REF_TYPE
+          isMemoComponent(componentNameOrComponent) ||
+          isForwardRefComponent(componentNameOrComponent)
         ) &&
         shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
       )

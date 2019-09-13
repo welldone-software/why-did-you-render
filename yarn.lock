@@ -1116,6 +1116,11 @@
     lodash.unescape "4.0.1"
     semver "5.5.0"
 
+"@welldone-software/jest-console-handler@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@welldone-software/jest-console-handler/-/jest-console-handler-0.1.0.tgz#20c3f5bcdc880a05e8915f8a029e135e0fb5e900"
+  integrity sha512-vH3a/oa78kHTUTiCnmMRWT1fPYxrEddXVoq+Y0aH9i1ArB3bQkM1/mzOnbgNpaXRIqpepduLjK8jNurCVbKWxw==
+
 abab@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.1.tgz#3fa17797032b71410ec372e11668f4b4ffc86a82"
