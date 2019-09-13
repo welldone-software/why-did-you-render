@@ -63,49 +63,51 @@ test('forward ref', () => {
 })
 
 test('forward ref a memo component', () => {
-  /* turns out this is not supported by react at this point. */
+  // This is not supported by React 16.9
+  expect(() => {
+    const content = 'My component!!!'
 
-  //   const content = 'My component!!!'
-  //
-  //   const MyComponent = React.forwardRef(React.memo((props, ref) => {
-  //     return <div ref={ref}>{content}</div>
-  //   }, () => true))
-  //
-  //   MyComponent.whyDidYouRender = true
-  //
-  //   let componentContentFromRef = null
-  //   let timesRefWasCalled = 0
-  //
-  //   const handleRef = ref => {
-  //     if(!ref){
-  //       return
-  //     }
-  //     timesRefWasCalled++
-  //     componentContentFromRef = ref.innerHTML
-  //   }
-  //
-  //   const {rerender} = rtl.render(
-  //     <MyComponent a={[]} ref={handleRef}/>
-  //   )
-  //
-  //   rerender(
-  //     <MyComponent a={[]} ref={handleRef}/>
-  //   )
-  //
-  //   expect(componentContentFromRef).toBe(content)
-  //   expect(timesRefWasCalled).toBe(1)
-  //
-  //   expect(updateInfos).toHaveLength(1)
-  //   expect(updateInfos[0].reason).toEqual({
-  //     propsDifferences: [
-  //       {
-  //         pathString: 'a',
-  //         diffType: diffTypes.deepEquals,
-  //         prevValue: [],
-  //         nextValue: []
-  //       }
-  //     ],
-  //     stateDifferences: false,
-  //     hookDifferences: false
-  //   })
+    const MyComponent = React.forwardRef(React.memo((props, ref) => {
+      return <div ref={ref}>{content}</div>
+    }, () => true))
+
+    MyComponent.whyDidYouRender = true
+
+    let componentContentFromRef = null
+    let timesRefWasCalled = 0
+
+    const handleRef = ref => {
+      if(!ref){
+        return
+      }
+      timesRefWasCalled++
+      componentContentFromRef = ref.innerHTML
+    }
+
+    const {rerender} = rtl.render(
+      <MyComponent a={[]} ref={handleRef}/>
+    )
+
+    rerender(
+      <MyComponent a={[]} ref={handleRef}/>
+    )
+
+    expect(componentContentFromRef).toBe(content)
+    expect(timesRefWasCalled).toBe(1)
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [
+        {
+          pathString: 'a',
+          diffType: diffTypes.deepEquals,
+          prevValue: [],
+          nextValue: []
+        }
+      ],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+  }).toThrow()
+  global.flushConsoleOutput()
 })

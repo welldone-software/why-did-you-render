@@ -218,4 +218,5 @@ test('memo a pure class component', () => {
     stateDifferences: false,
     hookDifferences: false
   })
+  global.flushConsoleOutput()
 })

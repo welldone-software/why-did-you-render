@@ -1,48 +1,31 @@
 import {defaults} from 'lodash'
 
-import getUpdateInfo from '../getUpdateInfo'
 import getDisplayName from '../getDisplayName'
 
-import {REACT_FORWARD_REF_TYPE} from '../consts'
+import {isForwardRefComponent, isReactClassComponent} from '../utils'
+import patchClassComponent from './patchClassComponent'
+import patchFunctionalComponent from './patchFunctionalComponent'
 
 export default function patchMemoComponent(MemoComponent, displayName, React, options){
   const {type: InnerMemoComponent} = MemoComponent
 
-  const isInnerMemoComponentForwardRefs = InnerMemoComponent.$$typeof === REACT_FORWARD_REF_TYPE
-  const WrappedFunctionalComponent = isInnerMemoComponentForwardRefs ? InnerMemoComponent.render : InnerMemoComponent
+  const isInnerMemoComponentAClassComponent = isReactClassComponent(InnerMemoComponent)
+  const isInnerMemoComponentForwardRefs = isForwardRefComponent(InnerMemoComponent)
 
-  function WDYRWrappedByMemoFunctionalComponent(){
-    const nextProps = arguments[0]
-    const ref = React.useRef()
+  const WrappedFunctionalComponent = isInnerMemoComponentForwardRefs ?
+    InnerMemoComponent.render :
+    InnerMemoComponent
 
-    const prevProps = ref.current
-    ref.current = nextProps
+  const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
+    patchClassComponent(WrappedFunctionalComponent, displayName, React, options) :
+    patchFunctionalComponent(WrappedFunctionalComponent, true, displayName, React, options)
 
-    if(prevProps){
-      const notification = getUpdateInfo({
-        Component: MemoComponent,
-        displayName,
-        prevProps,
-        nextProps,
-        options
-      })
-
-      // if a memoized functional component re-rendered without props change / prop values change
-      // it was probably caused by a hook and we should not care about it
-      if(notification.reason.propsDifferences && notification.reason.propsDifferences.length > 0){
-        options.notifier(notification)
-      }
-    }
-
-    return WrappedFunctionalComponent(...arguments)
-  }
-
-  WDYRWrappedByMemoFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)
-  WDYRWrappedByMemoFunctionalComponent.ComponentForHooksTracking = MemoComponent
-  defaults(WDYRWrappedByMemoFunctionalComponent, WrappedFunctionalComponent)
+  PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent)
+  PatchedInnerComponent.ComponentForHooksTracking = MemoComponent
+  defaults(PatchedInnerComponent, WrappedFunctionalComponent)
 
   const WDYRMemoizedFunctionalComponent = React.memo(
-    isInnerMemoComponentForwardRefs ? React.forwardRef(WDYRWrappedByMemoFunctionalComponent) : WDYRWrappedByMemoFunctionalComponent,
+    isInnerMemoComponentForwardRefs ? React.forwardRef(PatchedInnerComponent) : PatchedInnerComponent,
     MemoComponent.compare
   )
 
