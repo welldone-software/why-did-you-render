@@ -1,3 +1,3 @@
-import errorOnConsoleOutput from './testUtils/errorOnConsoleOutput'
+import {errorOnConsoleOutput} from '@welldone-software/jest-console-handler'
 
 global.flushConsoleOutput = errorOnConsoleOutput()
