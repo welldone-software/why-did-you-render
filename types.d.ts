@@ -1,19 +1,13 @@
 /// <reference types="react" />
 
-declare module NodeJS  {
-  interface Global {
-    flushConsoleOutput: any
-  }
-}
-
-declare module '@welldone-software/why-did-you-render' {
-  export interface ReasonForUpdate {
+declare namespace WhyDidYouRender {
+  interface ReasonForUpdate {
     hookDifferences: boolean;
     propsDifferences: boolean;
     stateDifferences: boolean;
   }
 
-  export interface UpdateInfo {
+  interface UpdateInfo {
     Component: React.Component;
     displayName: string;
     prevProps: any;
@@ -24,7 +18,7 @@ declare module '@welldone-software/why-did-you-render' {
     options: WhyDidYouRenderOptions;
   }
 
-  export interface WhyDidYouRenderOptions {
+  interface WhyDidYouRenderOptions {
     include?: RegExp[];
     exclude?: RegExp[];
     trackHooks?: boolean;
@@ -37,12 +31,21 @@ declare module '@welldone-software/why-did-you-render' {
     diffPathColor?: string;
     notifier?: (options: UpdateInfo) => void;
   }
+}
+
+declare module '@welldone-software/why-did-you-render' {
+  export import ReasonForUpdate = WhyDidYouRender.ReasonForUpdate;
+  export import UpdateInfo = WhyDidYouRender.UpdateInfo;
+  export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
 
   export default function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
 }
 
 declare namespace React {
   interface FunctionComponent<P = {}> {
-    whyDidYouRender?: boolean;
+    whyDidYouRender?: boolean|WhyDidYouRender.WhyDidYouRenderOptions;
+  }
+  namespace Component {
+    export const whyDidYouRender: boolean|WhyDidYouRender.WhyDidYouRenderOptions;
   }
 }
