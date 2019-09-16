@@ -31,6 +31,8 @@ declare namespace WhyDidYouRender {
     diffPathColor?: string;
     notifier?: (options: UpdateInfo) => void;
   }
+
+  type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
 }
 
 declare module '@welldone-software/why-did-you-render' {
@@ -43,9 +45,9 @@ declare module '@welldone-software/why-did-you-render' {
 
 declare namespace React {
   interface FunctionComponent<P = {}> {
-    whyDidYouRender?: boolean|WhyDidYouRender.WhyDidYouRenderOptions;
+    whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
   }
   namespace Component {
-    export const whyDidYouRender: boolean|WhyDidYouRender.WhyDidYouRenderOptions;
+    const whyDidYouRender: WhyDidYouRender.WhyDidYouRenderComponentMember;
   }
 }
