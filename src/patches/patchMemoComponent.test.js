@@ -22,7 +22,20 @@ afterEach(() => {
   React.__REVERT_WHY_DID_YOU_RENDER__()
 })
 
-test('Component memoized with React.memo', () => {
+test('Component memoized with React.memo - no change', () => {
+  const obj = {a: []}
+
+  const {rerender} = rtl.render(
+    <ReactMemoTestComponent arr={obj}/>
+  )
+  rerender(
+    <ReactMemoTestComponent arr={obj}/>
+  )
+
+  expect(updateInfos).toHaveLength(0)
+})
+
+test('Component memoized with React.memo - different prop values', () => {
   const {rerender} = rtl.render(
     <ReactMemoTestComponent a={1}/>
   )
@@ -43,15 +56,25 @@ test('Component memoized with React.memo', () => {
   })
 })
 
-test('Component memoized with React.memo - no change', () => {
+test('Component memoized with React.memo - deep equal prop values', () => {
   const {rerender} = rtl.render(
-    <ReactMemoTestComponent a={1}/>
+    <ReactMemoTestComponent a={[]}/>
   )
   rerender(
-    <ReactMemoTestComponent a={1}/>
+    <ReactMemoTestComponent a={[]}/>
   )
 
-  expect(updateInfos).toHaveLength(0)
+  expect(updateInfos).toHaveLength(1)
+  expect(updateInfos[0].reason).toEqual({
+    propsDifferences: [{
+      pathString: 'a',
+      diffType: diffTypes.deepEquals,
+      prevValue: [],
+      nextValue: []
+    }],
+    stateDifferences: false,
+    hookDifferences: false
+  })
 })
 
 test('Strict mode- memoized functional component with no props change', () => {
