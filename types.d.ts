@@ -1,8 +1,16 @@
 /// <reference types="react" />
 
 declare namespace WhyDidYouRender {
+
+  interface HookDifference {
+    pathString: string;
+    diffType: string;
+    prevValue: any;
+    nextValue: any;
+  }
+
   interface ReasonForUpdate {
-    hookDifferences: boolean;
+    hookDifferences: HookDifference[];
     propsDifferences: boolean;
     stateDifferences: boolean;
   }
@@ -14,8 +22,11 @@ declare namespace WhyDidYouRender {
     prevState: any;
     nextProps: any;
     nextState: any;
+    prevHook: any;
+    nextHook: any;
     reason: ReasonForUpdate;
     options: WhyDidYouRenderOptions;
+    hookName?: string;
   }
 
   interface WhyDidYouRenderOptions {
@@ -39,6 +50,7 @@ declare module '@welldone-software/why-did-you-render' {
   export import ReasonForUpdate = WhyDidYouRender.ReasonForUpdate;
   export import UpdateInfo = WhyDidYouRender.UpdateInfo;
   export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
+  export import HookDifference = WhyDidYouRender.HookDifference;
 
   export default function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
 }
