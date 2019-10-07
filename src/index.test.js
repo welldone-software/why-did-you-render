@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react'
+import ReactDOMServer from 'react-dom/server'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from './index'
 
@@ -54,4 +55,18 @@ test('dont swallow errors', () => {
       ])
     }
   ])
+})
+
+test('render to static markup', () => {
+  class MyComponent extends React.Component{
+    render(){
+      return (
+        <div>
+          hi!
+        </div>
+      )
+    }
+  }
+  const string = ReactDOMServer.renderToStaticMarkup(<MyComponent/>)
+  expect(string).toBe('<div>hi!</div>')
 })
