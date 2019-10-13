@@ -1,6 +1,6 @@
 {
   "name": "@welldone-software/why-did-you-render",
-  "version": "3.3.7",
+  "version": "3.3.8",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
   "types": "types.d.ts",
   "main": "dist/cjs/whyDidYouRender.min.js",
@@ -48,7 +48,9 @@
   },
   "jest": {
     "cacheDirectory": ".cache/jest-cache",
-    "modulePaths": ["<rootDir>/src"],
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/jestSetup.js"
     ]
