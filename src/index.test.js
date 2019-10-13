@@ -59,6 +59,7 @@ test('dont swallow errors', () => {
 
 test('render to static markup', () => {
   class MyComponent extends React.Component{
+    static whyDidYouRender = true
     render(){
       return (
         <div>
