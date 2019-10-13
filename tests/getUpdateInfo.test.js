@@ -1,8 +1,8 @@
 import React from 'react'
-import {diffTypes} from './consts'
-import getUpdateInfo from './getUpdateInfo'
-import getDisplayName from './getDisplayName'
-import normalizeOptions from './normalizeOptions'
+import {diffTypes} from 'consts'
+import getUpdateInfo from 'getUpdateInfo'
+import getDisplayName from 'getDisplayName'
+import normalizeOptions from 'normalizeOptions'
 
 class TestComponent extends React.Component{
   render(){

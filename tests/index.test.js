@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import * as rtl from '@testing-library/react'
-import whyDidYouRender from './index'
+import whyDidYouRender from 'index'
 
 let updateInfos = []
 beforeEach(() => {

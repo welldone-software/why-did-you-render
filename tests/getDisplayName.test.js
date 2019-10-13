@@ -1,5 +1,5 @@
 import React from 'react'
-import getDisplayName from './getDisplayName'
+import getDisplayName from 'getDisplayName'
 
 test('For a component', () => {
   class TestComponent extends React.Component{

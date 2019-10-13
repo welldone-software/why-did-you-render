@@ -1,5 +1,5 @@
 /*  eslint-disable no-console */
-import normalizeOptions from './normalizeOptions'
+import normalizeOptions from 'normalizeOptions'
 
 test('Empty options works', () => {
   const options = normalizeOptions()

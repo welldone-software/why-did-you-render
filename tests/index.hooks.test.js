@@ -1,7 +1,7 @@
 import React, {useState, useLayoutEffect} from 'react'
 import * as rtl from '@testing-library/react'
-import whyDidYouRender from './index'
-import {diffTypes} from './consts'
+import whyDidYouRender from 'index'
+import {diffTypes} from 'consts'
 
 describe('hooks - simple', () => {
   let updateInfos = []
