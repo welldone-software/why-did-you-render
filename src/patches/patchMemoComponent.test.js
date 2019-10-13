@@ -22,6 +22,22 @@ afterEach(() => {
   React.__REVERT_WHY_DID_YOU_RENDER__()
 })
 
+test('Memoize text component', () => {
+  const obj = {a: []}
+
+  const Svg = React.memo('svg')
+  Svg.whyDidYouRender = true
+
+  const {rerender} = rtl.render(
+    <Svg arr={obj}/>
+  )
+  rerender(
+    <Svg arr={obj}/>
+  )
+
+  expect(updateInfos).toHaveLength(0)
+})
+
 test('Component memoized with React.memo - no change', () => {
   const obj = {a: []}
 
