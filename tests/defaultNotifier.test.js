@@ -1,8 +1,8 @@
 import React from 'react'
 
-import defaultNotifier from './defaultNotifier'
-import getUpdateInfo from './getUpdateInfo'
-import normalizeOptions from './normalizeOptions'
+import defaultNotifier from 'defaultNotifier'
+import getUpdateInfo from 'getUpdateInfo'
+import normalizeOptions from 'normalizeOptions'
 
 class TestComponent extends React.Component{
   static whyDidYouRender = true

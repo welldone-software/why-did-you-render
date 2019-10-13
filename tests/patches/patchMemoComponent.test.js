@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
 import React from 'react'
 import * as rtl from '@testing-library/react'
-import whyDidYouRender from '../index'
-import {diffTypes} from '../consts'
+import whyDidYouRender from 'index'
+import {diffTypes} from 'consts'
 
 const ReactMemoTestComponent = React.memo(() => (
   <div>hi!</div>
@@ -20,6 +19,22 @@ beforeEach(() => {
 
 afterEach(() => {
   React.__REVERT_WHY_DID_YOU_RENDER__()
+})
+
+test('Memoize text component', () => {
+  const obj = {a: []}
+
+  const Svg = React.memo('svg')
+  Svg.whyDidYouRender = true
+
+  const {rerender} = rtl.render(
+    <Svg arr={obj}/>
+  )
+  rerender(
+    <Svg arr={obj}/>
+  )
+
+  expect(updateInfos).toHaveLength(0)
 })
 
 test('Component memoized with React.memo - no change', () => {

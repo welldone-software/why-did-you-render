@@ -1,7 +1,7 @@
 import React from 'react'
 
-import shouldTrack from './shouldTrack'
-import getDisplayName from './getDisplayName'
+import shouldTrack from 'shouldTrack'
+import getDisplayName from 'getDisplayName'
 
 class TrackedTestComponent extends React.Component{
   static whyDidYouRender = true

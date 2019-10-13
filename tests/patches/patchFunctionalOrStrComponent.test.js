@@ -1,8 +1,7 @@
-/* eslint-disable no-console */
 import React from 'react'
 import * as rtl from '@testing-library/react'
-import whyDidYouRender from '../index'
-import {diffTypes} from '../consts'
+import whyDidYouRender from 'index'
+import {diffTypes} from 'consts'
 
 const FunctionalTestComponent = () => (
   <div>hi!</div>
