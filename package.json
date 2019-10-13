@@ -31,7 +31,7 @@
   "scripts": {
     "start": "cross-env PORT=3003 NODE_ENV=development node demo/serve",
     "build": "cross-env NODE_ENV=production rollup --config",
-    "test": "cross-env NODE_ENV=development TEST=true jest",
+    "test": "cross-env TEST=true jest \"./tests\"",
     "test:watch": "yarn test --watch",
     "lint": "eslint . --ext=js --cache --cache-location .cache/eslint-cache",
     "lint:fix": "yarn lint --fix",
@@ -48,6 +48,7 @@
   },
   "jest": {
     "cacheDirectory": ".cache/jest-cache",
+    "modulePaths": ["<rootDir>/src"],
     "setupFilesAfterEnv": [
       "<rootDir>/jestSetup.js"
     ]

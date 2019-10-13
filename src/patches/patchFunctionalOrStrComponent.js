@@ -2,7 +2,15 @@ import {defaults} from 'lodash'
 
 import getUpdateInfo from '../getUpdateInfo'
 
-export default function patchFunctionalComponent(FunctionalComponent, isPure, displayName, React, options){
+const getFunctionalComponentFromStringComponent = (componentTypeStr, React) => props => (
+  React.createElement(componentTypeStr, props)
+)
+
+export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, isPure, displayName, React, options){
+  const FunctionalComponent = typeof(FunctionalOrStringComponent) === 'string' ?
+    getFunctionalComponentFromStringComponent(FunctionalOrStringComponent, React) :
+    FunctionalOrStringComponent
+
   function WDYRFunctionalComponent(){
     const nextProps = arguments[0]
     const ref = React.useRef()

@@ -4,7 +4,7 @@ import getDisplayName from '../getDisplayName'
 
 import {isForwardRefComponent, isReactClassComponent} from '../utils'
 import patchClassComponent from './patchClassComponent'
-import patchFunctionalComponent from './patchFunctionalComponent'
+import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
 export default function patchMemoComponent(MemoComponent, displayName, React, options){
   const {type: InnerMemoComponent} = MemoComponent
@@ -18,7 +18,7 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
 
   const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
     patchClassComponent(WrappedFunctionalComponent, displayName, React, options) :
-    patchFunctionalComponent(WrappedFunctionalComponent, true, displayName, React, options)
+    patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options)
 
   PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent)
   PatchedInnerComponent.ComponentForHooksTracking = MemoComponent

@@ -6,7 +6,7 @@ import getUpdateInfo from './getUpdateInfo'
 import shouldTrack from './shouldTrack'
 
 import patchClassComponent from './patches/patchClassComponent'
-import patchFunctionalComponent from './patches/patchFunctionalComponent'
+import patchFunctionalOrStrComponent from './patches/patchFunctionalOrStrComponent'
 import patchMemoComponent from './patches/patchMemoComponent'
 import patchForwardRefComponent from './patches/patchForwardRefComponent'
 
@@ -64,7 +64,7 @@ function createPatchedComponent(componentsMap, Component, displayName, React, op
     return patchClassComponent(Component, displayName, React, options)
   }
 
-  return patchFunctionalComponent(Component, false, displayName, React, options)
+  return patchFunctionalOrStrComponent(Component, false, displayName, React, options)
 }
 
 function getPatchedComponent(componentsMap, Component, displayName, React, options){

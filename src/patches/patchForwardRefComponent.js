@@ -2,7 +2,7 @@ import {defaults} from 'lodash'
 
 import getDisplayName from '../getDisplayName'
 import {isMemoComponent} from '../utils'
-import patchFunctionalComponent from './patchFunctionalComponent'
+import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
 export default function patchForwardRefComponent(ForwardRefComponent, displayName, React, options){
   const {render: InnerForwardRefComponent} = ForwardRefComponent
@@ -12,7 +12,7 @@ export default function patchForwardRefComponent(ForwardRefComponent, displayNam
     InnerForwardRefComponent.type : InnerForwardRefComponent
 
   const WDYRWrappedByReactForwardRefFunctionalComponent = (
-    patchFunctionalComponent(WrappedFunctionalComponent, isInnerComponentMemoized, displayName, React, options)
+    patchFunctionalOrStrComponent(WrappedFunctionalComponent, isInnerComponentMemoized, displayName, React, options)
   )
 
   WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)
