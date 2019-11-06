@@ -42,7 +42,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 ```
 
-If you are building for latest browsers and don't transpile the "class" keyword use the "no-classes-transpile" dist:
+If you are building for latest browsers and don't transpile, the "class" keyword use the "no-classes-transpile" dist:
 ```js
 import React from 'react';
 
@@ -57,7 +57,7 @@ where a transpiled class tries to extend a native class:
 `Class constructors must be invoked with 'new'`.
 
 ## Usage
-Mark all the components you want to be notified about their re-renders with `whyDidYouRender` like so:
+Mark all the components you want to be notified about their re-renders with `whyDidYouRender` like this:
 
 ```js
 class BigListPureComponent extends React.PureComponent {
@@ -92,7 +92,7 @@ EnhancedMenu.whyDidYouRender = {
 
 - `logOnDifferentValues`:
 
-  Normally only re-renders that are caused by equal values in props / state trigger notifications:
+  Normally, only re-renders that are caused by equal values in props / state trigger notifications:
   ```js
   render(<Menu a={1}/>)
   render(<Menu a={1}/>)
