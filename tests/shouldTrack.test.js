@@ -17,32 +17,32 @@ class NotTrackedTestComponent extends React.Component{
 }
 
 test('Do not track not tracked component (default)', () => {
-  const isShouldTrack = shouldTrack(NotTrackedTestComponent, getDisplayName(NotTrackedTestComponent), {})
+  const isShouldTrack = shouldTrack({Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {}})
   expect(isShouldTrack).toBe(false)
 })
 
 test('Track tracked component', () => {
-  const isShouldTrack = shouldTrack(TrackedTestComponent, getDisplayName(TrackedTestComponent), {})
+  const isShouldTrack = shouldTrack({Component: TrackedTestComponent, displayName: getDisplayName(TrackedTestComponent), options: {}})
   expect(isShouldTrack).toBe(true)
 })
 
 test('Track included not tracked components', () => {
-  const isShouldTrack = shouldTrack(NotTrackedTestComponent, getDisplayName(NotTrackedTestComponent), {
+  const isShouldTrack = shouldTrack({Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
     include: [/TestComponent/]
-  })
+  }})
   expect(isShouldTrack).toBe(true)
 })
 
 test('Do not track not included not tracked components', () => {
-  const isShouldTrack = shouldTrack(NotTrackedTestComponent, getDisplayName(NotTrackedTestComponent), {
+  const isShouldTrack = shouldTrack({Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
     include: [/0/]
-  })
+  }})
   expect(isShouldTrack).toBe(false)
 })
 
 test('Do not track excluded tracked components', () => {
-  const isShouldTrack = shouldTrack(TrackedTestComponent, getDisplayName(NotTrackedTestComponent), {
+  const isShouldTrack = shouldTrack({Component: TrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
     exclude: [/TrackedTestComponent/]
-  })
+  }})
   expect(isShouldTrack).toBe(false)
 })

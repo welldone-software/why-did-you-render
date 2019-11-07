@@ -13,33 +13,31 @@ import patchForwardRefComponent from './patches/patchForwardRefComponent'
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
 
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
-  const nextHook = hookResult
-
   const ComponentHookDispatchedFromInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+  const prevHookResultRef = React.useRef()
 
   if(!ComponentHookDispatchedFromInstance){
-    return nextHook
+    return hookResult
   }
 
   const Component = ComponentHookDispatchedFromInstance.type.ComponentForHooksTracking || ComponentHookDispatchedFromInstance.type
   const displayName = getDisplayName(Component)
 
-  const isShouldTrack = shouldTrack(Component, displayName, options)
+  const isShouldTrack = shouldTrack({Component, displayName, options, isHookChange: true})
   if(!isShouldTrack){
-    return nextHook
+    return hookResult
   }
 
-  const ref = React.useRef()
-  const prevHook = ref.current
-  ref.current = nextHook
+  const prevHookResult = prevHookResultRef.current
+  prevHookResultRef.current = hookResult
 
-  if(prevHook){
+  if(prevHookResult){
     const notification = getUpdateInfo({
       Component: Component,
       displayName,
       hookName,
-      prevHook: hookPath ? get(prevHook, hookPath) : prevHook,
-      nextHook: hookPath ? get(nextHook, hookPath) : nextHook,
+      prevHook: hookPath ? get(prevHookResult, hookPath) : prevHookResult,
+      nextHook: hookPath ? get(hookResult, hookPath) : hookResult,
       options
     })
 
@@ -48,7 +46,7 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
     }
   }
 
-  return ref.current
+  return hookResult
 }
 
 function createPatchedComponent(componentsMap, Component, displayName, React, options){
@@ -81,8 +79,7 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
 export const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
-  useContext: true,
-  useMemo: true
+  useContext: true
 }
 
 export default function whyDidYouRender(React, userOptions){
@@ -105,7 +102,7 @@ export default function whyDidYouRender(React, userOptions){
           isMemoComponent(componentNameOrComponent) ||
           isForwardRefComponent(componentNameOrComponent)
         ) &&
-        shouldTrack(componentNameOrComponent, getDisplayName(componentNameOrComponent), options)
+        shouldTrack({Component: componentNameOrComponent, displayName: getDisplayName(componentNameOrComponent), options})
       )
 
       if(isShouldTrack){
@@ -183,6 +180,19 @@ export default function whyDidYouRender(React, userOptions){
         }
       }
     )
+
+    options.trackExtraHooks.forEach(([hookParent, hookName]) => {
+      const originalHook = hookParent[hookName]
+      const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
+      const newHook = function(...args){
+        const hookResult = originalHook.call(this, ...args)
+        trackHookChanges(hookName, {}, hookResult, React, options)
+        return hookResult
+      }
+      Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})
+      Object.assign(newHook, {originalHook})
+      hookParent[hookName] = newHook
+    })
   }
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
@@ -199,6 +209,9 @@ export default function whyDidYouRender(React, userOptions){
         value: origHooks
       }
     )
+    options.trackExtraHooks.forEach(([hookParent, hookName]) => {
+      hookParent[hookName] = hookParent[hookName].originalHook
+    })
     delete React.__REVERT_WHY_DID_YOU_RENDER__
   }
 

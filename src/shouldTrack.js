@@ -14,7 +14,7 @@ function shouldExclude(displayName, options){
   )
 }
 
-export default function shouldTrack(Component, displayName, options){
+export default function shouldTrack({Component, displayName, options, isHookChange}){
   if(shouldExclude(displayName, options)){
     return false
   }
@@ -22,5 +22,9 @@ export default function shouldTrack(Component, displayName, options){
   return !!(
     Component.whyDidYouRender ||
     shouldInclude(displayName, options)
+  ) && !(
+    isHookChange && (
+      Component.whyDidYouRender && Component.whyDidYouRender.trackHooks === false
+    )
   )
 }

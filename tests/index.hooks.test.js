@@ -488,6 +488,7 @@ describe('track hooks', () => {
         <ComponentWithHooks a={1}/>
       )
 
+      expect(effectCalled).toBeTruthy()
       expect(updateInfos).toHaveLength(1)
       expect(updateInfos[0].reason).toEqual({
         hookDifferences: [{
@@ -499,7 +500,6 @@ describe('track hooks', () => {
         propsDifferences: false,
         stateDifferences: false
       })
-      expect(effectCalled).toBeTruthy()
     })
   })
 
@@ -631,119 +631,6 @@ describe('track hooks', () => {
         }],
         propsDifferences: false,
         stateDifferences: false
-      })
-    })
-  })
-
-  describe('the useMemo hook', () => {
-    test('same value', () => {
-      const ComponentWithHooks = ({a}) => {
-        const memoState = React.useMemo(() => a)
-
-        return (
-          <div>hi! {a} {memoState}</div>
-        )
-      }
-      ComponentWithHooks.whyDidYouRender = true
-
-      const {rerender} = rtl.render(
-        <ComponentWithHooks a={1}/>
-      )
-      rerender(
-        <ComponentWithHooks a={1}/>
-      )
-
-      expect(updateInfos).toHaveLength(1)
-      expect(updateInfos[0].reason).toEqual({
-        propsDifferences: [],
-        stateDifferences: false,
-        hookDifferences: false
-      })
-    })
-
-    test('deep equals', () => {
-      const ComponentWithHooks = ({a}) => {
-        const memoState = React.useMemo(() => ({a}))
-
-        return (
-          <div>hi! {a} {memoState.a}</div>
-        )
-      }
-      ComponentWithHooks.whyDidYouRender = true
-
-      const {rerender} = rtl.render(
-        <ComponentWithHooks a={1}/>
-      )
-      rerender(
-        <ComponentWithHooks a={1}/>
-      )
-
-      expect(updateInfos).toHaveLength(2)
-      expect(updateInfos[0].reason).toEqual({
-        propsDifferences: [],
-        stateDifferences: false,
-        hookDifferences: false
-      })
-      expect(updateInfos[1].reason).toEqual({
-        propsDifferences: false,
-        stateDifferences: false,
-        hookDifferences: [{
-          diffType: diffTypes.deepEquals,
-          pathString: '',
-          prevValue: {a: 1},
-          nextValue: {a: 1}
-        }]
-      })
-    })
-
-    test('deep equals nested', () => {
-      const ComponentWithHooks = ({a}) => {
-        const memoState = React.useMemo(() => ({
-          c: {b: {a}}
-        }))
-
-        return (
-          <div>hi! {a} {memoState.c.b.a}</div>
-        )
-      }
-      ComponentWithHooks.whyDidYouRender = true
-
-      const {rerender} = rtl.render(
-        <ComponentWithHooks a={1}/>
-      )
-      rerender(
-        <ComponentWithHooks a={1}/>
-      )
-
-      expect(updateInfos).toHaveLength(2)
-      expect(updateInfos[0].reason).toEqual({
-        propsDifferences: [],
-        stateDifferences: false,
-        hookDifferences: false
-      })
-      expect(updateInfos[1].reason).toEqual({
-        propsDifferences: false,
-        stateDifferences: false,
-        hookDifferences: [
-          {
-            diffType: diffTypes.deepEquals,
-            pathString: '.c.b',
-            prevValue: {a: 1},
-            nextValue: {a: 1}
-          },
-          {
-            diffType: diffTypes.deepEquals,
-            pathString: '.c',
-            prevValue: {b: {a: 1}},
-            nextValue: {b: {a: 1}}
-          },
-          {
-            diffType: diffTypes.deepEquals,
-            pathString: '',
-            prevValue: {c: {b: {a: 1}}},
-            nextValue: {c: {b: {a: 1}}}
-          }
-        ]
       })
     })
   })
