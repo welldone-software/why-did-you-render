@@ -132,7 +132,7 @@ export default function defaultNotifier(updateInfo){
 
 export function createDefaultNotifier(hotReloadBufferMs){
   if(hotReloadBufferMs){
-    if(module && module.hot && module.hot.addStatusHandler){
+    if(typeof(module) !== 'undefined' && module.hot && module.hot.addStatusHandler){
       module.hot.addStatusHandler(status => {
         if(status === 'idle'){
           inHotReload = true
