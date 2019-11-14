@@ -21,11 +21,11 @@ You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr
 
 ## Setup
 ```
-npm install @welldone-software/why-did-you-render --save
+npm install @welldone-software/why-did-you-render -D
 ```
 or
 ```
-yarn add @welldone-software/why-did-you-render
+yarn add @welldone-software/why-did-you-render -D
 ```
 
 > *Notice: the required **React version** for the library is **>=16.8** but it might work with older versions by using `trackHooks: false` in `whyDidYouRender`'s init options.*
