@@ -4,7 +4,6 @@ import * as Redux from 'react-redux'
 import {connect, Provider} from 'react-redux'
 import {cloneDeep} from 'lodash'
 import * as rtl from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
 import {diffTypes} from 'consts'
 
 import whyDidYouRender from 'index'
@@ -45,14 +44,11 @@ describe('react-redux - simple', () => {
     const SimpleComponent = ({a}) => (
       <div data-testid="foo">{a.b}</div>
     )
-
-    SimpleComponent.whyDidYouRender = {
-      trackHooks: false
-    }
-
     const ConnectedSimpleComponent = connect(
       state => ({a: state.a})
     )(SimpleComponent)
+
+    SimpleComponent.whyDidYouRender = true
 
     const Main = () => (
       <Provider store={store}>
@@ -77,14 +73,11 @@ describe('react-redux - simple', () => {
     const SimpleComponent = ({a}) => (
       <div data-testid="foo">{a.b}</div>
     )
-
-    SimpleComponent.whyDidYouRender = {
-      trackHooks: false
-    }
-
     const ConnectedSimpleComponent = connect(
       state => ({a: state.a})
     )(SimpleComponent)
+
+    SimpleComponent.whyDidYouRender = true
 
     const Main = () => (
       <Provider store={store}>
@@ -119,14 +112,11 @@ describe('react-redux - simple', () => {
         {a.b}
       </div>
     )
-
-    SimpleComponent.whyDidYouRender = {
-      trackHooks: false
-    }
-
     const ConnectedSimpleComponent = connect(
       state => ({a: state.a})
     )(SimpleComponent)
+
+    SimpleComponent.whyDidYouRender = true
 
     const Main = () => (
       <Provider store={store}>

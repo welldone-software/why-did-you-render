@@ -18,6 +18,9 @@ import createFactory from './createFactory'
 import cloneElement from './cloneElement'
 import useState from './hooks/useState'
 import useContext from './hooks/useContext'
+import useMemo from './hooks/useMemo'
+import useReducer from './hooks/useReducer'
+import reactReduxHOC from './reactReduxHOC'
 import strict from './strict'
 import reactRedux from './reactRedux'
 import styledComponents from './styledComponents'
@@ -38,8 +41,11 @@ const demosList = {
   cloneElement,
   useState,
   useContext,
+  useMemo,
+  useReducer,
   strict,
   reactRedux,
+  reactReduxHOC,
   styledComponents
 }
 

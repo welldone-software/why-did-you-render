@@ -79,7 +79,8 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
 export const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
-  useContext: true
+  useContext: true,
+  useMemo: true
 }
 
 export default function whyDidYouRender(React, userOptions){
@@ -181,18 +182,20 @@ export default function whyDidYouRender(React, userOptions){
       }
     )
 
-    options.trackExtraHooks.forEach(([hookParent, hookName]) => {
-      const originalHook = hookParent[hookName]
-      const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
-      const newHook = function(...args){
-        const hookResult = originalHook.call(this, ...args)
-        trackHookChanges(hookName, {}, hookResult, React, options)
-        return hookResult
-      }
-      Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})
-      Object.assign(newHook, {originalHook})
-      hookParent[hookName] = newHook
-    })
+    if(options.trackHooks){
+      options.trackExtraHooks.forEach(([hookParent, hookName]) => {
+        const originalHook = hookParent[hookName]
+        const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
+        const newHook = function(...args){
+          const hookResult = originalHook.call(this, ...args)
+          trackHookChanges(hookName, {}, hookResult, React, options)
+          return hookResult
+        }
+        Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})
+        Object.assign(newHook, {originalHook})
+        hookParent[hookName] = newHook
+      })
+    }
   }
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
