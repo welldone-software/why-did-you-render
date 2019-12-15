@@ -1,9 +1,9 @@
 import React from 'react'
 import {createStore} from 'redux'
+import * as Redux from 'react-redux'
 import {connect, Provider} from 'react-redux'
 import {cloneDeep} from 'lodash'
 import * as rtl from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
 import {diffTypes} from 'consts'
 
 import whyDidYouRender from 'index'
@@ -44,11 +44,11 @@ describe('react-redux - simple', () => {
     const SimpleComponent = ({a}) => (
       <div data-testid="foo">{a.b}</div>
     )
-
     const ConnectedSimpleComponent = connect(
       state => ({a: state.a})
     )(SimpleComponent)
-    ConnectedSimpleComponent.whyDidYouRender = true
+
+    SimpleComponent.whyDidYouRender = true
 
     const Main = () => (
       <Provider store={store}>
@@ -73,10 +73,149 @@ describe('react-redux - simple', () => {
     const SimpleComponent = ({a}) => (
       <div data-testid="foo">{a.b}</div>
     )
-
     const ConnectedSimpleComponent = connect(
       state => ({a: state.a})
     )(SimpleComponent)
+
+    SimpleComponent.whyDidYouRender = true
+
+    const Main = () => (
+      <Provider store={store}>
+        <ConnectedSimpleComponent/>
+      </Provider>
+    )
+
+    rtl.render(<Main/>)
+
+    expect(store.getState().a.b).toBe('c')
+
+    rtl.act(() => {
+      store.dispatch({type: 'differentState'})
+    })
+
+    expect(store.getState().a.b).toBe('d')
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [
+        expect.objectContaining({diffType: diffTypes.different}),
+        expect.objectContaining({diffType: diffTypes.different})
+      ],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+  })
+
+  test('deep equals state after dispatch', () => {
+    const SimpleComponent = ({a}) => (
+      <div data-testid="foo">
+        {a.b}
+      </div>
+    )
+    const ConnectedSimpleComponent = connect(
+      state => ({a: state.a})
+    )(SimpleComponent)
+
+    SimpleComponent.whyDidYouRender = true
+
+    const Main = () => (
+      <Provider store={store}>
+        <ConnectedSimpleComponent/>
+      </Provider>
+    )
+
+    rtl.render(<Main/>)
+
+    expect(store.getState().a.b).toBe('c')
+
+    rtl.act(() => {
+      store.dispatch({type: 'deepEqlState'})
+    })
+
+    expect(store.getState().a.b).toBe('c')
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [
+        expect.objectContaining({diffType: diffTypes.deepEquals})
+      ],
+      stateDifferences: false,
+      hookDifferences: false
+    })
+  })
+})
+
+describe('react-redux - hooks', () => {
+  const initialState = {a: {b: 'c'}}
+
+  const rootReducer = (state, action) => {
+    if(action.type === 'differentState'){
+      return {a: {b: 'd'}}
+    }
+
+    if(action.type === 'deepEqlState'){
+      return cloneDeep(state)
+    }
+
+    return state
+  }
+
+  let store
+  let updateInfos
+
+  beforeEach(() => {
+    store = createStore(rootReducer, initialState)
+    updateInfos = []
+    whyDidYouRender(React, {
+      notifier: updateInfo => updateInfos.push(updateInfo),
+      trackExtraHooks: [
+        [Redux, 'useSelector']
+      ]
+    })
+  })
+
+  afterEach(() => {
+    if(React.__REVERT_WHY_DID_YOU_RENDER__){
+      React.__REVERT_WHY_DID_YOU_RENDER__()
+    }
+  })
+
+  test('same state after dispatch', () => {
+    const ConnectedSimpleComponent = () => {
+      const a = Redux.useSelector(state => state)
+      return (
+        <div data-testid="foo">{a.b}</div>
+      )
+    }
+    ConnectedSimpleComponent.whyDidYouRender = true
+
+    const Main = () => (
+      <Provider store={store}>
+        <ConnectedSimpleComponent/>
+      </Provider>
+    )
+
+    rtl.render(<Main/>)
+
+    expect(store.getState().a.b).toBe('c')
+
+    rtl.act(() => {
+      store.dispatch({type: 'sameState'})
+    })
+
+    expect(store.getState().a.b).toBe('c')
+
+    expect(updateInfos).toHaveLength(0)
+  })
+
+  test('different state after dispatch', () => {
+    const ConnectedSimpleComponent = () => {
+      const a = Redux.useSelector(state => state.a)
+      return (
+        <div data-testid="foo">{a.b}</div>
+      )
+    }
+
     ConnectedSimpleComponent.whyDidYouRender = true
 
     const Main = () => (
@@ -95,47 +234,32 @@ describe('react-redux - simple', () => {
 
     expect(store.getState().a.b).toBe('d')
 
-    expect(updateInfos).toHaveLength(4)
-    expect(updateInfos[0].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[1].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[2].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[3].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
+    expect(updateInfos).toHaveLength(2)
+    expect(updateInfos[0]).toEqual(expect.objectContaining({
+      hookName: 'useReducer' // react-redux inner hook
+    }))
+    expect(updateInfos[1]).toEqual(expect.objectContaining({
+      hookName: 'useSelector',
+      reason: {
+        propsDifferences: false,
+        stateDifferences: false,
+        hookDifferences: [
+          {diffType: diffTypes.different, pathString: '.b', prevValue: 'c', nextValue: 'd'},
+          {diffType: diffTypes.different, pathString: '', prevValue: {b: 'c'}, nextValue: {b: 'd'}}
+        ]
+      }
+    }))
   })
 
   test('deep equals state after dispatch', () => {
-    const SimpleComponent = ({a}) => (
-      <div data-testid="foo">
-        {a.b}
-      </div>
-    )
-
-    const ConnectedSimpleComponent = connect(
-      state => ({a: state.a})
-    )(SimpleComponent)
+    const ConnectedSimpleComponent = () => {
+      const a = Redux.useSelector(state => state.a)
+      return (
+        <div data-testid="foo">
+          {a.b}
+        </div>
+      )
+    }
     ConnectedSimpleComponent.whyDidYouRender = true
 
     const Main = () => (
@@ -154,226 +278,19 @@ describe('react-redux - simple', () => {
 
     expect(store.getState().a.b).toBe('c')
 
-    expect(updateInfos).toHaveLength(4)
-    expect(updateInfos[0].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[1].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[2].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[3].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-  })
-})
-
-describe('react-redux using include', () => {
-  const initialState = {a: {b: 'c'}}
-
-  const rootReducer = (state, action) => {
-    if(action.type === 'differentState'){
-      return {a: {b: 'd'}}
-    }
-
-    if(action.type === 'deepEqlState'){
-      return cloneDeep(state)
-    }
-
-    if(action.type === 'additionalObj'){
-      return {
-        ...state,
-        x: 'y'
+    expect(updateInfos).toHaveLength(2)
+    expect(updateInfos[0]).toEqual(expect.objectContaining({
+      hookName: 'useReducer' // react-redux inner hook
+    }))
+    expect(updateInfos[1]).toEqual(expect.objectContaining({
+      hookName: 'useSelector',
+      reason: {
+        propsDifferences: false,
+        stateDifferences: false,
+        hookDifferences: [
+          {diffType: diffTypes.deepEquals, pathString: '', prevValue: {b: 'c'}, nextValue: {b: 'c'}}
+        ]
       }
-    }
-
-    return state
-  }
-
-  let store
-  let updateInfos
-
-  beforeEach(() => {
-    store = createStore(rootReducer, initialState)
-    updateInfos = []
-    whyDidYouRender(React, {
-      notifier: updateInfo => updateInfos.push(updateInfo),
-      include: [/^ConnectFunction$/]
-    })
-  })
-
-  afterEach(() => {
-    if(React.__REVERT_WHY_DID_YOU_RENDER__){
-      React.__REVERT_WHY_DID_YOU_RENDER__()
-    }
-  })
-
-  test('deep equals state after dispatch', () => {
-    const SimpleComponent = ({a}) => (
-      <div data-testid="foo">
-        {a.b}
-      </div>
-    )
-
-    const ConnectedSimpleComponent = connect(
-      state => ({a: state.a})
-    )(SimpleComponent)
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
-    )
-
-    rtl.render(<Main/>)
-
-    expect(store.getState().a.b).toBe('c')
-
-    rtl.act(() => {
-      store.dispatch({type: 'deepEqlState'})
-    })
-
-    expect(store.getState().a.b).toBe('c')
-
-    expect(updateInfos).toHaveLength(4)
-    expect(updateInfos[0].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[1].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[2].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[3].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-  })
-
-  test('bad connect that re-creates objects', () => {
-    const SimpleComponent = ({c}) => (
-      <div data-testid="foo">
-        {c.a.b}
-      </div>
-    )
-
-    const ConnectedSimpleComponent = connect(
-      state => ({c: {a: state.a}})
-    )(SimpleComponent)
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
-    )
-
-    rtl.render(<Main/>)
-
-    expect(store.getState().a.b).toBe('c')
-
-    rtl.act(() => {
-      store.dispatch({type: 'additionalObj'})
-    })
-
-    expect(store.getState().a.b).toBe('c')
-    expect(store.getState().x).toBe('y')
-
-    expect(updateInfos).toHaveLength(4)
-    expect(updateInfos[0].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.not.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[1].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({
-          diffType: diffTypes.deepEquals,
-          pathString: '.c'
-        })
-      ])
-    })
-    expect(updateInfos[2].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-    expect(updateInfos[3].reason).toEqual({
-      propsDifferences: false,
-      stateDifferences: false,
-      hookDifferences: expect.arrayContaining([
-        expect.objectContaining({diffType: diffTypes.deepEquals})
-      ])
-    })
-  })
-
-  test('right connect that doesn\'t re-creates objects', () => {
-    const SimpleComponent = ({a}) => (
-      <div data-testid="foo">
-        {a.b}
-      </div>
-    )
-
-    const ConnectedSimpleComponent = connect(
-      state => ({a: state.a})
-    )(SimpleComponent)
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
-    )
-
-    rtl.render(<Main/>)
-
-    expect(store.getState().a.b).toBe('c')
-
-    rtl.act(() => {
-      store.dispatch({type: 'additionalObj'})
-    })
-
-    expect(store.getState().a.b).toBe('c')
-    expect(store.getState().x).toBe('y')
-
-    expect(updateInfos).toHaveLength(0)
+    }))
   })
 })

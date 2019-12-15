@@ -1,17 +1,19 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import {createStore} from 'redux'
-import connect from 'react-redux/lib/connect/connect'
-import Provider from 'react-redux/lib/components/Provider'
 import _ from  'lodash'
-
-connect = connect.default
-Provider = Provider.default
+import {createStore} from 'redux'
+import Redux from 'react-redux/lib'
 
 export default {
   description: 'React Redux',
   fn({domElement, whyDidYouRender}){
-    whyDidYouRender(React, {include: [/^ConnectFunction$/]})
+    whyDidYouRender(React, {trackExtraHooks: [
+      [Redux, 'useSelector']
+    ]})
+
+    const useDispatch = Redux.useDispatch
+    const useSelector = Redux.useSelector
+    const Provider = Redux.Provider
 
     const initialState = {a: {b: 'c'}}
 
@@ -29,25 +31,21 @@ export default {
 
     const store = createStore(rootReducer, initialState)
 
-    const SimpleComponent = ({a, randomObj, deepEqlObj, sameObj}) => {
+    const ConnectedSimpleComponent = () => {
+      const a = useSelector(state => state.a)
+      const dispatch = useDispatch()
+
       return (
         <div>
           {`{a.b} is: ${a.b}`}
-          <button onClick={sameObj}>Same State</button>
-          <button onClick={deepEqlObj}>Deep Equal State</button>
-          <button onClick={randomObj}>Random Object</button>
+          <br/>
+          <button onClick={() => dispatch({type: 'sameObj'})}>Same State</button>
+          <button onClick={() => dispatch({type: 'deepEqlObj'})}>Deep Equal State</button>
+          <button onClick={() => dispatch({type: 'randomObj'})}>Random Object</button>
         </div>
       )
     }
-
-    const ConnectedSimpleComponent = connect(
-      state => ({a: state.a}),
-      ({
-        randomObj: () => ({type: 'randomObj'}),
-        deepEqlObj: () => ({type: 'deepEqlObj'}),
-        sameObj: () => ({type: 'sameObj'})
-      })
-    )(SimpleComponent)
+    ConnectedSimpleComponent.whyDidYouRender = true
 
     const Main = () => (
       <Provider store={store}>

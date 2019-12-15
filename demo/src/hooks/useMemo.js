@@ -7,15 +7,25 @@ export default {
   fn({domElement, whyDidYouRender}){
     whyDidYouRender(React)
 
-    const ComponentWithMemo = React.memo(({count}) => {
-      console.log('render ComponentWithMemo')
-      const countObj = React.useMemo(() => ({a: 'a'}))
+    const ComponentWithAlwaysNewMemoResult = React.memo(({count}) => {
+      console.log('render ComponentWithAlwaysNewMemoResult')
+      const countObj = React.useMemo(() => ({a: 'a'}), [count])
       return (
         <p>count: {count} JSON: {JSON.stringify(countObj)}</p>
       )
     })
-    ComponentWithMemo.displayName = 'ComponentWithMemo'
-    ComponentWithMemo.whyDidYouRender = true
+    ComponentWithAlwaysNewMemoResult.displayName = 'ComponentWithAlwaysNewMemoResult'
+    ComponentWithAlwaysNewMemoResult.whyDidYouRender = true
+
+    const ComponentWithSameMemoResult = React.memo(({count}) => {
+      console.log('render ComponentWithSameMemoResult')
+      const countObj = React.useMemo(() => ({a: 'a'}), [])
+      return (
+        <p>count: {count} JSON: {JSON.stringify(countObj)}</p>
+      )
+    })
+    ComponentWithSameMemoResult.displayName = 'ComponentWithSameMemoResult'
+    ComponentWithSameMemoResult.whyDidYouRender = true
 
     function Main(){
       const [count, setCount] = React.useState(0)
@@ -25,7 +35,8 @@ export default {
           <button onClick={() => setCount(count + 1)}>
             Current count: {count}
           </button>
-          <ComponentWithMemo count={count}/>
+          <ComponentWithAlwaysNewMemoResult count={count}/>
+          <ComponentWithSameMemoResult count={count}/>
         </div>
       )
     }

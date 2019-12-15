@@ -20,6 +20,10 @@ It can also help you to simply track when and why a certain component re-renders
 You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
 
 ## Setup
+> The required React version for the library is **16.12** but it is expected to work with older versions as well.
+
+> For versions before 16.8 turn off hooks support by using `trackHooks: false` in `whyDidYouRender`'s init options.*
+
 ```
 npm install @welldone-software/why-did-you-render --save
 ```
@@ -28,10 +32,8 @@ or
 yarn add @welldone-software/why-did-you-render
 ```
 
-> *Notice: the required **React version** for the library is **>=16.8** but it might work with older versions by using `trackHooks: false` in `whyDidYouRender`'s init options.*
-
 ## Installation
-Execute `whyDidYouRender` with `React` as it's first argument.
+Execute `whyDidYouRender` with `React` as it's first argument **before any `React` element is created**.
 
 ```js
 import React from 'react';
@@ -42,22 +44,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 ```
 
-If you are building for latest browsers and don't transpile, the "class" keyword use the "no-classes-transpile" dist:
-```js
-import React from 'react';
-
-if (process.env.NODE_ENV !== 'production') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js');
-  whyDidYouRender(React);
-}
-```
-Not doing so will [result in a bug](https://github.com/welldone-software/why-did-you-render/issues/5)
-where a transpiled class tries to extend a native class:
-
-`Class constructors must be invoked with 'new'`.
-
 ## Usage
-Mark all the components you want to be notified about their re-renders with `whyDidYouRender` like this:
+Mark any component you want to be notified about their "redundant" re-renders with `whyDidYouRender` like this:
 
 ```js
 class BigListPureComponent extends React.PureComponent {
@@ -86,7 +74,7 @@ You can also pass an object to specify more advanced settings:
 ```js
 EnhancedMenu.whyDidYouRender = {
   logOnDifferentValues: true,
-  customName: 'EnhancedMenu'
+  customName: 'Menu'
 }
 ```
 
@@ -108,22 +96,23 @@ EnhancedMenu.whyDidYouRender = {
   Sometimes the name of the component can be very inconvenient. For example:
 
   ```js
-  const EnhancedMenu = Connect(withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu))))))))))))))))))))))))
+  const EnhancedMenu = withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu)))))))))))))))))))))))
   ```
 
   will have the display name:
 
   ```js
-  Connect(withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu))))))))))))))))))))))))
+  withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu)))))))))))))))))))))))
   ```
 
   To prevent polluting the console, and any other reason, you can change it using `customName`.
 
 ## Options
-Optionally you can pass in options as a second parameter. The following options are available:
+Optionally you can pass in `options` as the second parameter. The following options are available:
 - `include: [RegExp, ...]` (`null` by default)
 - `exclude: [RegExp, ...]` (`null` by default)
 - `trackHooks: true`
+- `trackExtraHooks: []`
 - `logOnDifferentValues: false`
 - `hotReloadBufferMs: 500`
 - `onlyLogs: false`
@@ -148,6 +137,14 @@ whyDidYouRender(React, { include: [/^ConnectFunction/] });
 You can turn off tracking of hooks changes.
 
 Understand and fix hook issues [>> HERE <<](http://bit.ly/wdyr3).
+
+#### trackExtraHooks
+Adding extra hooks to track for "redundant" results:
+```js
+whyDidYouRender(React, {trackExtraHooks: [
+  [Redux, 'useSelector']
+]});
+```
 
 #### logOnDifferentValues
 Normally, you only want notifications about component re-renders when their props and state
@@ -177,6 +174,38 @@ Controls the colors used in the console notifications
 
 #### notifier
 You can create a custom notifier if the default one does not suite your needs.
+
+## Troubleshooting
+
+### `Class constructors must be invoked with 'new'`.
+If you are building for latest browsers (or using es6 classes without building) you don't transpile the "class" keyword.
+
+This causes an error because the library uses transpiled classes, and [transpiled classes currently can't extend native classes](https://github.com/welldone-software/why-did-you-render/issues/5).
+
+To fix this, use the "no-classes-transpile" dist:
+```js
+import React from 'react';
+
+if (process.env.NODE_ENV !== 'production') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js');
+  whyDidYouRender(React);
+}
+```
+
+### React-Redux `connect` HOC is spamming the console
+Since `connect` hoists statics, if you add WDYR to the inner component, it is also added to the HOC component where complex hooks are running.
+
+To fix this, add the `whyDidYouRender = true` static to a component after the connect:
+```js
+  const SimpleComponent = ({a}) => <div data-testid="foo">{a.b}</div>)
+  // not before the connect: 
+  // SimpleComponent.whyDidYouRender = true
+  const ConnectedSimpleComponent = connect(
+    state => ({a: state.a})
+  )(SimpleComponent)
+  // after the connect:
+  SimpleComponent.whyDidYouRender = true
+```
 
 ## Credit
 
