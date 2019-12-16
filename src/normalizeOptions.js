@@ -35,6 +35,7 @@ export default function normalizeOptions(userOptions = {}){
     diffNameColor: 'blue',
     diffPathColor: 'red',
     trackExtraHooks: [],
+    trackAllPureComponents: false,
     ...userOptions
   }
 }

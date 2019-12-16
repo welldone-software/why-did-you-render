@@ -1,3 +1,5 @@
+import {isMemoComponent} from './utils'
+
 function shouldInclude(displayName, options){
   return (
     options.include &&
@@ -14,17 +16,24 @@ function shouldExclude(displayName, options){
   )
 }
 
-export default function shouldTrack({Component, displayName, options, isHookChange}){
+export default function shouldTrack({Component, displayName, options, React, isHookChange}){
   if(shouldExclude(displayName, options)){
     return false
   }
 
+  if(isHookChange && (
+    Component.whyDidYouRender && Component.whyDidYouRender.trackHooks === false
+  )){
+    return false
+  }
+
   return !!(
-    Component.whyDidYouRender ||
+    Component.whyDidYouRender || (
+      options.trackAllPureComponents && (
+        (Component && Component.prototype instanceof React.PureComponent) ||
+        isMemoComponent(Component)
+      )
+    ) ||
     shouldInclude(displayName, options)
-  ) && !(
-    isHookChange && (
-      Component.whyDidYouRender && Component.whyDidYouRender.trackHooks === false
-    )
   )
 }

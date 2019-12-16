@@ -23,7 +23,7 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
   const Component = ComponentHookDispatchedFromInstance.type.ComponentForHooksTracking || ComponentHookDispatchedFromInstance.type
   const displayName = getDisplayName(Component)
 
-  const isShouldTrack = shouldTrack({Component, displayName, options, isHookChange: true})
+  const isShouldTrack = shouldTrack({Component, displayName, options, React, isHookChange: true})
   if(!isShouldTrack){
     return hookResult
   }
@@ -103,7 +103,7 @@ export default function whyDidYouRender(React, userOptions){
           isMemoComponent(componentNameOrComponent) ||
           isForwardRefComponent(componentNameOrComponent)
         ) &&
-        shouldTrack({Component: componentNameOrComponent, displayName: getDisplayName(componentNameOrComponent), options})
+        shouldTrack({Component: componentNameOrComponent, displayName: getDisplayName(componentNameOrComponent), React, options})
       )
 
       if(isShouldTrack){

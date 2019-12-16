@@ -16,33 +16,74 @@ class NotTrackedTestComponent extends React.Component{
   }
 }
 
+class PureComponent extends React.PureComponent{
+  render(){
+    return <div>hi!</div>
+  }
+}
+
+const MemoComponent = React.memo(() => (
+  <div>hi!</div>
+))
+MemoComponent.displayName = 'MemoComponent'
+
 test('Do not track not tracked component (default)', () => {
-  const isShouldTrack = shouldTrack({Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {}})
+  const isShouldTrack = shouldTrack({React, Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {}})
   expect(isShouldTrack).toBe(false)
 })
 
 test('Track tracked component', () => {
-  const isShouldTrack = shouldTrack({Component: TrackedTestComponent, displayName: getDisplayName(TrackedTestComponent), options: {}})
+  const isShouldTrack = shouldTrack({React, Component: TrackedTestComponent, displayName: getDisplayName(TrackedTestComponent), options: {}})
   expect(isShouldTrack).toBe(true)
 })
 
 test('Track included not tracked components', () => {
-  const isShouldTrack = shouldTrack({Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
+  const isShouldTrack = shouldTrack({React, Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
     include: [/TestComponent/]
   }})
   expect(isShouldTrack).toBe(true)
 })
 
 test('Do not track not included not tracked components', () => {
-  const isShouldTrack = shouldTrack({Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
+  const isShouldTrack = shouldTrack({React, Component: NotTrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
     include: [/0/]
   }})
   expect(isShouldTrack).toBe(false)
 })
 
 test('Do not track excluded tracked components', () => {
-  const isShouldTrack = shouldTrack({Component: TrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
+  const isShouldTrack = shouldTrack({React, Component: TrackedTestComponent, displayName: getDisplayName(NotTrackedTestComponent), options: {
     exclude: [/TrackedTestComponent/]
+  }})
+  expect(isShouldTrack).toBe(false)
+})
+
+test('Pure component', () => {
+  const isShouldTrack = shouldTrack({React, Component: PureComponent, displayName: getDisplayName(PureComponent), options: {
+    trackAllPureComponents: true
+  }})
+  expect(isShouldTrack).toBe(true)
+})
+
+test('Memo component', () => {
+  const isShouldTrack = shouldTrack({React, Component: MemoComponent, displayName: getDisplayName(MemoComponent), options: {
+      trackAllPureComponents: true
+    }})
+  expect(isShouldTrack).toBe(true)
+})
+
+test('Pure component excluded', () => {
+  const isShouldTrack = shouldTrack({React, Component: PureComponent, displayName: getDisplayName(PureComponent), options: {
+    trackAllPureComponents: true,
+    exclude: [/PureComponent/]
+  }})
+  expect(isShouldTrack).toBe(false)
+})
+
+test('Memo component excluded', () => {
+  const isShouldTrack = shouldTrack({React, Component: MemoComponent, displayName: getDisplayName(MemoComponent), options: {
+    trackAllPureComponents: true,
+    exclude: [/MemoComponent/]
   }})
   expect(isShouldTrack).toBe(false)
 })
