@@ -21,6 +21,10 @@ export default function shouldTrack({Component, displayName, options, React, isH
     return false
   }
 
+  if(Component.whyDidYouRender === false){
+    return false
+  }
+
   if(isHookChange && (
     Component.whyDidYouRender && Component.whyDidYouRender.trackHooks === false
   )){

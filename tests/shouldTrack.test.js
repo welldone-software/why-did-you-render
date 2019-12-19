@@ -16,6 +16,13 @@ class NotTrackedTestComponent extends React.Component{
   }
 }
 
+class ExcludedTestComponent extends React.Component{
+  static whyDidYouRender = false
+  render(){
+    return <div>hi!</div>
+  }
+}
+
 class PureComponent extends React.PureComponent{
   render(){
     return <div>hi!</div>
@@ -42,6 +49,13 @@ test('Track included not tracked components', () => {
     include: [/TestComponent/]
   }})
   expect(isShouldTrack).toBe(true)
+})
+
+test('Dont track components with whyDidYouRender=false', () => {
+  const isShouldTrack = shouldTrack({React, Component: ExcludedTestComponent, displayName: getDisplayName(ExcludedTestComponent), options: {
+    include: [/ExcludedTestComponent/]
+  }})
+  expect(isShouldTrack).toBe(false)
 })
 
 test('Do not track not included not tracked components', () => {
