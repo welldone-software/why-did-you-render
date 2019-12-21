@@ -1,4 +1,4 @@
-import {get, mapValues} from 'lodash'
+import {get} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -145,57 +145,28 @@ export default function whyDidYouRender(React, userOptions){
 
   Object.assign(React.createFactory, origCreateFactory)
 
-  let origHooks
-
   if(options.trackHooks){
-    const patchedHooks = mapValues(hooksConfig, (hookConfig, hookName) => {
-      return (...args) => {
-        const origHook = origHooks[hookName]
-        if(!origHook){
-          throw new Error('[WhyDidYouRender] A problem with React Hooks patching occurred.')
-        }
-        const hookResult = origHook(...args)
-        if(hookConfig){
-          trackHookChanges(hookName, hookConfig === true ? {} : hookConfig, hookResult, React, options)
-        }
-        return hookResult
-      }
+    const nativeHooks = Object.entries(hooksConfig).map(([hookName, hookTrackingConfig]) => {
+      return [React, hookName, hookTrackingConfig]
     })
 
-    Object.defineProperty(
-      React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
-      'current',
-      {
-        set(newHooks){
-          origHooks = newHooks && {
-            ...newHooks,
-            ...newHooks.origHooks
-          }
-        },
-        get(){
-          return origHooks && {
-            ...origHooks,
-            ...patchedHooks,
-            origHooks
-          }
-        }
-      }
-    )
+    const hooksToTrack = [
+      ...nativeHooks,
+      ...options.trackExtraHooks
+    ]
 
-    if(options.trackHooks){
-      options.trackExtraHooks.forEach(([hookParent, hookName]) => {
-        const originalHook = hookParent[hookName]
-        const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
-        const newHook = function(...args){
-          const hookResult = originalHook.call(this, ...args)
-          trackHookChanges(hookName, {}, hookResult, React, options)
-          return hookResult
-        }
-        Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})
-        Object.assign(newHook, {originalHook})
-        hookParent[hookName] = newHook
-      })
-    }
+    hooksToTrack.forEach(([hookParent, hookName, hookTrackingConfig = {}]) => {
+      const originalHook = hookParent[hookName]
+      const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
+      const newHook = function(...args){
+        const hookResult = originalHook.call(this, ...args)
+        trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options)
+        return hookResult
+      }
+      Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})
+      Object.assign(newHook, {originalHook})
+      hookParent[hookName] = newHook
+    })
   }
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
@@ -203,18 +174,19 @@ export default function whyDidYouRender(React, userOptions){
       createElement: origCreateElement,
       createFactory: origCreateFactory
     })
+
     componentsMap = null
-    Object.defineProperty(
-      React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentDispatcher,
-      'current',
-      {
-        writable: true,
-        value: origHooks
+
+    const hooksToRevert = [
+      ...Object.keys(hooksConfig).map(hookName => [React, hookName]),
+      ...options.trackExtraHooks
+    ]
+    hooksToRevert.forEach(([hookParent, hookName]) => {
+      if(hookParent[hookName].originalHook){
+        hookParent[hookName] = hookParent[hookName].originalHook
       }
-    )
-    options.trackExtraHooks.forEach(([hookParent, hookName]) => {
-      hookParent[hookName] = hookParent[hookName].originalHook
     })
+
     delete React.__REVERT_WHY_DID_YOU_RENDER__
   }
 

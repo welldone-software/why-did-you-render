@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from 'index'
 import {diffTypes} from 'consts'
@@ -30,7 +30,7 @@ describe('hooks - useContext', () => {
     ComponentWithContextHook.whyDidYouRender = true
 
     const OuterComponent = () => {
-      const [currentState, setCurrentState] = useState('c')
+      const [currentState, setCurrentState] = React.useState('c')
 
       React.useLayoutEffect(() => {
         setCurrentState('c')
@@ -65,7 +65,7 @@ describe('hooks - useContext', () => {
     ComponentWithContextHook.whyDidYouRender = true
 
     const OuterComponent = () => {
-      const [currentState, setCurrentState] = useState({c: 'c'})
+      const [currentState, setCurrentState] = React.useState({c: 'c'})
 
       React.useLayoutEffect(() => {
         setCurrentState({c: 'c'})
@@ -110,7 +110,7 @@ describe('hooks - useContext', () => {
     ComponentWithContextHook.whyDidYouRender = true
 
     const OuterComponent = () => {
-      const [currentState, setCurrentState] = useState({c: 'c'})
+      const [currentState, setCurrentState] = React.useState({c: 'c'})
 
       React.useLayoutEffect(() => {
         setCurrentState({c: 'c'})

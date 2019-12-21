@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect} from 'react'
+import React from 'react'
 import * as rtl from '@testing-library/react'
 import whyDidYouRender from 'index'
 import {diffTypes} from 'consts'
@@ -191,9 +191,9 @@ describe('track hooks', () => {
 
   test('deep equals direct import', () => {
     const ComponentWithHooks = ({a}) => {
-      const [currentState, setCurrentState] = useState({b: 'b'})
+      const [currentState, setCurrentState] = React.useState({b: 'b'})
 
-      useLayoutEffect(() => {
+      React.useLayoutEffect(() => {
         setCurrentState({b: 'b'})
       }, [])
 
@@ -223,13 +223,13 @@ describe('track hooks', () => {
 
   test('many deep equals direct import', () => {
     const ComponentWithHooks = ({a}) => {
-      const [currentStateA, setCurrentStateA] = useState({a: 'a'})
-      const [currentStateB, setCurrentStateB] = useState({b: 'b'})
-      const [currentStateC, setCurrentStateC] = useState({c: 'c'})
-      const [currentStateD, setCurrentStateD] = useState({d: 'd'})
-      const [currentStateE, setCurrentStateE] = useState({e: 'e'})
+      const [currentStateA, setCurrentStateA] = React.useState({a: 'a'})
+      const [currentStateB, setCurrentStateB] = React.useState({b: 'b'})
+      const [currentStateC, setCurrentStateC] = React.useState({c: 'c'})
+      const [currentStateD, setCurrentStateD] = React.useState({d: 'd'})
+      const [currentStateE, setCurrentStateE] = React.useState({e: 'e'})
 
-      useLayoutEffect(() => {
+      React.useLayoutEffect(() => {
         setCurrentStateA({a: 'a'})
         setCurrentStateB({b: 'b'})
         setCurrentStateC({c: 'c'})
