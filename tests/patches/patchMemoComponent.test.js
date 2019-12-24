@@ -92,58 +92,6 @@ test('Component memoized with React.memo - deep equal prop values', () => {
   })
 })
 
-test('Strict mode- memoized functional component with no props change', () => {
-  const Main = props => {
-    return (
-      <React.StrictMode>
-        <div>
-          <ReactMemoTestComponent {...props}/>
-        </div>
-      </React.StrictMode>
-    )
-  }
-  const {rerender} = rtl.render(
-    <Main a={1}/>
-  )
-
-  rerender(
-    <Main a={1}/>
-  )
-
-  expect(updateInfos).toHaveLength(0)
-})
-
-test('Strict mode- memoized functional component with props change', () => {
-  const Main = props => {
-    return (
-      <React.StrictMode>
-        <div>
-          <ReactMemoTestComponent {...props}/>
-        </div>
-      </React.StrictMode>
-    )
-  }
-  const {rerender} = rtl.render(
-    <Main a={1} b={[]}/>
-  )
-
-  rerender(
-    <Main a={1} b={[]}/>
-  )
-
-  expect(updateInfos).toHaveLength(1)
-  expect(updateInfos[0].reason).toEqual({
-    propsDifferences: [{
-      diffType: diffTypes.deepEquals,
-      prevValue: [],
-      nextValue: [],
-      pathString: 'b'
-    }],
-    stateDifferences: false,
-    hookDifferences: false
-  })
-})
-
 test('memo a forward ref component', () => {
   const content = 'My component!!!'
 

@@ -11,13 +11,6 @@ class TestComponent extends React.Component{
   }
 }
 
-class PureTestComponent extends React.PureComponent{
-  static whyDidYouRender = true
-  render(){
-    return <div>hi!</div>
-  }
-}
-
 const createStateTestComponent = (initialState, newState) => {
   return class StateTestComponent extends React.Component{
     static whyDidYouRender = true
@@ -426,115 +419,6 @@ test('Several class components', () => {
 
   expect(updateInfos[2].reason).toEqual({
     propsDifferences: [],
-    stateDifferences: false,
-    hookDifferences: false
-  })
-})
-
-test('Strict mode- class component no props change', () => {
-  const {rerender} = rtl.render(
-    <React.StrictMode>
-      <div>
-        <TestComponent a={1}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  rerender(
-    <React.StrictMode>
-      <div>
-        <TestComponent a={1}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  expect(updateInfos).toHaveLength(1)
-  expect(updateInfos[0].reason).toEqual({
-    propsDifferences: [],
-    stateDifferences: false,
-    hookDifferences: false
-  })
-})
-
-test('Strict mode- class component props change', () => {
-  const {rerender} = rtl.render(
-    <React.StrictMode>
-      <div>
-        <TestComponent a={[]}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  rerender(
-    <React.StrictMode>
-      <div>
-        <TestComponent a={[]}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  expect(updateInfos).toHaveLength(1)
-  expect(updateInfos[0].reason).toEqual({
-    propsDifferences: [
-      {
-        pathString: 'a',
-        diffType: diffTypes.deepEquals,
-        prevValue: [],
-        nextValue: []
-      }
-    ],
-    stateDifferences: false,
-    hookDifferences: false
-  })
-})
-
-test('Strict mode- pure class component no props change', () => {
-  const {rerender} = rtl.render(
-    <React.StrictMode>
-      <div>
-        <PureTestComponent a={1}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  rerender(
-    <React.StrictMode>
-      <div>
-        <PureTestComponent a={1}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  expect(updateInfos).toHaveLength(0)
-})
-
-test('Strict mode- pure class component props change', () => {
-  const {rerender} = rtl.render(
-    <React.StrictMode>
-      <div>
-        <PureTestComponent a={[]}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  rerender(
-    <React.StrictMode>
-      <div>
-        <PureTestComponent a={[]}/>
-      </div>
-    </React.StrictMode>
-  )
-
-  expect(updateInfos).toHaveLength(1)
-  expect(updateInfos[0].reason).toEqual({
-    propsDifferences: [
-      {
-        pathString: 'a',
-        diffType: diffTypes.deepEquals,
-        prevValue: [],
-        nextValue: []
-      }
-    ],
     stateDifferences: false,
     hookDifferences: false
   })
