@@ -148,7 +148,7 @@ whyDidYouRender(React, {trackExtraHooks: [
 
 #### logOnDifferentValues
 Normally, you only want notifications about component re-renders when their props and state
-are the same, because it means these re-renders could of been avoided. But you can also track
+are the same, because it means these re-renders could have been avoided. But you can also track
 all re-renders, even on different state/props.
 
 ```js
