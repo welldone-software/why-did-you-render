@@ -33,7 +33,7 @@ yarn add @welldone-software/why-did-you-render
 ```
 
 ## Installation
-Execute `whyDidYouRender` with `React` as it's first argument **before any `React` element is created**.
+Execute `whyDidYouRender` with `React` as its first argument **before any `React` element is created**.
 
 ```js
 import React from 'react';
