@@ -420,7 +420,8 @@ function normalizeOptions() {
     diffNameColor: 'blue',
     diffPathColor: 'red',
     trackExtraHooks: [],
-    trackAllPureComponents: false
+    trackAllPureComponents: false,
+    trackAllComponents: false
   }, userOptions);
 }
 

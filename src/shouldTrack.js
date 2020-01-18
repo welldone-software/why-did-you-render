@@ -31,5 +31,14 @@ export default function shouldTrack({Component, displayName, options, React, isH
     return false
   }
 
-  return true;
+  return !!(
+    options.trackAllComponents ||
+    Component.whyDidYouRender || (
+      options.trackAllPureComponents && (
+        (Component && Component.prototype instanceof React.PureComponent) ||
+        isMemoComponent(Component)
+      )
+    ) ||
+    shouldInclude(displayName, options)
+  )
 }

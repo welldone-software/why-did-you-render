@@ -120,6 +120,7 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `titleColor`
 - `diffNameColor`
 - `diffPathColor`
+- `trackAllComponents: false`
 - `notifier: ({Component, displayName, prevProps, prevState, nextProps, nextState, reason, options}) => void`
 
 #### include / exclude
