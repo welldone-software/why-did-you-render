@@ -23,9 +23,9 @@ FunctionalComponent.whyDidYouRender = 'a'
 const MemoFunctionalComponent = React.memo<Props>(({str}) => <div>{str}</div>)
 MemoFunctionalComponent.whyDidYouRender = true
 MemoFunctionalComponent.whyDidYouRender = {collapseGroups: true}
-/* THIS SHOULD ERROR because we use an unsupported whyDidYouRender prop */
+/* SHOULD ERROR because we use an unsupported whyDidYouRender prop */
 MemoFunctionalComponent.whyDidYouRender = {nonWDYRProp: true}
-/* THIS SHOULD ERROR because whyDidYouRender shouldn't be a string */
+/* SHOULD ERROR because whyDidYouRender shouldn't be a string */
 MemoFunctionalComponent.whyDidYouRender = 'a'
 
 /* SHOULD ERROR because bad trackExtraHooks was provided (second argument should be string) */
@@ -73,7 +73,7 @@ class ErroredClassComponentWithNonWDYRProp extends React.Component<Props>{
 }
 
 class ErroredClassComponentWithStringWDYR extends React.Component<Props>{
-  /* THIS SHOULD ERROR because whyDidYouRender shouldn't be a string */
+  /* SHOULD ERROR because whyDidYouRender shouldn't be a string */
   static whyDidYouRender = 'a'
   render(){
     const {str} = this.props
@@ -86,6 +86,7 @@ class ErroredClassComponentWithStringWDYR extends React.Component<Props>{
 class ErrorousClassComponentWithTrackExtraHooks extends React.Component<Props>{
   static whyDidYouRender = {
     collapseGroups: true,
+    /* SHOULD ERROR because bad trackExtraHooks was provided (second argument should be string) */
     trackExtraHooks: [[Redux, Redux.useSelector] as WhyDidYouRender.ExtraHookToTrack]
   }
   render(){
@@ -141,7 +142,7 @@ class ErroredPureClassComponentWithNonWDYRProp extends React.PureComponent<Props
 }
 
 class ErroredPureClassComponentWithStringWDYR extends React.PureComponent<Props>{
-  /* THIS SHOULD ERROR because whyDidYouRender shouldn't be a string */
+  /* SHOULD ERROR because whyDidYouRender shouldn't be a string */
   static whyDidYouRender = 'a'
   render(){
     const {str} = this.props
