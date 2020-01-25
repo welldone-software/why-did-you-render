@@ -29,10 +29,13 @@ declare namespace WhyDidYouRender {
     hookName?: string;
   }
 
+  type ExtraHookToTrack = [any, string];
+
   interface WhyDidYouRenderOptions {
     include?: RegExp[];
     exclude?: RegExp[];
     trackHooks?: boolean;
+    trackExtraHooks?: Array<ExtraHookToTrack>;
     logOnDifferentValues?: boolean;
     hotReloadBufferMs?: number;
     onlyLogs?: boolean;
@@ -59,7 +62,22 @@ declare namespace React {
   interface FunctionComponent<P = {}> {
     whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
   }
+
+  interface ExoticComponent<P = {}> {
+    whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
+  }
+
   namespace Component {
     const whyDidYouRender: WhyDidYouRender.WhyDidYouRenderComponentMember;
   }
+
+  /* not supported.
+   see https://github.com/microsoft/TypeScript/issues/33892
+   and https://github.com/microsoft/TypeScript/issues/34516
+   and https://github.com/microsoft/TypeScript/issues/32185
+
+   // interface Component<P = {}, S = {}, SS = any> extends ComponentLifecycle<P, S, SS> {
+   //   static whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
+   // }
+  */
 }

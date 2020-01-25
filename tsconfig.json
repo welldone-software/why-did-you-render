@@ -3,5 +3,9 @@
     "allowJs": true,
     "esModuleInterop": true,
     "jsx": "preserve"
-  }
+  },
+  "include": [
+    "./types.d.ts",
+    "./tsx-test.tsx"
+  ]
 }
