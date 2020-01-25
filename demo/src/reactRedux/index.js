@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import _ from  'lodash'
 import {createStore} from 'redux'
-import Redux from 'react-redux/lib'
+import * as Redux from 'react-redux'
 
 export default {
   description: 'React Redux',
@@ -14,22 +14,6 @@ export default {
     const useDispatch = Redux.useDispatch
     const useSelector = Redux.useSelector
     const Provider = Redux.Provider
-
-    const initialState = {a: {b: 'c'}}
-
-    const rootReducer = (state, action) => {
-      if(action.type === 'randomObj'){
-        return {a: {b: `${Math.random()}`}}
-      }
-
-      if(action.type === 'deepEqlObj'){
-        return _.cloneDeep(state)
-      }
-
-      return state
-    }
-
-    const store = createStore(rootReducer, initialState)
 
     const ConnectedSimpleComponent = () => {
       const a = useSelector(state => state.a)
@@ -45,7 +29,19 @@ export default {
         </div>
       )
     }
+
     ConnectedSimpleComponent.whyDidYouRender = true
+
+    const initialState = {a: {b: 'c'}}
+    const store = createStore((state = initialState, action) => {
+      if(action.type === 'randomObj'){
+        return {a: {b: `${Math.random()}`}}
+      }
+      if(action.type === 'deepEqlObj'){
+        return _.cloneDeep(state)
+      }
+      return state
+    })
 
     const Main = () => (
       <Provider store={store}>
