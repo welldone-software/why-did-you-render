@@ -34,6 +34,7 @@ declare namespace WhyDidYouRender {
   interface WhyDidYouRenderOptions {
     include?: RegExp[];
     exclude?: RegExp[];
+    trackAllPureComponents?: boolean;
     trackHooks?: boolean;
     trackExtraHooks?: Array<ExtraHookToTrack>;
     logOnDifferentValues?: boolean;

@@ -111,6 +111,7 @@ EnhancedMenu.whyDidYouRender = {
 Optionally you can pass in `options` as the second parameter. The following options are available:
 - `include: [RegExp, ...]` (`null` by default)
 - `exclude: [RegExp, ...]` (`null` by default)
+- `trackAllPureComponents: false`
 - `trackHooks: true`
 - `trackExtraHooks: []`
 - `logOnDifferentValues: false`
@@ -132,6 +133,11 @@ For example, the following code is used to [track all redundant re-renders that 
 ```js
 whyDidYouRender(React, { include: [/^ConnectFunction/] });
 ```
+
+#### trackAllPureComponents
+You can track all pure components (both `React.memo` and `React.PureComponent` components)
+
+*Notice: You can exclude the tracking of any specific component with `whyDidYouRender = false`.*
 
 #### trackHooks
 You can turn off tracking of hooks changes.

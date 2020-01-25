@@ -4,14 +4,15 @@ import ReactDom from 'react-dom'
 export default {
   description: 'Child of Pure Component',
   fn({domElement, whyDidYouRender}){
-    whyDidYouRender(React)
+    whyDidYouRender(React, {
+      trackAllPureComponents: true
+    })
 
     const SomeChild = () => (
       <div>Child!</div>
     )
 
     class PureFather extends React.PureComponent{
-      static whyDidYouRender = true
       render(){
         return (
           <div>
