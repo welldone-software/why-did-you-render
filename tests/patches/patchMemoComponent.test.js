@@ -92,6 +92,30 @@ test('Component memoized with React.memo - deep equal prop values', () => {
   })
 })
 
+test('React.memo Component memoized with another React.memo - deep equal prop values', () => {
+  const ReactSecondMemoComponent = React.memo(ReactMemoTestComponent)
+  ReactSecondMemoComponent.whyDidYouRender = true
+
+  const {rerender} = rtl.render(
+    <ReactSecondMemoComponent a={[]}/>
+  )
+  rerender(
+    <ReactSecondMemoComponent a={[]}/>
+  )
+
+  expect(updateInfos).toHaveLength(1)
+  expect(updateInfos[0].reason).toEqual({
+    propsDifferences: [{
+      pathString: 'a',
+      diffType: diffTypes.deepEquals,
+      prevValue: [],
+      nextValue: []
+    }],
+    stateDifferences: false,
+    hookDifferences: false
+  })
+})
+
 test('memo a forward ref component', () => {
   const content = 'My component!!!'
 

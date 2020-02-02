@@ -2,7 +2,7 @@ import {defaults} from 'lodash'
 
 import getDisplayName from '../getDisplayName'
 
-import {isForwardRefComponent, isReactClassComponent} from '../utils'
+import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from '../utils'
 import patchClassComponent from './patchClassComponent'
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
@@ -11,6 +11,7 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
 
   const isInnerMemoComponentAClassComponent = isReactClassComponent(InnerMemoComponent)
   const isInnerMemoComponentForwardRefs = isForwardRefComponent(InnerMemoComponent)
+  const isInnerMemoComponentAnotherMemoComponent = isMemoComponent(InnerMemoComponent)
 
   const WrappedFunctionalComponent = isInnerMemoComponentForwardRefs ?
     InnerMemoComponent.render :
@@ -18,7 +19,10 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
 
   const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
     patchClassComponent(WrappedFunctionalComponent, displayName, React, options) :
-    patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options)
+    (isInnerMemoComponentAnotherMemoComponent ?
+      patchMemoComponent(WrappedFunctionalComponent, displayName, React, options) :
+      patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options)
+    )
 
   try{
     PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent)
