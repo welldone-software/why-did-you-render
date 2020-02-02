@@ -192,7 +192,7 @@ To fix this, use the "no-classes-transpile" dist:
 ```js
 import React from 'react';
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js');
   whyDidYouRender(React);
 }
