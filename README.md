@@ -38,7 +38,7 @@ Execute `whyDidYouRender` with `React` as its first argument **before any `React
 ```js
 import React from 'react';
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
   whyDidYouRender(React);
 }
