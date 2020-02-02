@@ -20,7 +20,12 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
     patchClassComponent(WrappedFunctionalComponent, displayName, React, options) :
     patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options)
 
-  PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent)
+  try{
+    PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent)
+  }catch(e){
+    // not crucial if displayName couldn't be set
+  }
+
   PatchedInnerComponent.ComponentForHooksTracking = MemoComponent
   defaults(PatchedInnerComponent, WrappedFunctionalComponent)
 
@@ -29,7 +34,12 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
     MemoComponent.compare
   )
 
-  WDYRMemoizedFunctionalComponent.displayName = displayName
+  try{
+    WDYRMemoizedFunctionalComponent.displayName = displayName
+  }catch(e){
+    // not crucial if displayName couldn't be set
+  }
+
   defaults(WDYRMemoizedFunctionalComponent, MemoComponent)
 
   return WDYRMemoizedFunctionalComponent

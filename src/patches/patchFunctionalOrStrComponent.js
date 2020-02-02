@@ -41,7 +41,12 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
     return FunctionalComponent(...arguments)
   }
 
-  WDYRFunctionalComponent.displayName = displayName
+  try{
+    WDYRFunctionalComponent.displayName = displayName
+  }catch(e){
+    // not crucial if displayName couldn't be set
+  }
+
   WDYRFunctionalComponent.ComponentForHooksTracking = FunctionalComponent
   defaults(WDYRFunctionalComponent, FunctionalComponent)
 

@@ -25,7 +25,12 @@ export default function patchForwardRefComponent(ForwardRefComponent, displayNam
       WDYRWrappedByReactForwardRefFunctionalComponent
   )
 
-  WDYRForwardRefFunctionalComponent.displayName = displayName
+  try{
+    WDYRForwardRefFunctionalComponent.displayName = displayName
+  }catch(e){
+    // not crucial if displayName couldn't be set
+  }
+
   defaults(WDYRForwardRefFunctionalComponent, ForwardRefComponent)
 
   return WDYRForwardRefFunctionalComponent

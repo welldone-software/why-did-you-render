@@ -51,7 +51,12 @@ export default function patchClassComponent(ClassComponent, displayName, React, 
     }
   }
 
-  WDYRPatchedClassComponent.displayName = displayName
+  try{
+    WDYRPatchedClassComponent.displayName = displayName
+  }catch(e){
+    // not crucial if displayName couldn't be set
+  }
+
   defaults(WDYRPatchedClassComponent, ClassComponent)
 
   return WDYRPatchedClassComponent
