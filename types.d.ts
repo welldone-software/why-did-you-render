@@ -61,7 +61,7 @@ declare module '@welldone-software/why-did-you-render' {
   export import HookDifference = WhyDidYouRender.HookDifference;
   import IWhyDidYouRender = WhyDidYouRender.IWhyDidYouRender;
 
-  export default IWhyDidYouRender
+  export default IWhyDidYouRender;
 }
 
 declare namespace React {
