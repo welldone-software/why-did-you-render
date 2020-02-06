@@ -50,8 +50,6 @@ declare namespace WhyDidYouRender {
   type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
   
   type Notifier = (options: UpdateInfo) => void
-
-  interface IWhyDidYouRender { (react: typeof React, options?: WhyDidYouRenderOptions): typeof React; defaultNotifier: Notifier; }
 }
 
 declare module '@welldone-software/why-did-you-render' {
@@ -59,9 +57,15 @@ declare module '@welldone-software/why-did-you-render' {
   export import UpdateInfo = WhyDidYouRender.UpdateInfo;
   export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
   export import HookDifference = WhyDidYouRender.HookDifference;
-  import IWhyDidYouRender = WhyDidYouRender.IWhyDidYouRender;
+  export import Notifier = WhyDidYouRender.Notifier;
 
-  export default IWhyDidYouRender;
+  function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
+
+  namespace whyDidYouRender {
+    export const defaultNotifier: Notifier;
+  }
+
+  export default whyDidYouRender;
 }
 
 declare namespace React {
