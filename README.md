@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 
-`why-did-you-render` monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
+`why-did-you-render` by [Welldone Software](https://welldone.software) monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
 
 For example, when you pass `style={{width: '100%'}}` to a big pure component and make it always re-render:
 
@@ -11,10 +11,10 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Read More
-* You can read more about the library [>> HERE <<](http://bit.ly/wdyr1).
-* Part 2 - **Common fixing scenarios** this library can help to eliminate can be found [>> HERE <<](http://bit.ly/wdyr02).
-* Part 3 - **React Hooks** - Understand and fix hooks issues [>> HERE <<](http://bit.ly/wdyr3).
-* Part 4 - **React-Redux** - Understand and fix react-redux issues [>> HERE <<](http://bit.ly/wdyr04).
+* [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
+* [**Common fixing scenarios** this library can helps with](http://bit.ly/wdyr02)
+* [**React Hooks** - Understand and fix hooks issues](http://bit.ly/wdyr3)
+* [Why Did You Render v4 Released!](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c) - TypeScript support, Custom hooks tracking (like React-Redux’s useSelector), Tracking of all pure components.
 
 ## Sandbox
 You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
@@ -22,7 +22,7 @@ You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr
 ## Setup
 > The required React version for the library is **16.12** but it is expected to work with older versions as well.
 
-> For versions before 16.8 turn off hooks support by using `trackHooks: false` in `whyDidYouRender`'s init options.*
+> For versions before 16.8 try turning off hooks support by using `trackHooks: false` in `whyDidYouRender`'s init options.*
 
 ```
 npm install @welldone-software/why-did-you-render --save
