@@ -10,15 +10,6 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 
 It can also help you to simply track when and why a certain component re-renders.
 
-## Read More
-* [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
-* [**Common fixing scenarios** this library can helps with](http://bit.ly/wdyr02)
-* [**React Hooks** - Understand and fix hooks issues](http://bit.ly/wdyr3)
-* [Why Did You Render v4 Released!](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c) - TypeScript support, Custom hooks tracking (like React-Redux’s useSelector), Tracking of all pure components.
-
-## Sandbox
-You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr-sb).
-
 ## Setup
 > The required React version for the library is **16.12** but it is expected to work with older versions as well.
 
@@ -26,10 +17,6 @@ You can test the library in the official sandbox [>> HERE <<](http://bit.ly/wdyr
 
 ```
 npm install @welldone-software/why-did-you-render --save
-```
-or
-```
-yarn add @welldone-software/why-did-you-render
 ```
 
 ## Installation
@@ -40,13 +27,39 @@ import React from 'react';
 
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
-  whyDidYouRender(React);
+  whyDidYouRender(React, {
+    trackAllPureComponents: true,
+  });
+}
+```
+If you use the latest `react-redux` with hooks:
+```js
+import React from 'react';
+
+if (process.env.NODE_ENV === 'development') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render');
+  const ReactRedux = require('react-redux');
+  whyDidYouRender(React, {
+    trackAllPureComponents: true,
+    trackExtraHooks: [
+      [ReactRedux, 'useSelector']
+    ]
+  });
 }
 ```
 
-## Usage
-Mark any component you want to be notified about their "redundant" re-renders with `whyDidYouRender` like this:
+## Read More
+* [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
+* [**Common fixing scenarios** this library can helps with](http://bit.ly/wdyr02)
+* [**React Hooks** - Understand and fix hooks issues](http://bit.ly/wdyr3)
+* [Why Did You Render v4 Released!](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c) - TypeScript support, Custom hooks tracking (like React-Redux’s useSelector), Tracking of all pure components.
 
+## Sandbox
+You can test the library in [the official sandbox](http://bit.ly/wdyr-sb).
+
+## Usage
+Besides tracking all pure components using the `trackAllPureComponents` option, you can manually
+track any component you want by setting `whyDidYouRender` on them like this:
 ```js
 class BigListPureComponent extends React.PureComponent {
   static whyDidYouRender = true
@@ -58,7 +71,7 @@ class BigListPureComponent extends React.PureComponent {
 }
 ```
 
-Or like this:
+And for functional components:
 
 ```js
 const BigListPureComponent = props => (
@@ -69,7 +82,7 @@ const BigListPureComponent = props => (
 BigListPureComponent.whyDidYouRender = true
 ```
 
-You can also pass an object to specify more advanced settings:
+You can also pass an object to specify more advanced tracking settings:
 
 ```js
 EnhancedMenu.whyDidYouRender = {
@@ -142,15 +155,22 @@ You can track all pure components (both `React.memo` and `React.PureComponent` c
 #### trackHooks
 You can turn off tracking of hooks changes.
 
-Understand and fix hook issues [>> HERE <<](http://bit.ly/wdyr3).
+[Understand and fix hook issues](http://bit.ly/wdyr3).
 
 #### trackExtraHooks
 Adding extra hooks to track for "redundant" results:
+
 ```js
-whyDidYouRender(React, {trackExtraHooks: [
-  [Redux, 'useSelector']
-]});
+whyDidYouRender(React, {
+  trackExtraHooks: [
+    [ReactRedux, 'useSelector']
+  ]
+});
 ```
+
+> There is currently a problem with rewriting exports of imported files in webpack.
+
+> To see available workarounds check out the discussion at bug [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
 
 #### logOnDifferentValues
 Normally, you only want notifications about component re-renders when their props and state
