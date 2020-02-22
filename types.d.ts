@@ -44,10 +44,12 @@ declare namespace WhyDidYouRender {
     titleColor?: string;
     diffNameColor?: string;
     diffPathColor?: string;
-    notifier?: (options: UpdateInfo) => void;
+    notifier?: Notifier;
   }
 
   type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
+  
+  type Notifier = (options: UpdateInfo) => void
 }
 
 declare module '@welldone-software/why-did-you-render' {
@@ -55,8 +57,15 @@ declare module '@welldone-software/why-did-you-render' {
   export import UpdateInfo = WhyDidYouRender.UpdateInfo;
   export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
   export import HookDifference = WhyDidYouRender.HookDifference;
+  export import Notifier = WhyDidYouRender.Notifier;
 
-  export default function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
+  function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
+
+  namespace whyDidYouRender {
+    export const defaultNotifier: Notifier;
+  }
+
+  export default whyDidYouRender;
 }
 
 declare namespace React {
