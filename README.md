@@ -48,13 +48,15 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-If you use Next.js you can see an example [here](https://github.com/zeit/next.js/tree/canary/examples/with-why-did-you-render)
-
 ## Read More
 * [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
 * [**Common fixing scenarios** this library can helps with](http://bit.ly/wdyr02)
 * [**React Hooks** - Understand and fix hooks issues](http://bit.ly/wdyr3)
 * [Why Did You Render v4 Released!](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c) - TypeScript support, Custom hooks tracking (like React-Redux’s useSelector), Tracking of all pure components.
+
+## Integration With Other Libraries
+* [Next.js example](https://github.com/zeit/next.js/tree/canary/examples/with-why-did-you-render)
+* [React-Redux With Hooks](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c)
 
 ## Sandbox
 You can test the library in [the official sandbox](http://bit.ly/wdyr-sb).
@@ -239,7 +241,7 @@ To fix this, add the `whyDidYouRender = true` static to a component after the co
 
 Inspired by the following previous work:
 
-https://github.com/maicki/why-did-you-update which i had the chance to maintain for some time.
+https://github.com/maicki/why-did-you-update which I had the chance to maintain for some time.
 
 https://github.com/garbles/why-did-you-update where [A deep dive into React perf debugging](http://benchling.engineering/deep-dive-react-perf-debugging/) is credited for the idea.
 
