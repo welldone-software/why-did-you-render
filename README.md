@@ -48,6 +48,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
+If you use Next.js you can see an example [here](https://github.com/zeit/next.js/tree/canary/examples/with-why-did-you-render)
+
 ## Read More
 * [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
 * [**Common fixing scenarios** this library can helps with](http://bit.ly/wdyr02)
