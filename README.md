@@ -61,11 +61,12 @@ if (process.env.NODE_ENV === 'development') {
 ## Sandbox
 You can test the library in [the official sandbox](http://bit.ly/wdyr-sb).
 
-## Usage
-Besides tracking all pure components using the `trackAllPureComponents` option, you can manually
-track any component you want by setting `whyDidYouRender` on them like this:
+## Tracking Components
+You can track all pure components (components that are extending [React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent), or function components that are wrapped with [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) using the `trackAllPureComponents: true` option.
+
+You can also manually track any component you want by setting `whyDidYouRender` on them like this:
 ```js
-class BigListPureComponent extends React.PureComponent {
+class BigList extends React.Component {
   static whyDidYouRender = true
   render(){
     return (
