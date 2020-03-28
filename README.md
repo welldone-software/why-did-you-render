@@ -61,6 +61,8 @@ if (process.env.NODE_ENV === 'development') {
 ## Sandbox
 You can test the library in [the official sandbox](http://bit.ly/wdyr-sb).
 
+And another [oficcial sandbox with hooks tracking](https://codesandbox.io/s/why-did-you-render-sandbox-with-hooks-pyi14)
+
 ## Tracking Components
 You can track all pure components (components that are extending [React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent), or function components that are wrapped with [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) using the `trackAllPureComponents: true` option.
 
