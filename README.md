@@ -11,7 +11,7 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-> The required React version for the library is **16.12** but it is expected to work with older versions as well.
+> The last version of the library has been tested with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
 
 > For versions before 16.8 try turning off hooks support by using `trackHooks: false` in `whyDidYouRender`'s init options.*
 
@@ -231,7 +231,7 @@ Since `connect` hoists statics, if you add WDYR to the inner component, it is al
 To fix this, add the `whyDidYouRender = true` static to a component after the connect:
 ```js
   const SimpleComponent = ({a}) => <div data-testid="foo">{a.b}</div>)
-  // not before the connect: 
+  // not before the connect:
   // SimpleComponent.whyDidYouRender = true
   const ConnectedSimpleComponent = connect(
     state => ({a: state.a})
