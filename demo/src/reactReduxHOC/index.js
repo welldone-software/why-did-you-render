@@ -1,12 +1,11 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import {createStore} from 'redux'
-import connect from 'react-redux/lib/connect/connect'
-import Provider from 'react-redux/lib/components/Provider'
+import * as Redux from 'react-redux'
 import _ from  'lodash'
 
-connect = connect.default
-Provider = Provider.default
+const connect = Redux.connect
+const Provider = Redux.Provider
 
 export default {
   description: 'React Redux HOC',
