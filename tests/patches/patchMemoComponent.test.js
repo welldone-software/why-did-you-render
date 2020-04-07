@@ -67,7 +67,8 @@ test('Component memoized with React.memo - different prop values', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -88,7 +89,8 @@ test('Component memoized with React.memo - deep equal prop values', () => {
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -112,7 +114,8 @@ test('React.memo Component memoized with another React.memo - deep equal prop va
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -158,7 +161,8 @@ test('memo a forward ref component', () => {
       }
     ],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -192,7 +196,8 @@ test('memo a class component', () => {
       }
     ],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -226,7 +231,8 @@ test('memo a pure class component', () => {
       }
     ],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
   global.flushConsoleOutput()
 })

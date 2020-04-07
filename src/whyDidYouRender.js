@@ -13,7 +13,9 @@ import patchForwardRefComponent from './patches/patchForwardRefComponent'
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
 
 const initialHookValue = Symbol('initial-hook-value')
-function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
+function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options, ownerDataMap, hooksRef){
+  const nextHook = hookPath ? get(hookResult, hookPath) : hookResult
+  hooksRef.current.push({hookName, result: nextHook})
   const ComponentHookDispatchedFromInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
   const prevHookResultRef = React.useRef(initialHookValue)
 
@@ -38,8 +40,9 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
       displayName,
       hookName,
       prevHook: hookPath ? get(prevHookResult, hookPath) : prevHookResult,
-      nextHook: hookPath ? get(hookResult, hookPath) : hookResult,
-      options
+      nextHook,
+      options,
+      ownerDataMap
     })
 
     if(notification.reason.hookDifferences){
@@ -50,28 +53,28 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
   return hookResult
 }
 
-function createPatchedComponent(componentsMap, Component, displayName, React, options){
+function createPatchedComponent(componentsMap, Component, displayName, React, options, ownerDataMap){
   if(isMemoComponent(Component)){
-    return patchMemoComponent(Component, displayName, React, options)
+    return patchMemoComponent(Component, displayName, React, options, ownerDataMap)
   }
 
   if(isForwardRefComponent(Component)){
-    return patchForwardRefComponent(Component, displayName, React, options)
+    return patchForwardRefComponent(Component, displayName, React, options, ownerDataMap)
   }
 
   if(isReactClassComponent(Component)){
-    return patchClassComponent(Component, displayName, React, options)
+    return patchClassComponent(Component, displayName, React, options, ownerDataMap)
   }
 
-  return patchFunctionalOrStrComponent(Component, false, displayName, React, options)
+  return patchFunctionalOrStrComponent(Component, false, displayName, React, options, ownerDataMap)
 }
 
-function getPatchedComponent(componentsMap, Component, displayName, React, options){
+function getPatchedComponent(componentsMap, Component, displayName, React, options, ownerDataMap){
   if(componentsMap.has(Component)){
     return componentsMap.get(Component)
   }
 
-  const WDYRPatchedComponent = createPatchedComponent(componentsMap, Component, displayName, React, options)
+  const WDYRPatchedComponent = createPatchedComponent(componentsMap, Component, displayName, React, options, ownerDataMap)
 
   componentsMap.set(Component, WDYRPatchedComponent)
   return WDYRPatchedComponent
@@ -91,6 +94,18 @@ export default function whyDidYouRender(React, userOptions){
   const origCreateFactory = React.createFactory
 
   let componentsMap = new WeakMap()
+  const ownerDataMap = new WeakMap()
+  const hooksRef = {current: []}
+
+  Object.defineProperty(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
+    get(){
+      return this._current
+    },
+    set(value){
+      this._current = value
+      hooksRef.current = []
+    }
+  })
 
   React.createElement = function(componentNameOrComponent, ...rest){
     let isShouldTrack = null
@@ -115,8 +130,25 @@ export default function whyDidYouRender(React, userOptions){
           getDisplayName(componentNameOrComponent)
         )
 
-        WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options)
-        return origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
+        WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options, ownerDataMap)
+
+        const element = origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
+        if(options.logOwnerReasons){
+          const OwnerInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+          if(OwnerInstance != null){
+            const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
+            const displayName = getDisplayName(Component)
+            ownerDataMap.set(element.props, {
+              Component,
+              displayName,
+              props: OwnerInstance.pendingProps,
+              state: OwnerInstance.stateNode != null ? OwnerInstance.stateNode.state : null,
+              hooks: hooksRef.current
+            })
+          }
+        }
+
+        return element
       }
     }
     catch(e){
@@ -161,7 +193,7 @@ export default function whyDidYouRender(React, userOptions){
       const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
       const newHook = function(...args){
         const hookResult = originalHook.call(this, ...args)
-        trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options)
+        trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options, ownerDataMap, hooksRef)
         return hookResult
       }
       Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})

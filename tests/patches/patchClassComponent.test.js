@@ -48,7 +48,8 @@ test('Empty props and state', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -63,7 +64,8 @@ test('Same props', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
   expect(updateInfos).toHaveLength(1)
 })
@@ -79,7 +81,8 @@ test('Same state', () => {
       expect(updateInfos[0].reason).toEqual({
         propsDifferences: false,
         stateDifferences: [],
-        hookDifferences: false
+        hookDifferences: false,
+        ownerDifferences: false
       })
       expect(updateInfos).toHaveLength(1)
     })
@@ -102,7 +105,8 @@ test('Props change', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -133,7 +137,8 @@ test('With implemented "componentDidUpdate()"', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
   expect(innerComponentDidUpdateCalled).toBe(true)
   expect(updateInfos).toHaveLength(1)
@@ -162,7 +167,8 @@ test('With render as an arrow function', () => {
       pathString: 'c',
       prevValue: undefined
     }],
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   rerender(
@@ -177,7 +183,8 @@ test('With render as an arrow function', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos).toHaveLength(2)
@@ -210,7 +217,8 @@ test('With render as a binded function', () => {
       pathString: 'c',
       prevValue: undefined
     }],
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   rerender(
@@ -225,7 +233,8 @@ test('With render as a binded function', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos).toHaveLength(2)
@@ -308,7 +317,8 @@ test('Component created with "createReactClass"', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -342,7 +352,8 @@ test('Component created with "createReactClass" with implemented "componentDidUp
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
   expect(innerComponentDidUpdateCalled).toBe(true)
 })
@@ -360,7 +371,8 @@ test('Element created with "createFactory"', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos).toHaveLength(1)
@@ -377,7 +389,8 @@ test('Element created with "cloneElement"', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -403,7 +416,8 @@ test('Several class components', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos[1].reason).toEqual({
@@ -414,12 +428,14 @@ test('Several class components', () => {
       prevValue: {a: 'a'}
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos[2].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })

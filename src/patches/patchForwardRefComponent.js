@@ -4,7 +4,7 @@ import getDisplayName from '../getDisplayName'
 import {isMemoComponent} from '../utils'
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
-export default function patchForwardRefComponent(ForwardRefComponent, displayName, React, options){
+export default function patchForwardRefComponent(ForwardRefComponent, displayName, React, options, ownerDataMap){
   const {render: InnerForwardRefComponent} = ForwardRefComponent
 
   const isInnerComponentMemoized = isMemoComponent(InnerForwardRefComponent)
@@ -12,7 +12,7 @@ export default function patchForwardRefComponent(ForwardRefComponent, displayNam
     InnerForwardRefComponent.type : InnerForwardRefComponent
 
   const WDYRWrappedByReactForwardRefFunctionalComponent = (
-    patchFunctionalOrStrComponent(WrappedFunctionalComponent, isInnerComponentMemoized, displayName, React, options)
+    patchFunctionalOrStrComponent(WrappedFunctionalComponent, isInnerComponentMemoized, displayName, React, options, ownerDataMap)
   )
 
   WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)

@@ -10,6 +10,8 @@ class TestComponent extends React.Component{
   }
 }
 
+const ownerDataMap = new WeakMap()
+
 test('Empty props and state', () => {
   const input = {
     Component: TestComponent,
@@ -18,7 +20,8 @@ test('Empty props and state', () => {
     prevState: null,
     nextProps: {},
     nextState: null,
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -29,7 +32,8 @@ test('Empty props and state', () => {
     reason: {
       propsDifferences: [],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -42,7 +46,8 @@ test('Same props', () => {
     prevState: null,
     nextProps: {a: 1},
     nextState: null,
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -53,7 +58,8 @@ test('Same props', () => {
     reason: {
       propsDifferences: [],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -66,7 +72,8 @@ test('Same state', () => {
     prevState: {a: 1},
     nextProps: {},
     nextState: {a: 1},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -77,7 +84,8 @@ test('Same state', () => {
     reason: {
       propsDifferences: [],
       stateDifferences: [],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -90,7 +98,8 @@ test('Same props and state', () => {
     prevState: {a: 1},
     nextProps: {b: 1},
     nextState: {a: 1},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -101,7 +110,8 @@ test('Same props and state', () => {
     reason: {
       propsDifferences: [],
       stateDifferences: [],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -114,7 +124,8 @@ test('Props change', () => {
     prevState: null,
     nextProps: {a: 2},
     nextState: null,
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -132,7 +143,8 @@ test('Props change', () => {
         }
       ],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -145,7 +157,8 @@ test('State change', () => {
     prevState: {a: 1},
     nextProps: {},
     nextState: {a: 2},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -163,7 +176,8 @@ test('State change', () => {
           nextValue: input.nextState.a
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -176,7 +190,8 @@ test('Props and state change', () => {
     prevState: {a: 1},
     nextProps: {b: 2},
     nextState: {a: 2},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -201,7 +216,8 @@ test('Props and state change', () => {
           nextValue: input.nextState.a
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -214,7 +230,8 @@ test('Props change by ref', () => {
     prevState: null,
     nextProps: {a: {b: 'b'}},
     nextState: null,
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -232,7 +249,8 @@ test('Props change by ref', () => {
         }
       ],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -245,7 +263,8 @@ test('State changed by ref', () => {
     prevState: {a: {b: 'b'}},
     nextProps: {},
     nextState: {a: {b: 'b'}},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -263,7 +282,8 @@ test('State changed by ref', () => {
           nextValue: input.nextState.a
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -276,7 +296,8 @@ test('Props and state different by ref', () => {
     prevState: {a: {d: 'd'}},
     nextProps: {b: {c: 'c'}},
     nextState: {a: {d: 'd'}},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -301,7 +322,8 @@ test('Props and state different by ref', () => {
           nextValue: input.nextState.a
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -314,7 +336,8 @@ test('Props change by function', () => {
     prevState: null,
     nextProps: {a: () => {}},
     nextState: null,
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -332,7 +355,8 @@ test('Props change by function', () => {
         }
       ],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -345,7 +369,8 @@ test('State changed by function ref', () => {
     prevState: {a: () => {}},
     nextProps: {},
     nextState: {a: () => {}},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -363,7 +388,8 @@ test('State changed by function ref', () => {
           nextValue: input.nextState.a
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -376,7 +402,8 @@ test('Props and state different by function', () => {
     prevState: {b: () => {}},
     nextProps: {a: () => {}},
     nextState: {b: () => {}},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -401,7 +428,8 @@ test('Props and state different by function', () => {
           nextValue: input.nextState.b
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })
@@ -414,7 +442,8 @@ test('Mix of differences', () => {
     prevState: null,
     nextProps: {a: () => {}, b: '12345', c: {d: 'e'}, f: 3},
     nextState: {a: 4},
-    options: normalizeOptions()
+    options: normalizeOptions(),
+    ownerDataMap
   }
 
   const updateInfo = getUpdateInfo(input)
@@ -451,7 +480,8 @@ test('Mix of differences', () => {
           nextValue: input.nextState.a
         }
       ],
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     }
   })
 })

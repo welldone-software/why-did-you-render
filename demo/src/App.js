@@ -24,6 +24,7 @@ import reactReduxHOC from './reactReduxHOC'
 import strict from './strict'
 import reactRedux from './reactRedux'
 import styledComponents from './styledComponents'
+import logOwnerReasons from './logOwnerReasons'
 
 import whyDidYouRender from './whyDidYouRender'
 
@@ -46,7 +47,8 @@ const demosList = {
   strict,
   reactRedux,
   reactReduxHOC,
-  styledComponents
+  styledComponents,
+  logOwnerReasons
 }
 
 const defaultDemoName = 'bigList'

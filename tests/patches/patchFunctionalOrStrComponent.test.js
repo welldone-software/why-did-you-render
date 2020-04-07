@@ -42,7 +42,8 @@ test('simple inline component', () => {
       nextValue: 2
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -68,7 +69,8 @@ test('Several functional components', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos[1].reason).toEqual({
@@ -79,13 +81,15 @@ test('Several functional components', () => {
       prevValue: {a: 'a'}
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 
   expect(updateInfos[2].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 

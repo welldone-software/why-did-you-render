@@ -106,7 +106,8 @@ describe('hooks - simple', () => {
           nextValue: 2
         }],
         stateDifferences: false,
-        hookDifferences: false
+        hookDifferences: false,
+        ownerDifferences: false
       })
     })
 
@@ -137,7 +138,8 @@ describe('hooks - simple', () => {
           nextValue: 2
         }],
         stateDifferences: false,
-        hookDifferences: false
+        hookDifferences: false,
+        ownerDifferences: false
       })
     })
   })
