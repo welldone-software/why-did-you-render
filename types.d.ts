@@ -1,7 +1,6 @@
-/// <reference types="react" />
+import * as React from 'react';
 
-declare namespace WhyDidYouRender {
-
+export namespace WhyDidYouRender {
   interface HookDifference {
     pathString: string;
     diffType: string;
@@ -52,23 +51,21 @@ declare namespace WhyDidYouRender {
   type Notifier = (options: UpdateInfo) => void
 }
 
-declare module '@welldone-software/why-did-you-render' {
-  export import ReasonForUpdate = WhyDidYouRender.ReasonForUpdate;
-  export import UpdateInfo = WhyDidYouRender.UpdateInfo;
-  export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
-  export import HookDifference = WhyDidYouRender.HookDifference;
-  export import Notifier = WhyDidYouRender.Notifier;
+export import ReasonForUpdate = WhyDidYouRender.ReasonForUpdate;
+export import UpdateInfo = WhyDidYouRender.UpdateInfo;
+export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
+export import HookDifference = WhyDidYouRender.HookDifference;
+export import Notifier = WhyDidYouRender.Notifier;
 
-  function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
+declare function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
 
-  namespace whyDidYouRender {
-    export const defaultNotifier: Notifier;
-  }
-
-  export default whyDidYouRender;
+declare namespace whyDidYouRender {
+  export const defaultNotifier: Notifier;
 }
 
-declare namespace React {
+export default whyDidYouRender;
+
+declare module 'react' {
   interface FunctionComponent<P = {}> {
     whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
   }
@@ -82,12 +79,12 @@ declare namespace React {
   }
 
   /* not supported.
-   see https://github.com/microsoft/TypeScript/issues/33892
-   and https://github.com/microsoft/TypeScript/issues/34516
-   and https://github.com/microsoft/TypeScript/issues/32185
+  see https://github.com/microsoft/TypeScript/issues/33892
+  and https://github.com/microsoft/TypeScript/issues/34516
+  and https://github.com/microsoft/TypeScript/issues/32185
 
-   // interface Component<P = {}, S = {}, SS = any> extends ComponentLifecycle<P, S, SS> {
-   //   static whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
-   // }
+  // interface Component<P = {}, S = {}, SS = any> extends ComponentLifecycle<P, S, SS> {
+  //   static whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
+  // }
   */
 }

@@ -2,7 +2,7 @@
 import './types'
 import React from 'react'
 import * as Redux from 'react-redux'
-import whyDidYouRender from '@welldone-software/why-did-you-render';
+import whyDidYouRender, { WhyDidYouRender } from '.';
 
 /* SHOULD ERROR because bad trackExtraHooks was provided (second argument should be string) */
 whyDidYouRender(React, {trackExtraHooks: [[Redux, Redux.useSelector]]});
