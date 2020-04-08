@@ -2,7 +2,7 @@
 import './types'
 import React from 'react'
 import * as Redux from 'react-redux'
-import whyDidYouRender, { WhyDidYouRender } from '.';
+import whyDidYouRender, { ExtraHookToTrack } from '.';
 
 /* SHOULD ERROR because bad trackExtraHooks was provided (second argument should be string) */
 whyDidYouRender(React, {trackExtraHooks: [[Redux, Redux.useSelector]]});
@@ -87,7 +87,7 @@ class ErrorousClassComponentWithTrackExtraHooks extends React.Component<Props>{
   static whyDidYouRender = {
     collapseGroups: true,
     /* SHOULD ERROR because bad trackExtraHooks was provided (second argument should be string) */
-    trackExtraHooks: [[Redux, Redux.useSelector] as WhyDidYouRender.ExtraHookToTrack]
+    trackExtraHooks: [[Redux, Redux.useSelector] as ExtraHookToTrack]
   }
   render(){
     const {str} = this.props
@@ -100,7 +100,7 @@ class ErrorousClassComponentWithTrackExtraHooks extends React.Component<Props>{
 class ClassComponentWithTrackExtraHooks extends React.Component<Props>{
   static whyDidYouRender = {
     collapseGroups: true,
-    trackExtraHooks: [[Redux, 'useSelector'] as WhyDidYouRender.ExtraHookToTrack]
+    trackExtraHooks: [[Redux, 'useSelector'] as ExtraHookToTrack]
   }
   render(){
     const {str} = this.props
