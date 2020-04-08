@@ -1,93 +1,82 @@
-/// <reference types="react" />
+import * as React from 'react';
 
-declare namespace WhyDidYouRender {
-
-  interface HookDifference {
-    pathString: string;
-    diffType: string;
-    prevValue: any;
-    nextValue: any;
-  }
-
-  interface ReasonForUpdate {
-    hookDifferences: HookDifference[];
-    propsDifferences: boolean;
-    stateDifferences: boolean;
-  }
-
-  interface UpdateInfo {
-    Component: React.Component;
-    displayName: string;
-    prevProps: any;
-    prevState: any;
-    nextProps: any;
-    nextState: any;
-    prevHook: any;
-    nextHook: any;
-    reason: ReasonForUpdate;
-    options: WhyDidYouRenderOptions;
-    hookName?: string;
-  }
-
-  type ExtraHookToTrack = [any, string];
-
-  interface WhyDidYouRenderOptions {
-    include?: RegExp[];
-    exclude?: RegExp[];
-    trackAllPureComponents?: boolean;
-    trackHooks?: boolean;
-    trackExtraHooks?: Array<ExtraHookToTrack>;
-    logOnDifferentValues?: boolean;
-    hotReloadBufferMs?: number;
-    onlyLogs?: boolean;
-    collapseGroups?: boolean;
-    titleColor?: string;
-    diffNameColor?: string;
-    diffPathColor?: string;
-    notifier?: Notifier;
-  }
-
-  type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
-  
-  type Notifier = (options: UpdateInfo) => void
+export interface HookDifference {
+  pathString: string;
+  diffType: string;
+  prevValue: any;
+  nextValue: any;
 }
 
-declare module '@welldone-software/why-did-you-render' {
-  export import ReasonForUpdate = WhyDidYouRender.ReasonForUpdate;
-  export import UpdateInfo = WhyDidYouRender.UpdateInfo;
-  export import WhyDidYouRenderOptions = WhyDidYouRender.WhyDidYouRenderOptions;
-  export import HookDifference = WhyDidYouRender.HookDifference;
-  export import Notifier = WhyDidYouRender.Notifier;
-
-  function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
-
-  namespace whyDidYouRender {
-    export const defaultNotifier: Notifier;
-  }
-
-  export default whyDidYouRender;
+export interface ReasonForUpdate {
+  hookDifferences: HookDifference[];
+  propsDifferences: boolean;
+  stateDifferences: boolean;
 }
 
-declare namespace React {
+export interface UpdateInfo {
+  Component: React.Component;
+  displayName: string;
+  prevProps: any;
+  prevState: any;
+  nextProps: any;
+  nextState: any;
+  prevHook: any;
+  nextHook: any;
+  reason: ReasonForUpdate;
+  options: WhyDidYouRenderOptions;
+  hookName?: string;
+}
+
+export type ExtraHookToTrack = [any, string];
+
+export interface WhyDidYouRenderOptions {
+  include?: RegExp[];
+  exclude?: RegExp[];
+  trackAllPureComponents?: boolean;
+  trackHooks?: boolean;
+  trackExtraHooks?: Array<ExtraHookToTrack>;
+  logOnDifferentValues?: boolean;
+  hotReloadBufferMs?: number;
+  onlyLogs?: boolean;
+  collapseGroups?: boolean;
+  titleColor?: string;
+  diffNameColor?: string;
+  diffPathColor?: string;
+  notifier?: Notifier;
+}
+
+export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
+
+export type Notifier = (options: UpdateInfo) => void
+
+declare function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
+
+declare namespace whyDidYouRender {
+  export const defaultNotifier: Notifier;
+}
+
+export default whyDidYouRender;
+
+declare module 'react' {
   interface FunctionComponent<P = {}> {
-    whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
+    whyDidYouRender?: WhyDidYouRenderComponentMember;
   }
 
   interface ExoticComponent<P = {}> {
-    whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
+    whyDidYouRender?: WhyDidYouRenderComponentMember;
   }
 
   namespace Component {
-    const whyDidYouRender: WhyDidYouRender.WhyDidYouRenderComponentMember;
+    const whyDidYouRender: WhyDidYouRenderComponentMember;
   }
 
   /* not supported.
-   see https://github.com/microsoft/TypeScript/issues/33892
-   and https://github.com/microsoft/TypeScript/issues/34516
-   and https://github.com/microsoft/TypeScript/issues/32185
+  see https://github.com/microsoft/TypeScript/issues/33892
+  and https://github.com/microsoft/TypeScript/issues/34516
+  and https://github.com/microsoft/TypeScript/issues/32185
 
-   // interface Component<P = {}, S = {}, SS = any> extends ComponentLifecycle<P, S, SS> {
-   //   static whyDidYouRender?: WhyDidYouRender.WhyDidYouRenderComponentMember;
-   // }
+  // interface Component<P = {}, S = {}, SS = any> extends ComponentLifecycle<P, S, SS> {
+  //   static whyDidYouRender?: WhyDidYouRenderComponentMember;
+  // }
   */
 }
