@@ -97,12 +97,14 @@ export default function whyDidYouRender(React, userOptions){
   const ownerDataMap = new WeakMap()
   const hooksRef = {current: []}
 
+  // Intercept assignments to ReactCurrentOwner.current and reset hooksRef
+  let currentOwner = null
   Object.defineProperty(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
     get(){
-      return this._current
+      return currentOwner
     },
     set(value){
-      this._current = value
+      currentOwner = value
       hooksRef.current = []
     }
   })
