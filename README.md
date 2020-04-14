@@ -6,7 +6,7 @@
 
 For example, when you pass `style={{width: '100%'}}` to a big pure component and make it always re-render:
 
-![](https://raw.githubusercontent.com/welldone-software/why-did-you-render/master/demo-image.png)
+![demo](images/demo.png)
 
 It can also help you to simply track when and why a certain component re-renders.
 
@@ -143,6 +143,7 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `trackHooks: true`
 - `trackExtraHooks: []`
 - `logOnDifferentValues: false`
+- `logOwnerReasons: false`
 - `hotReloadBufferMs: 500`
 - `onlyLogs: false`
 - `collapseGroups: false`
@@ -197,6 +198,11 @@ render(<BigListPureComponent a={1}/>)
 render(<BigListPureComponent a={2}/>)
 // this will only cause whyDidYouRender notifications for {logOnDifferentValues: true}
 ```
+
+#### logOwnerReasons
+One way of fixing re-render issues is preventing the component's owner from re-rendering.
+To make that easier, you can use `logOwnerReasons: true` to view the reasons why owner component re-renders.
+![demo](images/logOwnerReasons.png)
 
 #### hotReloadBufferMs
 Time in milliseconds to ignore updates after a hot reload is detected.
