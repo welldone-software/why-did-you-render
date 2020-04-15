@@ -12,9 +12,10 @@ import patchForwardRefComponent from './patches/patchForwardRefComponent'
 
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
 
+const initialHookValue = Symbol('initial-hook-value')
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options){
   const ComponentHookDispatchedFromInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
-  const prevHookResultRef = React.useRef()
+  const prevHookResultRef = React.useRef(initialHookValue)
 
   if(!ComponentHookDispatchedFromInstance){
     return hookResult
@@ -31,7 +32,7 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
   const prevHookResult = prevHookResultRef.current
   prevHookResultRef.current = hookResult
 
-  if(prevHookResult){
+  if(prevHookResult !== initialHookValue){
     const notification = getUpdateInfo({
       Component: Component,
       displayName,
