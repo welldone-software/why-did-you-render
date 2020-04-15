@@ -157,6 +157,31 @@ describe('track hooks', () => {
     expect(effectCalled).toBeTruthy()
   })
 
+  test('different (falsy to truthy)', () => {
+    const ComponentWithHooks = () => {
+      const [currentResult, setCurrentState] = React.useState(false)
+      const result = React.useMemo(() => currentResult, [currentResult])
+
+      React.useLayoutEffect(() => {
+        setCurrentState(true)
+      }, [])
+
+      return (
+        <div>hi! {result}</div>
+      )
+    }
+
+    ComponentWithHooks.whyDidYouRender = {
+      logOnDifferentValues: true
+    }
+
+    rtl.render(
+      <ComponentWithHooks/>
+    )
+
+    expect(updateInfos).toHaveLength(2)
+  })
+
   test('deep equals', () => {
     const ComponentWithHooks = ({a}) => {
       const [currentState, setCurrentState] = React.useState({b: 'b'})
