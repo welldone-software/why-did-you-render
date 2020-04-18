@@ -34,6 +34,7 @@ export interface WhyDidYouRenderOptions {
   exclude?: RegExp[];
   trackAllPureComponents?: boolean;
   trackHooks?: boolean;
+  logOwnerReasons?: boolean;
   trackExtraHooks?: Array<ExtraHookToTrack>;
   logOnDifferentValues?: boolean;
   hotReloadBufferMs?: number;
