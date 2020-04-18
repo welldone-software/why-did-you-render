@@ -102,7 +102,8 @@ describe('react-redux - simple', () => {
         expect.objectContaining({diffType: diffTypes.different})
       ],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     })
   })
 
@@ -140,7 +141,8 @@ describe('react-redux - simple', () => {
         expect.objectContaining({diffType: diffTypes.deepEquals})
       ],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     })
   })
 })
@@ -246,7 +248,8 @@ describe('react-redux - hooks', () => {
         hookDifferences: [
           {diffType: diffTypes.different, pathString: '.b', prevValue: 'c', nextValue: 'd'},
           {diffType: diffTypes.different, pathString: '', prevValue: {b: 'c'}, nextValue: {b: 'd'}}
-        ]
+        ],
+        ownerDifferences: false
       }
     }))
   })
@@ -289,7 +292,8 @@ describe('react-redux - hooks', () => {
         stateDifferences: false,
         hookDifferences: [
           {diffType: diffTypes.deepEquals, pathString: '', prevValue: {b: 'c'}, nextValue: {b: 'c'}}
-        ]
+        ],
+        ownerDifferences: false
       }
     }))
   })

@@ -36,7 +36,7 @@
     "quotes": ["error", "single"],
     "no-console": ["error"],
     "no-debugger": ["warn"],
-    "no-unused-vars": ["error"],
+    "no-unused-vars": ["error", {"ignoreRestSiblings": true}],
     "eol-last": ["error"],
     "object-curly-spacing": ["error"],
     "react/prop-types": ["off"],

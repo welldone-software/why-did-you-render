@@ -6,7 +6,7 @@ import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from '../
 import patchClassComponent from './patchClassComponent'
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
-export default function patchMemoComponent(MemoComponent, displayName, React, options){
+export default function patchMemoComponent(MemoComponent, displayName, React, options, ownerDataMap){
   const {type: InnerMemoComponent} = MemoComponent
 
   const isInnerMemoComponentAClassComponent = isReactClassComponent(InnerMemoComponent)
@@ -18,10 +18,10 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
     InnerMemoComponent
 
   const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
-    patchClassComponent(WrappedFunctionalComponent, displayName, React, options) :
+    patchClassComponent(WrappedFunctionalComponent, displayName, React, options, ownerDataMap) :
     (isInnerMemoComponentAnotherMemoComponent ?
-      patchMemoComponent(WrappedFunctionalComponent, displayName, React, options) :
-      patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options)
+      patchMemoComponent(WrappedFunctionalComponent, displayName, React, options, ownerDataMap) :
+      patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options, ownerDataMap)
     )
 
   try{

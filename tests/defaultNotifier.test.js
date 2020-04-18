@@ -103,6 +103,8 @@ function expectLogTypes(expectedLogTypes, expects){
     .toHaveLength(calculateNumberOfExpectedLogs(expectedLogTypes, expects.groupCollapsedLogsCount))
 }
 
+const ownerDataMap = new WeakMap()
+
 describe('For no differences', () => {
   Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
@@ -112,7 +114,8 @@ describe('For no differences', () => {
         prevState: null,
         nextProps: null,
         nextState: null,
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -131,7 +134,8 @@ describe('For different props eq by ref', () => {
         prevState: null,
         nextProps: {a: 'aa'},
         nextState: null,
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -150,7 +154,8 @@ describe('For equal state eq by ref', () => {
         prevState: {a: 'aa'},
         nextProps: null,
         nextState: {a: 'aa'},
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -169,7 +174,8 @@ describe('For different state and props', () => {
         prevState: {a: 'aa'},
         nextProps: {a: 'aa'},
         nextState: {a: 'aa'},
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -186,7 +192,8 @@ describe('For different hook', () => {
         Component: TestComponent,
         prevHook: {a: 'aa'},
         nextHook: {a: 'aa'},
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -205,7 +212,8 @@ describe('For different deep equal props', () => {
         prevState: null,
         nextProps: {a: {b: 'b'}},
         nextState: null,
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -224,7 +232,8 @@ describe('For different deep equal state', () => {
         prevState: {a: {b: 'b'}},
         nextProps: null,
         nextState: {a: {b: 'b'}},
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -243,7 +252,8 @@ describe('For different deep equal state and props', () => {
         prevState: {a: {b: 'b'}},
         nextProps: {a: {b: 'b'}},
         nextState: {a: {b: 'b'}},
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -262,7 +272,8 @@ describe('For different functions by the same name', () => {
         prevState: null,
         nextProps: {fn: function something(){}},
         nextState: null,
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -281,7 +292,8 @@ describe('Mix of changes', () => {
         prevState: {a: {b: 'b'}},
         nextProps: {fn: function something(){}},
         nextState: {a: {b: 'b'}},
-        options: normalizeOptions(userOptions)
+        options: normalizeOptions(userOptions),
+        ownerDataMap
       })
 
       defaultNotifier(updateInfo)
@@ -301,7 +313,8 @@ describe('logOnDifferentProps option', () => {
       nextState: null,
       options: normalizeOptions({
         onlyLogs: true
-      })
+      }),
+      ownerDataMap
     })
 
     defaultNotifier(updateInfo)
@@ -319,7 +332,8 @@ describe('logOnDifferentProps option', () => {
       nextState: {a: 'bbbb'},
       options: normalizeOptions({
         onlyLogs: true
-      })
+      }),
+      ownerDataMap
     })
 
     defaultNotifier(updateInfo)
@@ -338,7 +352,8 @@ describe('logOnDifferentProps option', () => {
       options: normalizeOptions({
         logOnDifferentValues: true,
         onlyLogs: true
-      })
+      }),
+      ownerDataMap
     })
 
     defaultNotifier(updateInfo)
@@ -368,7 +383,8 @@ describe('logOnDifferentProps option', () => {
       nextState: null,
       options: normalizeOptions({
         onlyLogs: true
-      })
+      }),
+      ownerDataMap
     })
 
     defaultNotifier(updateInfo)

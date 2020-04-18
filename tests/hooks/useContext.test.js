@@ -93,7 +93,8 @@ describe('hooks - useContext', () => {
         prevValue: {c: 'c'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 
@@ -133,7 +134,8 @@ describe('hooks - useContext', () => {
     expect(updateInfos[0].reason).toEqual({
       hookDifferences: false,
       propsDifferences: [],
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
     expect(updateInfos[1].reason).toEqual({
       hookDifferences: [{
@@ -143,7 +145,8 @@ describe('hooks - useContext', () => {
         prevValue: {c: 'c'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 })

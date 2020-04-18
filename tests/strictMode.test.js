@@ -74,7 +74,8 @@ test('Strict mode- class component no props change', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -106,7 +107,8 @@ test('Strict mode- class component props change', () => {
       }
     ],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -158,7 +160,8 @@ test('Strict mode- pure class component props change', () => {
       }
     ],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -184,7 +187,8 @@ test('Strict mode- functional component no props change', () => {
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: [],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -215,7 +219,8 @@ test('Strict mode- functional component with props change', () => {
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -245,7 +250,8 @@ test('Strict mode- functional component with hooks no props change', () => {
         nextValue: {count: 0},
         prevValue: {count: 0}
       }
-    ]
+    ],
+    ownerDifferences: false
   })
 })
 
@@ -273,6 +279,7 @@ test('Strict mode- functional component with hooks with props change', () => {
       pathString: '',
       nextValue: {count: 0},
       prevValue: {count: 0}
-    }]
+    }],
+    ownerDifferences: false
   })
 })

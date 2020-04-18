@@ -6,7 +6,7 @@ const getFunctionalComponentFromStringComponent = (componentTypeStr, React) => p
   React.createElement(componentTypeStr, props)
 )
 
-export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, isPure, displayName, React, options){
+export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, isPure, displayName, React, options, ownerDataMap){
   const FunctionalComponent = typeof(FunctionalOrStringComponent) === 'string' ?
     getFunctionalComponentFromStringComponent(FunctionalOrStringComponent, React) :
     FunctionalOrStringComponent
@@ -24,7 +24,8 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
         displayName,
         prevProps,
         nextProps,
-        options
+        options,
+        ownerDataMap
       })
 
       const shouldNotify = (

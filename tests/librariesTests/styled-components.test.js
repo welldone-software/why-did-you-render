@@ -39,7 +39,8 @@ test('simple styled-components', () => {
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -65,7 +66,8 @@ test('styled-components wrap of a memoized component', () => {
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -99,7 +101,8 @@ test('styled-components with forward ref', () => {
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -135,6 +138,7 @@ test('styled-components with memoized forward ref', () => {
       nextValue: []
     }],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })

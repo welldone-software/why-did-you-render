@@ -3,7 +3,7 @@ import {defaults} from 'lodash'
 import {checkIfInsideAStrictModeTree} from '../utils'
 import getUpdateInfo from '../getUpdateInfo'
 
-export default function patchClassComponent(ClassComponent, displayName, React, options){
+export default function patchClassComponent(ClassComponent, displayName, React, options, ownerDataMap){
   class WDYRPatchedClassComponent extends ClassComponent{
     constructor(props, context){
       super(props, context)
@@ -39,7 +39,8 @@ export default function patchClassComponent(ClassComponent, displayName, React, 
             prevState: this._WDYR.prevState,
             nextProps: this.props,
             nextState: this.state,
-            options
+            options,
+            ownerDataMap
           }))
         }
 

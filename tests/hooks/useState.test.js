@@ -76,7 +76,8 @@ describe('hooks - useState', () => {
           prevValue: {b: 'b'},
           nextValue: {b: 'c'}
         }
-      ]
+      ],
+      ownerDifferences: false
     })
   })
 
@@ -108,7 +109,8 @@ describe('hooks - useState', () => {
         diffType: diffTypes.deepEquals,
         prevValue: {b: 'b'},
         nextValue: {b: 'b'}
-      }]
+      }],
+      ownerDifferences: false
     })
   })
 })
@@ -210,7 +212,8 @@ describe('track hooks', () => {
         prevValue: {b: 'b'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 
@@ -242,7 +245,8 @@ describe('track hooks', () => {
         prevValue: {b: 'b'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 
@@ -282,7 +286,8 @@ describe('track hooks', () => {
         prevValue: {a: 'a'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
     expect(updateInfos[1].reason).toEqual({
       hookDifferences: [{
@@ -292,7 +297,8 @@ describe('track hooks', () => {
         prevValue: {b: 'b'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
     expect(updateInfos[2].reason).toEqual({
       hookDifferences: [{
@@ -302,7 +308,8 @@ describe('track hooks', () => {
         prevValue: {c: 'c'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
     expect(updateInfos[3].reason).toEqual({
       hookDifferences: [{
@@ -312,7 +319,8 @@ describe('track hooks', () => {
         prevValue: {d: 'd'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
     expect(updateInfos[4].reason).toEqual({
       hookDifferences: [{
@@ -322,7 +330,8 @@ describe('track hooks', () => {
         prevValue: {e: 'e'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 
@@ -354,7 +363,8 @@ describe('track hooks', () => {
         prevValue: {b: 'b'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 })

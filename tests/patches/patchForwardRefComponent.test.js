@@ -57,7 +57,8 @@ test('forward ref', () => {
       }
     ],
     stateDifferences: false,
-    hookDifferences: false
+    hookDifferences: false,
+    ownerDifferences: false
   })
 })
 
@@ -105,7 +106,8 @@ test('forward ref a memo component', () => {
         }
       ],
       stateDifferences: false,
-      hookDifferences: false
+      hookDifferences: false,
+      ownerDifferences: false
     })
   }).toThrow()
   global.flushConsoleOutput()

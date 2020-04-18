@@ -82,7 +82,8 @@ describe('hooks - useReducer', () => {
         nextValue: {a: 'a'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 
@@ -120,7 +121,8 @@ describe('hooks - useReducer', () => {
         prevValue: {b: 'b'}
       }],
       propsDifferences: false,
-      stateDifferences: false
+      stateDifferences: false,
+      ownerDifferences: false
     })
   })
 })
