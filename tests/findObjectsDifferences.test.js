@@ -164,4 +164,25 @@ describe('findObjectsDifferences not shallow', () => {
       }
     ])
   })
+
+  test('For sets with same values', () => {
+    const prev = new Set([1, 2, 3])
+    const next = new Set([1, 2, 3])
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual([])
+  })
+
+  test('For sets with different values', () => {
+    const prev = new Set([1, 2, 3])
+    const next = new Set([4, 5, 6])
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        diffType: diffTypes.deepEquals,
+        prevValue: prev,
+        nextValue: next
+      }
+    ])
+  })
 })
