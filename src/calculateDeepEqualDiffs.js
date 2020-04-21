@@ -1,4 +1,4 @@
-import {isArray, isPlainObject, isDate, isRegExp, isFunction, keys as getKeys, has} from 'lodash'
+import {isArray, isPlainObject, isDate, isRegExp, isFunction, isSet, keys as getKeys, has} from 'lodash'
 import {diffTypes} from './consts'
 
 const hasElementType = typeof Element !== 'undefined'
@@ -44,6 +44,18 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
     return allChildrenDeepEqual ?
       trackDiff(a, b, diffsAccumulator, pathString, diffTypes.deepEquals) :
       trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+  }
+
+  if(isSet(a) && isSet(b)){
+    if(a.size !== b.size){
+      return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)
+    }
+    for(const valA of a){
+      if(!b.has(valA)){
+        return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)
+      }
+    }
+    return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.deepEquals)
   }
 
   if(isDate(a) && isDate(b)){
