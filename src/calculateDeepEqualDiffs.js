@@ -31,7 +31,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
   if(isArray(a) && isArray(b)){
     const length = a.length
     if(length !== b.length){
-      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+      return trackDiff([...a], [...b], diffsAccumulator, pathString, diffTypes.different)
     }
 
     let allChildrenDeepEqual = true
@@ -42,26 +42,28 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
     }
 
     return allChildrenDeepEqual ?
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.deepEquals) :
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+      trackDiff([...a], [...b], diffsAccumulator, pathString, diffTypes.deepEquals) :
+      trackDiff([...a], [...b], diffsAccumulator, pathString, diffTypes.different)
   }
 
   if(isSet(a) && isSet(b)){
     if(a.size !== b.size){
       return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)
     }
+
     for(const valA of a){
       if(!b.has(valA)){
         return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)
       }
     }
+
     return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.deepEquals)
   }
 
   if(isDate(a) && isDate(b)){
     return a.getTime() === b.getTime() ?
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.date) :
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+      trackDiff(new Date(a), new Date(b), diffsAccumulator, pathString, diffTypes.date) :
+      trackDiff(new Date(a), new Date(b), diffsAccumulator, pathString, diffTypes.different)
   }
 
   if(isRegExp(a) && isRegExp(b)){
@@ -79,14 +81,12 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
       return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
     }
 
-    else{
-      const reactElementPropsAreDeepEqual =
-        accumulateDeepEqualDiffs(a.props, b.props, diffsAccumulator, `${pathString}.props`)
+    const reactElementPropsAreDeepEqual =
+      accumulateDeepEqualDiffs(a.props, b.props, diffsAccumulator, `${pathString}.props`)
 
-      return reactElementPropsAreDeepEqual ?
-        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.reactElement) :
-        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
-    }
+    return reactElementPropsAreDeepEqual ?
+      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.reactElement) :
+      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
   }
 
   if(isFunction(a) && isFunction(b)){
@@ -99,12 +99,12 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
     const keys = getKeys(a)
     const length = keys.length
     if(length !== getKeys(b).length){
-      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+      return trackDiff({...a}, {...b}, diffsAccumulator, pathString, diffTypes.different)
     }
 
     for(let i = length; i-- !== 0;){
       if(!has(b, keys[i])){
-        return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+        return trackDiff({...a}, {...b}, diffsAccumulator, pathString, diffTypes.different)
       }
     }
 
@@ -117,8 +117,8 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
     }
 
     return allChildrenDeepEqual ?
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.deepEquals) :
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+      trackDiff({...a}, {...b}, diffsAccumulator, pathString, diffTypes.deepEquals) :
+      trackDiff({...a}, {...b}, diffsAccumulator, pathString, diffTypes.different)
   }
 
   return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
