@@ -445,6 +445,48 @@ test('inline functions', () => {
   ])
 })
 
+test('sets', () => {
+  const prevValue = {
+    a: new Set(['a']),
+    b: new Set(['a', 1]),
+    c: new Set(['a', 1])
+  }
+
+  const nextValue = {
+    a: new Set(['a']),
+    b: new Set(['a', 2]),
+    c: new Set(['a', 1, 'c'])
+  }
+
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
+  expect(diffs).toEqual([
+    {
+      pathString: '.c',
+      prevValue: prevValue.c,
+      nextValue: nextValue.c,
+      diffType: diffTypes.different
+    },
+    {
+      pathString: '.b',
+      prevValue: prevValue.b,
+      nextValue: nextValue.b,
+      diffType: diffTypes.different
+    },
+    {
+      pathString: '.a',
+      prevValue: prevValue.a,
+      nextValue: nextValue.a,
+      diffType: diffTypes.deepEquals
+    },
+    {
+      pathString: '',
+      prevValue: prevValue,
+      nextValue: nextValue,
+      diffType: diffTypes.different
+    }
+  ])
+})
+
 test('mix', () => {
   const prevValue = {a: {fn: () => {}}, b: [{tooltip: <div>hi</div>}]}
   const nextValue = {a: {fn: () => {}}, b: [{tooltip: <div>hi</div>}]}

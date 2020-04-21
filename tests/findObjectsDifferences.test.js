@@ -190,4 +190,18 @@ describe('findObjectsDifferences not shallow', () => {
       }
     ])
   })
+
+  test('For sets with different value length', () => {
+    const prev = new Set([1, 2, 3])
+    const next = new Set([1, 2, 3, 4])
+    const diffs = findObjectsDifferences(prev, next, {shallow: false})
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        diffType: diffTypes.different,
+        prevValue: prev,
+        nextValue: next
+      }
+    ])
+  })
 })
