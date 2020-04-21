@@ -47,11 +47,15 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
   }
 
   if(isSet(a) && isSet(b)){
-    if(a.size !== b.size){return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)}
-    for(const valA of a) 
-      {if(!b.has(valA)) 
-        {return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.deepEquals)}}
-    return true
+    if(a.size !== b.size){
+      return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)
+    }
+    for(const valA of a){
+      if(!b.has(valA)){
+        return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different)
+      }
+    }
+    return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.deepEquals)
   }
 
   if(isDate(a) && isDate(b)){
