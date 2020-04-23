@@ -22,7 +22,7 @@ npm install @welldone-software/why-did-you-render --save
 ## Installation
 Execute `whyDidYouRender` **as the first thing that happens in your application** (even before `react-hot-loader`).
 
-The best way of doing it would be to create a file with the name `wdyr.js` near the entrypoint of your application:
+The best way of doing this would be to create a file (lets say `wdyr.js`) near the entrypoint of your application:
 
 `wdyr.js`:
 ```js
@@ -36,6 +36,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 And then import `wdyr.js` (even before `react-hot-loader`):
+
+`index.js`:
 ```
 import './wdyr';
 
