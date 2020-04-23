@@ -20,10 +20,11 @@ npm install @welldone-software/why-did-you-render --save
 ```
 
 ## Installation
-Execute `whyDidYouRender` with `React` as its first argument **before any `React` element is created**.
+Execute `whyDidYouRender` **as the first thing that happens in your application** (even before `react-hot-loader`).
 
-The second argument is an optional options object, which we suggest configuring as following:
+The best way of doing it would be to create a file with the name `wdyr.js` near the entrypoint of your application:
 
+`wdyr.js`:
 ```js
 import React from 'react';
 
@@ -34,13 +35,25 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 ```
+And then import `wdyr.js` (even before `react-hot-loader`):
+```
+import './wdyr';
 
-If you use the latest `react-redux` with hooks:
+import 'react-hot-loader';
+import {hot} from 'react-hot-loader/root';
 
-> There is currently a problem with rewriting exports of imported files in webpack.
+import React from 'react';
+import ReactDOM from 'react-dom';
+// ...
+import {App} from './app';
 
-> To see available workarounds check out the discussion at bug [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
+// ...
+const HotApp = hot(App);
+// ...
+ReactDOM.render(<HotApp/>, document.getElementById('root'));
+```
 
+If you use the latest `react-redux` with hooks (or any other custom library), you can also patch it like this:
 ```js
 import React from 'react';
 
@@ -55,6 +68,7 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 ```
+But there is currently a problem with rewriting exports of imported files in `webpack` and a small workaround should be applied to support this feature [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
 
 ## Read More
 * [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
