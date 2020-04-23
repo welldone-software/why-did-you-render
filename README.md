@@ -25,7 +25,7 @@ Execute `whyDidYouRender` **as the first thing that happens in your application*
 The best way of doing this would be to create a file (lets say `wdyr.js`) near the entrypoint of your application:
 
 `wdyr.js`:
-```js
+```jsx
 import React from 'react';
 
 if (process.env.NODE_ENV === 'development') {
@@ -38,7 +38,7 @@ if (process.env.NODE_ENV === 'development') {
 And then import `wdyr.js` (even before `react-hot-loader`):
 
 `index.js`:
-```
+```jsx
 import './wdyr';
 
 import 'react-hot-loader';
