@@ -32,7 +32,7 @@ export default function patchClassComponent(ClassComponent, displayName, React, 
       // in strict mode- ignore every other render
       if(!(this._WDYR.isStrictMode && this._WDYR.renderNumber % 2 === 1)){
         if(this._WDYR.prevProps){
-          options.notifier(getUpdateInfo({
+          const updateInfo = getUpdateInfo({
             Component: ClassComponent,
             displayName,
             prevProps: this._WDYR.prevProps,
@@ -41,7 +41,9 @@ export default function patchClassComponent(ClassComponent, displayName, React, 
             nextState: this.state,
             options,
             ownerDataMap
-          }))
+          })
+
+          options.notifier(updateInfo)
         }
 
         this._WDYR.prevProps = this.props

@@ -28,13 +28,13 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
         ownerDataMap
       })
 
-      const shouldNotify = (
-        updateInfo.reason.propsDifferences && (
-          !(isPure && updateInfo.reason.propsDifferences.length === 0)
+      const notifiedByHooks = (
+        !updateInfo.reason.propsDifferences || (
+          (isPure && updateInfo.reason.propsDifferences.length === 0)
         )
       )
 
-      if(shouldNotify){
+      if(!notifiedByHooks){
         options.notifier(updateInfo)
       }
     }
