@@ -16,7 +16,11 @@ const initialHookValue = Symbol('initial-hook-value')
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options, ownerDataMap, hooksRef){
   const nextHook = hookPath ? get(hookResult, hookPath) : hookResult
   hooksRef.current.push({hookName, result: nextHook})
-  const ComponentHookDispatchedFromInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+  const ComponentHookDispatchedFromInstance = (
+    React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
+    React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+  )
+
   const prevHookResultRef = React.useRef(initialHookValue)
 
   if(!ComponentHookDispatchedFromInstance){
@@ -99,15 +103,17 @@ export default function whyDidYouRender(React, userOptions){
 
   // Intercept assignments to ReactCurrentOwner.current and reset hooksRef
   let currentOwner = null
-  Object.defineProperty(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
-    get(){
-      return currentOwner
-    },
-    set(value){
-      currentOwner = value
-      hooksRef.current = []
-    }
-  })
+  if(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED){
+    Object.defineProperty(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
+      get(){
+        return currentOwner
+      },
+      set(value){
+        currentOwner = value
+        hooksRef.current = []
+      }
+    })
+  }
 
   React.createElement = function(componentNameOrComponent, ...rest){
     let isShouldTrack = null
