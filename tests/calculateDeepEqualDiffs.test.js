@@ -57,12 +57,6 @@ test('nested object deep equals', () => {
 
   expect(diffs).toEqual([
     {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.deepEquals
-    },
-    {
       pathString: '',
       prevValue,
       nextValue,
@@ -79,18 +73,6 @@ test('nested array deep equals', () => {
 
   expect(diffs).toEqual([
     {
-      pathString: '.a.b',
-      prevValue: prevValue.a.b,
-      nextValue: nextValue.a.b,
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.deepEquals
-    },
-    {
       pathString: '',
       prevValue,
       nextValue,
@@ -103,30 +85,28 @@ test('date', () => {
   const now = new Date()
   const now2 = new Date(now)
 
+  const diffs = calculateDeepEqualDiffs(now, now2)
+
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue: now,
+      nextValue: now2,
+      diffType: diffTypes.date
+    }
+  ])
+})
+
+test('nested date', () => {
+  const now = new Date()
+  const now2 = new Date(now)
+
   const prevValue = {a: {b: [now]}}
   const nextValue = {a: {b: [now2]}}
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
   expect(diffs).toEqual([
-    {
-      pathString: '.a.b[0]',
-      prevValue: prevValue.a.b[0],
-      nextValue: nextValue.a.b[0],
-      diffType: diffTypes.date
-    },
-    {
-      pathString: '.a.b',
-      prevValue: prevValue.a.b,
-      nextValue: nextValue.a.b,
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.deepEquals
-    },
     {
       pathString: '',
       prevValue,
@@ -140,30 +120,28 @@ test('regular expression', () => {
   const regEx = /c/i
   const regEx2 = /c/i
 
+  const diffs = calculateDeepEqualDiffs(regEx, regEx2)
+
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue: regEx,
+      nextValue: regEx2,
+      diffType: diffTypes.regex
+    }
+  ])
+})
+
+test('nested regular expression', () => {
+  const regEx = /c/i
+  const regEx2 = /c/i
+
   const prevValue = {a: {b: [regEx]}}
   const nextValue = {a: {b: [regEx2]}}
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
   expect(diffs).toEqual([
-    {
-      pathString: '.a.b[0]',
-      prevValue: prevValue.a.b[0],
-      nextValue: nextValue.a.b[0],
-      diffType: diffTypes.regex
-    },
-    {
-      pathString: '.a.b',
-      prevValue: prevValue.a.b,
-      nextValue: nextValue.a.b,
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.deepEquals
-    },
     {
       pathString: '',
       prevValue,
@@ -216,8 +194,23 @@ test('equal react elements', () => {
   ])
 })
 
-
 test('simple react elements', () => {
+  const tooltip = <div>hi!</div>
+  const tooltip2 = <div>hi!</div>
+
+  const diffs = calculateDeepEqualDiffs(tooltip, tooltip2)
+
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue: tooltip,
+      nextValue: tooltip2,
+      diffType: diffTypes.reactElement
+    }
+  ])
+})
+
+test('nested react elements', () => {
   const tooltip = <div>hi!</div>
   const tooltip2 = <div>hi!</div>
 
@@ -227,18 +220,6 @@ test('simple react elements', () => {
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
   expect(diffs).toEqual([
-    {
-      pathString: '.a.props',
-      prevValue: {children: 'hi!'},
-      nextValue: {children: 'hi!'},
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.reactElement
-    },
     {
       pathString: '',
       prevValue,
@@ -265,18 +246,6 @@ test('react class component instance', () => {
 
   expect(diffs).toEqual([
     {
-      pathString: '.a.props',
-      prevValue: {},
-      nextValue: {},
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.reactElement
-    },
-    {
       pathString: '',
       prevValue,
       nextValue,
@@ -302,18 +271,6 @@ test('react class pure component instance', () => {
 
   expect(diffs).toEqual([
     {
-      pathString: '.a.props',
-      prevValue: {},
-      nextValue: {},
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.reactElement
-    },
-    {
       pathString: '',
       prevValue,
       nextValue,
@@ -336,18 +293,6 @@ test('react functional component instance', () => {
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
   expect(diffs).toEqual([
-    {
-      pathString: '.a.props',
-      prevValue: {},
-      nextValue: {},
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.reactElement
-    },
     {
       pathString: '',
       prevValue,
@@ -372,18 +317,6 @@ test('react memoized functional component instance', () => {
 
   expect(diffs).toEqual([
     {
-      pathString: '.a.props',
-      prevValue: {a: 1},
-      nextValue: {a: 1},
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.reactElement
-    },
-    {
       pathString: '',
       prevValue,
       nextValue,
@@ -403,12 +336,6 @@ test('functions', () => {
 
   expect(diffs).toEqual([
     {
-      pathString: '.fn',
-      prevValue: prevValue.fn,
-      nextValue: nextValue.fn,
-      diffType: diffTypes.function
-    },
-    {
       pathString: '',
       prevValue,
       nextValue,
@@ -424,18 +351,6 @@ test('inline functions', () => {
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
   expect(diffs).toEqual([
-    {
-      pathString: '.a.fn',
-      prevValue: prevValue.a.fn,
-      nextValue: nextValue.a.fn,
-      diffType: diffTypes.function
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.deepEquals
-    },
     {
       pathString: '',
       prevValue,
@@ -494,42 +409,6 @@ test('mix', () => {
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
 
   expect(diffs).toEqual([
-    {
-      pathString: '.b[0].tooltip.props',
-      prevValue: {children: 'hi'},
-      nextValue: {children: 'hi'},
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.b[0].tooltip',
-      prevValue: prevValue.b[0].tooltip,
-      nextValue: nextValue.b[0].tooltip,
-      diffType: diffTypes.reactElement
-    },
-    {
-      pathString: '.b[0]',
-      prevValue: prevValue.b[0],
-      nextValue: nextValue.b[0],
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.b',
-      prevValue: prevValue.b,
-      nextValue: nextValue.b,
-      diffType: diffTypes.deepEquals
-    },
-    {
-      pathString: '.a.fn',
-      prevValue: prevValue.a.fn,
-      nextValue: nextValue.a.fn,
-      diffType: diffTypes.function
-    },
-    {
-      pathString: '.a',
-      prevValue: prevValue.a,
-      nextValue: nextValue.a,
-      diffType: diffTypes.deepEquals
-    },
     {
       pathString: '',
       prevValue,

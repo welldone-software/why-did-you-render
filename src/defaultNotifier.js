@@ -8,7 +8,7 @@ const diffTypesDescriptions = {
   [diffTypes.deepEquals]: 'different objects that are equal by value.',
   [diffTypes.date]: 'different date objects with the same value.',
   [diffTypes.regex]: 'different regular expressions with the same value.',
-  [diffTypes.reactElement]: 'different React elements with the same displayName.',
+  [diffTypes.reactElement]: 'different React elements (remember that the <jsx/> syntax always produces a *NEW* immutable React element so a component that receives <jsx/> as props always re-renders.).',
   [diffTypes.function]: 'different functions with the same name.'
 }
 
