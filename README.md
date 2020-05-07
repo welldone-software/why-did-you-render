@@ -96,7 +96,7 @@ class BigList extends React.Component {
   static whyDidYouRender = true
   render(){
     return (
-      //some heavy render you want to ensure doesn't happen if its not neceserry
+      //some heavy render you want to ensure doesn't happen if its not necessary
     )
   }
 }
@@ -107,7 +107,7 @@ And for functional components:
 ```js
 const BigListPureComponent = props => (
   <div>
-    //some heavy component you want to ensure doesn't happen if its not neceserry
+    //some heavy component you want to ensure doesn't happen if its not necessary
   </div>
 )
 BigListPureComponent.whyDidYouRender = true
