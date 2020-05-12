@@ -229,6 +229,31 @@ test('nested react elements', () => {
   ])
 })
 
+test('nested different react elements', () => {
+  const tooltip = <div>hi!</div>
+  const tooltip2 = <div>hi 2 !</div>
+
+  const prevValue = {a: tooltip}
+  const nextValue = {a: tooltip2}
+
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
+
+  expect(diffs).toEqual([
+    {
+      pathString: '.a',
+      prevValue: tooltip,
+      nextValue: tooltip2,
+      diffType: diffTypes.different
+    },
+    {
+      pathString: '',
+      prevValue,
+      nextValue,
+      diffType: diffTypes.different
+    }
+  ])
+})
+
 test('react class component instance', () => {
   class MyComponent extends React.Component{
     render(){
