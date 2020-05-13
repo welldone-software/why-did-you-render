@@ -11,7 +11,7 @@ For example, when you pass `style={{width: '100%'}}` to a big pure component and
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-> The last version of the library has been tested with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
+The last version of the library has been tested with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
 
 > For versions before 16.8 try turning off hooks support by using `trackHooks: false` in `whyDidYouRender`'s init options.*
 
