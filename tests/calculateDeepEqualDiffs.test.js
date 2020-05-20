@@ -254,6 +254,22 @@ test('nested different react elements', () => {
   ])
 })
 
+test('nested different react elements with several children', () => {
+  const prevValue = <div><a>hi</a><a>hi111</a></div>
+  const nextValue = <div><a>hi</a><a>hi222</a></div>
+
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue)
+
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue,
+      nextValue,
+      diffType: diffTypes.different
+    }
+  ])
+})
+
 test('react class component instance', () => {
   class MyComponent extends React.Component{
     render(){

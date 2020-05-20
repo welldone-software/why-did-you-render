@@ -9,12 +9,6 @@ const REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7
 const isReactElement = object => object.$$typeof === REACT_ELEMENT_TYPE
 // end
 
-function countDeepEquals(diffs){
-  return diffs.filter(diff => (
-    diff.diffType !== diffTypes.different
-  )).length
-}
-
 function trackDiff(a, b, diffsAccumulator, pathString, diffType){
   diffsAccumulator.push({
     diffType,
@@ -41,12 +35,15 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
     }
 
     const arrayItemDiffs = []
+    let numberOfDeepEqualsItems = 0
     for(let i = arrayLength; i--; i > 0){
-      accumulateDeepEqualDiffs(a[i], b[i], arrayItemDiffs, `${pathString}[${i}]`)
+      const diffEquals = accumulateDeepEqualDiffs(a[i], b[i], arrayItemDiffs, `${pathString}[${i}]`)
+      if(diffEquals){
+        numberOfDeepEqualsItems++
+      }
     }
 
-    const numberOfDeepEqualsItems = countDeepEquals(arrayItemDiffs)
-    if(arrayItemDiffs.length === 0 || numberOfDeepEqualsItems === arrayLength){
+    if(numberOfDeepEqualsItems === arrayLength){
       return trackDiff([...a], [...b], diffsAccumulator, pathString, diffTypes.deepEquals)
     }
 
@@ -118,13 +115,16 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = ''){
     }
 
     const objectValuesDiffs = []
+    let numberOfDeepEqualsObjectValues = 0
     for(let i = keysLength; i--; i > 0){
       const key = keys[i]
-      accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`)
+      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`)
+      if(deepEquals){
+        numberOfDeepEqualsObjectValues++
+      }
     }
 
-    const numberOfDeepEqualsObjectValues = countDeepEquals(objectValuesDiffs)
-    if(objectValuesDiffs.length === 0 || numberOfDeepEqualsObjectValues === keysLength){
+    if(numberOfDeepEqualsObjectValues === keysLength){
       return trackDiff({...a}, {...b}, diffsAccumulator, pathString, diffTypes.deepEquals)
     }
 
