@@ -132,6 +132,62 @@ describe('logOwnerReasons - function child', () => {
       }
     })
   })
+
+  test('owner state updated during render', () => {
+    function DerivedStateOwner({ready}){
+      const [wasReady, setWasReady] = React.useState(ready)
+      if(ready && !wasReady){
+        setWasReady(true)
+      }
+
+      return <Child />
+    }
+    const {rerender} = rtl.render(<DerivedStateOwner ready={false}/>)
+    rerender(<DerivedStateOwner ready/>)
+    rerender(<DerivedStateOwner ready={false}/>)
+
+    expect(updateInfos).toHaveLength(2)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false,
+      hookDifferences: false,
+      ownerDifferences: {
+        propsDifferences: [{
+          pathString: 'ready',
+          diffType: diffTypes.different,
+          prevValue: false,
+          nextValue: true
+        }],
+        stateDifferences: false,
+        hookDifferences: [
+          {
+            hookName: 'useState',
+            differences: [{
+              pathString: '',
+              diffType: diffTypes.different,
+              prevValue: false,
+              nextValue: true
+            }]
+          }
+        ]
+      }
+    })
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false,
+      hookDifferences: false,
+      ownerDifferences: {
+        propsDifferences: [{
+          pathString: 'ready',
+          diffType: diffTypes.different,
+          prevValue: true,
+          nextValue: false
+        }],
+        stateDifferences: false,
+        hookDifferences: [{hookName: 'useState', differences: false}]
+      }
+    })
+  })
 })
 
 
