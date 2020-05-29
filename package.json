@@ -94,6 +94,7 @@
     "react-dom": "npm:@hot-loader/react-dom@^16.13.0",
     "react-hot-loader": "^4.12.21",
     "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.10.5",
