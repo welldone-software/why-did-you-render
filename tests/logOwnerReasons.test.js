@@ -72,7 +72,7 @@ describe('logOwnerReasons - function child', () => {
           nextValue: 2
         }],
         stateDifferences: false,
-        hookDifferences: []
+        hookDifferences: false
       }
     })
   })
@@ -93,7 +93,7 @@ describe('logOwnerReasons - function child', () => {
           prevValue: 1,
           nextValue: 2
         }],
-        hookDifferences: []
+        hookDifferences: false
       }
     })
   })
@@ -162,7 +162,7 @@ describe('logOwnerReasons - class child', () => {
           nextValue: 2
         }],
         stateDifferences: false,
-        hookDifferences: []
+        hookDifferences: false
       }
     })
   })
@@ -183,7 +183,7 @@ describe('logOwnerReasons - class child', () => {
           prevValue: 1,
           nextValue: 2
         }],
-        hookDifferences: []
+        hookDifferences: false
       }
     })
   })
