@@ -15,7 +15,12 @@ import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './u
 const initialHookValue = Symbol('initial-hook-value')
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options, ownerDataMap, hooksRef){
   const nextHook = hookPath ? get(hookResult, hookPath) : hookResult
-  hooksRef.current.push({hookName, result: nextHook})
+  const renderNumber = React.useRef(1)
+  if(hooksRef.current[0] != null && renderNumber.current !== hooksRef.current[0].renderNumber){
+    hooksRef.current = []
+  }
+  hooksRef.current.push({hookName, result: nextHook, renderNumber: renderNumber.current})
+  renderNumber.current++
   const ComponentHookDispatchedFromInstance = (
     React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
     React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
