@@ -84,6 +84,24 @@ function getPatchedComponent(componentsMap, Component, displayName, React, optio
   return WDYRPatchedComponent
 }
 
+function getIsSupportedComponentType(Comp){
+  if(!Comp){
+    return false
+  }
+
+  if(typeof Comp === 'function'){
+    return true
+  }
+
+  if(isMemoComponent(Comp)){
+    return getIsSupportedComponentType(Comp.type)
+  }
+
+  if(isForwardRefComponent(Comp)){
+    return getIsSupportedComponentType(Comp.render)
+  }
+}
+
 export const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
@@ -122,11 +140,7 @@ export default function whyDidYouRender(React, userOptions){
 
     try{
       isShouldTrack = (
-        (
-          typeof componentNameOrComponent === 'function' ||
-          isMemoComponent(componentNameOrComponent) ||
-          isForwardRefComponent(componentNameOrComponent)
-        ) &&
+        getIsSupportedComponentType(componentNameOrComponent) &&
         shouldTrack({Component: componentNameOrComponent, displayName: getDisplayName(componentNameOrComponent), React, options})
       )
 
@@ -143,7 +157,7 @@ export default function whyDidYouRender(React, userOptions){
         const element = origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
         if(options.logOwnerReasons){
           const OwnerInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
-          if(OwnerInstance != null){
+          if(OwnerInstance){
             const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
             const displayName = getDisplayName(Component)
             ownerDataMap.set(element.props, {

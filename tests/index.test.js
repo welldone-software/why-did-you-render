@@ -36,12 +36,6 @@ test('dont swallow errors', () => {
       ])
     },
     {
-      level: 'log',
-      args: expect.arrayContaining([
-        expect.stringContaining('whyDidYouRender error')
-      ])
-    },
-    {
       level: 'error',
       args: expect.arrayContaining([
         expect.stringContaining('propTypes')
