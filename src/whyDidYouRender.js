@@ -94,16 +94,16 @@ function getIsSupportedComponentType(Comp){
     return false
   }
 
-  if(typeof Comp === 'function'){
-    return true
-  }
-
   if(isMemoComponent(Comp)){
     return getIsSupportedComponentType(Comp.type)
   }
 
   if(isForwardRefComponent(Comp)){
     return getIsSupportedComponentType(Comp.render)
+  }
+
+  if(typeof Comp === 'function'){
+    return true
   }
 }
 
