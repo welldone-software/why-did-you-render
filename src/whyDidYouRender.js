@@ -119,10 +119,26 @@ export default function whyDidYouRender(React, userOptions){
 
   const origCreateElement = React.createElement
   const origCreateFactory = React.createFactory
+  const origCloneElement = React.cloneElement
 
   let componentsMap = new WeakMap()
   const ownerDataMap = new WeakMap()
   const hooksRef = {current: []}
+
+  function storeOwnerData(element){
+    const OwnerInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+    if(OwnerInstance){
+      const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
+      const displayName = getDisplayName(Component)
+      ownerDataMap.set(element.props, {
+        Component,
+        displayName,
+        props: OwnerInstance.pendingProps,
+        state: OwnerInstance.stateNode != null ? OwnerInstance.stateNode.state : null,
+        hooks: hooksRef.current
+      })
+    }
+  }
 
   // Intercept assignments to ReactCurrentOwner.current and reset hooksRef
   let currentOwner = null
@@ -161,18 +177,7 @@ export default function whyDidYouRender(React, userOptions){
 
         const element = origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
         if(options.logOwnerReasons){
-          const OwnerInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
-          if(OwnerInstance){
-            const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
-            const displayName = getDisplayName(Component)
-            ownerDataMap.set(element.props, {
-              Component,
-              displayName,
-              props: OwnerInstance.pendingProps,
-              state: OwnerInstance.stateNode != null ? OwnerInstance.stateNode.state : null,
-              hooks: hooksRef.current
-            })
-          }
+          storeOwnerData(element)
         }
 
         return element
@@ -205,6 +210,17 @@ export default function whyDidYouRender(React, userOptions){
 
   Object.assign(React.createFactory, origCreateFactory)
 
+  React.cloneElement = (...args) => {
+    const element = origCloneElement.apply(React, args)
+    if(options.logOwnerReasons){
+      storeOwnerData(element)
+    }
+
+    return element
+  }
+
+  Object.assign(React.cloneElement, origCloneElement)
+
   if(options.trackHooks){
     const nativeHooks = Object.entries(hooksConfig).map(([hookName, hookTrackingConfig]) => {
       return [React, hookName, hookTrackingConfig]
@@ -232,7 +248,8 @@ export default function whyDidYouRender(React, userOptions){
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     Object.assign(React, {
       createElement: origCreateElement,
-      createFactory: origCreateFactory
+      createFactory: origCreateFactory,
+      cloneElement: origCloneElement
     })
 
     componentsMap = null
