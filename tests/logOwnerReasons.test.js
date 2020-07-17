@@ -49,6 +49,19 @@ function createOwners(Child){
   return {Owner, ClassOwner, HooksOwner}
 }
 
+function CloneOwner({children}){
+  /* eslint-disable no-unused-vars */
+  const [a, setA] = React.useState(1)
+  const [b, setB] = React.useState(1)
+  /* eslint-enable */
+  React.useEffect(() => {
+    setA(2)
+    setB(2)
+  }, [])
+
+  return React.cloneElement(children)
+}
+
 describe('logOwnerReasons - function child', () => {
   const Child = () => null
   Child.whyDidYouRender = true
@@ -185,6 +198,41 @@ describe('logOwnerReasons - function child', () => {
         }],
         stateDifferences: false,
         hookDifferences: [{hookName: 'useState', differences: false}]
+      }
+    })
+  })
+
+  test('owner uses cloneElement', () => {
+    rtl.render(<CloneOwner><Child/></CloneOwner>)
+
+    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: [],
+      stateDifferences: false,
+      hookDifferences: false,
+      ownerDifferences: {
+        propsDifferences: false,
+        stateDifferences: false,
+        hookDifferences: [
+          {
+            hookName: 'useState',
+            differences: [{
+              pathString: '',
+              diffType: diffTypes.different,
+              prevValue: 1,
+              nextValue: 2
+            }]
+          },
+          {
+            hookName: 'useState',
+            differences: [{
+              pathString: '',
+              diffType: diffTypes.different,
+              prevValue: 1,
+              nextValue: 2
+            }]
+          }
+        ]
       }
     })
   })
