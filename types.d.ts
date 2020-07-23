@@ -44,6 +44,7 @@ export interface WhyDidYouRenderOptions {
   diffNameColor?: string;
   diffPathColor?: string;
   notifier?: Notifier;
+  customName?: string;
 }
 
 export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
