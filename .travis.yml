@@ -14,11 +14,11 @@ branches:
 jobs:
   include:
     - stage: Health Checks
-      script: yarn cypress:ci
       name: "Cypress E2E Test"
-    - script: yarn test:ci
-      name: "Unit Tests"
-    - script: yarn lint
-      name: "Linting"
-    - script: yarn audit
-      name: "Yarn audit"
+      script: yarn cypress:ci
+
+    - name: "Unit Tests, Lint, and Audit"
+      script:
+        - yarn test:ci
+        - yarn lint
+        - yarn audit
