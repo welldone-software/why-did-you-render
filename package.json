@@ -32,6 +32,7 @@
     "start": "cross-env PORT=3003 NODE_ENV=development node demo/serve",
     "build": "cross-env NODE_ENV=production rollup --config",
     "test": "cross-env TEST=true jest \"./tests\"",
+    "test:ci": "yarn test --coverage && coveralls < coverage/lcov.info",
     "test:watch": "yarn test --watch",
     "lint": "eslint . --ext=js --cache --cache-location .cache/eslint-cache",
     "lint:fix": "yarn lint --fix",
@@ -39,7 +40,11 @@
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
     "checkHealth": "yarn lint && yarn test",
     "version": "yarn checkHealth && yarn build && git add --all dist",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:record": "yarn cypress:run --record",
+    "cypress:ci": "start-server-and-test start http://localhost:3003 cypress:run:record"
   },
   "husky": {
     "hooks": {
@@ -64,12 +69,13 @@
   "devDependencies": {
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.1",
+    "@babel/eslint-parser": "^7.11.0",
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
-    "@rollup/plugin-replace": "^2.3.3",
     "@rollup/plugin-babel": "^5.1.0",
     "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-replace": "^2.3.3",
     "@testing-library/jest-dom": "^5.11.2",
     "@testing-library/react": "^10.4.8",
     "@types/react-redux": "^7.1.9",
@@ -77,13 +83,15 @@
     "acorn-walk": "^7.2.0",
     "astring": "^1.4.3",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^10.1.0",
     "babel-jest": "^26.2.2",
     "babel-plugin-lodash": "^3.3.4",
     "concurrently": "^5.3.0",
+    "coveralls": "^3.1.0",
     "create-react-class": "^15.6.3",
     "cross-env": "^7.0.2",
+    "cypress": "^4.12.1",
     "eslint": "^7.6.0",
+    "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-jest": "^23.20.0",
     "eslint-plugin-react": "^7.20.5",
     "express": "^4.17.1",
@@ -96,6 +104,7 @@
     "react": "^16.13.1",
     "react-dom": "npm:@hot-loader/react-dom@^16.13.0",
     "react-hot-loader": "^4.12.21",
+    "react-is": "^16.13.1",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
@@ -105,6 +114,7 @@
     "rollup-plugin-license": "^2.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^6.1.0",
+    "start-server-and-test": "^1.11.2",
     "styled-components": "^5.1.1",
     "typescript": "^3.9.7"
   }

@@ -1,9 +1,24 @@
 language: node_js
 node_js:
-  - "stable"
-cache: yarn
+  - "lts/*"
 
-script:
-  - yarn audit
-  - yarn lint
-  - yarn test
+cache:
+  yarn: true
+  directories:
+    - ~/.cache
+
+branches:
+  only:
+    - master
+
+jobs:
+  include:
+    - stage: Health Checks
+      script: yarn cypress:ci
+      name: "Cypress E2E Test"
+    - script: yarn test:ci
+      name: "Unit Tests"
+    - script: yarn lint
+      name: "Linting"
+    - script: yarn audit
+      name: "Yarn audit"

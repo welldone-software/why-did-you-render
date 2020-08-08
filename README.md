@@ -1,6 +1,10 @@
 # Why Did You Render
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
+[![Build Status](https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)](https://travis-ci.com/welldone-software/why-did-you-render)
+![NPM](https://img.shields.io/npm/l/@welldone-software/why-did-you-render?style=flat)
+![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/@welldone-software/why-did-you-render)
+[![Coverage Status](https://coveralls.io/repos/github/welldone-software/why-did-you-render/badge.svg?branch=add-e2e-tests-using-cypress)](https://coveralls.io/github/welldone-software/why-did-you-render?branch=add-e2e-tests-using-cypress)
 
 `why-did-you-render` by [Welldone Software](https://welldone.software) monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
 
