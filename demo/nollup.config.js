@@ -1,5 +1,5 @@
-const replace = require('rollup-plugin-replace')
-const babel = require('rollup-plugin-babel')
+const replace = require('@rollup/plugin-replace')
+const babel = require('@rollup/plugin-babel').default
 const nodeResolve = require('rollup-plugin-node-resolve')
 const commonjs = require('rollup-plugin-commonjs-alternate')
 
@@ -16,7 +16,8 @@ module.exports = {
       'process.env.PORT': JSON.stringify(process.env.PORT)
     }),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      babelHelpers: 'bundled'
     }),
     nodeResolve({
       mainFields: ['module', 'browser', 'main']
