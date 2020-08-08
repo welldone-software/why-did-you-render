@@ -1,14 +1,17 @@
 {
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
       "jsx": true
     }
   },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "plugins": [
-    "react",
-    "jest"
+    "react"
   ],
   "globals": {
     "flushConsoleOutput": true
@@ -18,16 +21,10 @@
       "version": "16"
     }
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:jest/recommended"
-  ],
   "env": {
     "es6": true,
     "node": true,
-    "browser": true,
-    "jest/globals": true
+    "browser": true
   },
   "rules": {
     "semi": ["error", "never"],
@@ -54,6 +51,5 @@
     }}],
     "space-before-blocks": ["error", "never"],
     "comma-dangle": ["error", "never"],
-    "jest/expect-expect": ["off"]
   }
 }
