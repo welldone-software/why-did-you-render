@@ -11,3 +11,5 @@ node_modules
 demo/dist
 
 cypress/videos
+
+coverage
