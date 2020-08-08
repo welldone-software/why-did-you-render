@@ -3,4 +3,7 @@ node_js:
   - "stable"
 cache: yarn
 
-script: yarn test
+script:
+  - yarn audit
+  - yarn lint
+  - yarn test
