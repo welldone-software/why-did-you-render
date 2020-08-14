@@ -41,9 +41,9 @@
     "version": "yarn checkHealth && yarn build && git add --all dist",
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "cypress:run:record": "yarn cypress:run --record",
-    "cypress:ci": "start-server-and-test start http://localhost:3003 cypress:run:record"
+    "cypress:run": "cypress run --browser chrome",
+    "_cypress:run:ci": "yarn cypress:run --record --parallel",
+    "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:run:ci"
   },
   "husky": {
     "hooks": {
