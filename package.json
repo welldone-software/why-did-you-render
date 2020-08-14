@@ -35,7 +35,6 @@
     "test:ci": "yarn test --coverage && coveralls < coverage/lcov.info",
     "test:watch": "yarn test --watch",
     "lint": "eslint . --ext=js --cache --cache-location .cache/eslint-cache",
-    "lint:fix": "yarn lint --fix",
     "clear": "rimraf .cache dist demo/dist",
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
     "checkHealth": "yarn lint && yarn test",
