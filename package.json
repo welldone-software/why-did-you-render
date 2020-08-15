@@ -5,7 +5,6 @@
   "types": "types.d.ts",
   "main": "dist/whyDidYouRender.min.js",
   "files": [
-    "src",
     "dist",
     "types.d.ts"
   ],
