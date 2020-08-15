@@ -4,7 +4,8 @@ it('props changes', () => {
   cy.getConsoleSpy(console => {
     expect(console.group).to.be.calledWithMatches([
       {match: 'ClassDemo', times: 3},
-      {match: /props.*a\W/, times: 2}
+      {match: 'Rendered by Main', times: 3},
+      {match: /props.*a\W/, times: 4}
     ])
   })
 })
