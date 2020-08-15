@@ -103,7 +103,11 @@ describe('react-redux - simple', () => {
       ],
       stateDifferences: false,
       hookDifferences: false,
-      ownerDifferences: false
+      ownerDifferences: {
+        hookDifferences: false,
+        propsDifferences: false,
+        stateDifferences: false
+      }
     })
   })
 
@@ -142,7 +146,11 @@ describe('react-redux - simple', () => {
       ],
       stateDifferences: false,
       hookDifferences: false,
-      ownerDifferences: false
+      ownerDifferences: {
+        hookDifferences: false,
+        propsDifferences: false,
+        stateDifferences: false
+      }
     })
   })
 })

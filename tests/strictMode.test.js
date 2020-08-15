@@ -188,7 +188,11 @@ test('Strict mode- functional component no props change', () => {
     propsDifferences: [],
     stateDifferences: false,
     hookDifferences: false,
-    ownerDifferences: false
+    ownerDifferences: {
+      hookDifferences: false,
+      propsDifferences: [],
+      stateDifferences: false
+    }
   })
 })
 
@@ -220,7 +224,16 @@ test('Strict mode- functional component with props change', () => {
     }],
     stateDifferences: false,
     hookDifferences: false,
-    ownerDifferences: false
+    ownerDifferences: {
+      hookDifferences: false,
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.deepEquals,
+        prevValue: [],
+        nextValue: []
+      }],
+      stateDifferences: false
+    }
   })
 })
 

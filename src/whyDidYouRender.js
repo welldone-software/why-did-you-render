@@ -221,7 +221,8 @@ export default function whyDidYouRender(React, userOptions){
 
   Object.assign(React.cloneElement, origCloneElement)
 
-  if(options.trackHooks){
+  const hooksSupported = !!React.useState
+  if(options.trackHooks && hooksSupported){
     const nativeHooks = Object.entries(hooksConfig).map(([hookName, hookTrackingConfig]) => {
       return [React, hookName, hookTrackingConfig]
     })

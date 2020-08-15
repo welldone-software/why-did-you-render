@@ -8,7 +8,7 @@ export default {
   fn({domElement, whyDidYouRender}){
     const stepLogger = createStepLogger()
 
-    whyDidYouRender(React, {logOwnerReasons: true})
+    whyDidYouRender(React)
 
     const Child = () => null
     Child.whyDidYouRender = true

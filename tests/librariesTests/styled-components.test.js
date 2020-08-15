@@ -102,7 +102,16 @@ test('styled-components with forward ref', () => {
     }],
     stateDifferences: false,
     hookDifferences: false,
-    ownerDifferences: false
+    ownerDifferences: {
+      hookDifferences: false,
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.deepEquals,
+        prevValue: [],
+        nextValue: []
+      }],
+      stateDifferences: false
+    }
   })
 })
 
@@ -139,6 +148,15 @@ test('styled-components with memoized forward ref', () => {
     }],
     stateDifferences: false,
     hookDifferences: false,
-    ownerDifferences: false
+    ownerDifferences: {
+      hookDifferences: false,
+      propsDifferences: [{
+        pathString: 'a',
+        diffType: diffTypes.deepEquals,
+        prevValue: [],
+        nextValue: []
+      }],
+      stateDifferences: false
+    }
   })
 })

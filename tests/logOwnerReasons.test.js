@@ -8,8 +8,7 @@ let updateInfos = []
 beforeEach(() => {
   updateInfos = []
   whyDidYouRender(React, {
-    notifier: updateInfo => updateInfos.push(updateInfo),
-    logOwnerReasons: true
+    notifier: updateInfo => updateInfos.push(updateInfo)
   })
 })
 
