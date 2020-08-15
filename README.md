@@ -6,27 +6,25 @@
 ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/@welldone-software/why-did-you-render)
 [![Coverage Status](https://coveralls.io/repos/github/welldone-software/why-did-you-render/badge.svg?branch=add-e2e-tests-using-cypress)](https://coveralls.io/github/welldone-software/why-did-you-render?branch=add-e2e-tests-using-cypress)
 
-`why-did-you-render` by [Welldone Software](https://welldone.software) monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
+`why-did-you-render` by [Welldone Software](https://welldone.software/) monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
 
-For example, when you pass `style={{width: '100%'}}` to a big pure component and make it always re-render:
+For example, if you pass `style={{width: '100%'}}` to a big pure component it would always re-render on every element creation:
+```jsx
+<BigListPureComponent style={{width: '100%'}}/>
+```
 
 ![demo](images/demo.png)
 
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-The last version of the library has been tested with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
-
-> For versions before 16.8 try turning off hooks support by using `trackHooks: false` in `whyDidYouRender`'s init options.*
+The last version of the library has been tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
 
 ```
 npm install @welldone-software/why-did-you-render --save
 ```
 
-## Installation
-Execute `whyDidYouRender` **as the first thing that happens in your application** (even before `react-hot-loader`).
-
-The best way of doing this would be to create a file (lets say `wdyr.js`) near the entrypoint of your application:
+Create a `wdyr.js` file and import it as **the first import** in your application.
 
 `wdyr.js`:
 ```jsx
@@ -39,11 +37,14 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 ```
-And then import `wdyr.js` (even before `react-hot-loader`):
+
+> **Notice: The library should *NEVER* be used in production because it slows down React**
+
+Import `wdyr.js` as the first import (even before `react-hot-loader`):
 
 `index.js`:
 ```jsx
-import './wdyr';
+import './wdyr'; // <--- first import
 
 import 'react-hot-loader';
 import {hot} from 'react-hot-loader/root';
@@ -52,15 +53,26 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // ...
 import {App} from './app';
-
 // ...
 const HotApp = hot(App);
 // ...
 ReactDOM.render(<HotApp/>, document.getElementById('root'));
 ```
 
-If you use the latest `react-redux` with hooks (or any other custom library), you can also patch it like this:
-```js
+If you use `trackAllPureComponents` like we suggest, all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) will be tracked.
+
+Otherwise, add `whyDidYouRender = true` to components you want to track.
+
+More information about what is tracked can be found in [Tracking Components](#tracking-components).
+
+Can't see any WDYR logs? Check out the troubleshoot or search the issues.
+
+## Custom Hooks
+
+Also, tracking custom hooks is possible by using `trackExtraHooks`. For example if you want to track `useSelector` from React Redux:
+
+`wdyr.js`:
+```jsx
 import React from 'react';
 
 if (process.env.NODE_ENV === 'development') {
@@ -74,7 +86,8 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 ```
-But there is currently a problem with rewriting exports of imported files in `webpack` and a small workaround should be applied to support this feature [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
+
+> Notice that there's currently a problem with rewriting exports of imported files in `webpack`. A quick workaround can help with it: [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85).
 
 ## Read More
 * [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
@@ -92,7 +105,7 @@ You can test the library in [the official sandbox](http://bit.ly/wdyr-sb).
 And another [official sandbox with hooks tracking](https://codesandbox.io/s/why-did-you-render-sandbox-with-hooks-pyi14)
 
 ## Tracking Components
-You can track all pure components (components that are extending [React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent), or function components that are wrapped with [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) using the `trackAllPureComponents: true` option.
+You can track all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) using the `trackAllPureComponents: true` option.
 
 You can also manually track any component you want by setting `whyDidYouRender` on them like this:
 ```js
@@ -106,7 +119,7 @@ class BigList extends React.Component {
 }
 ```
 
-And for functional components:
+Or for functional components:
 
 ```js
 const BigListPureComponent = props => (
@@ -141,20 +154,12 @@ EnhancedMenu.whyDidYouRender = {
 
 - `customName`:
 
-  Sometimes the name of the component can be very inconvenient. For example:
-
-  ```js
-  const EnhancedMenu = withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu)))))))))))))))))))))))
-  ```
-
-  will have the display name:
+  Sometimes the name of the component can be missing or very inconvenient. For example:
 
   ```js
   withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu)))))))))))))))))))))))
   ```
-
-  To prevent polluting the console, and any other reason, you can change it using `customName`.
-
+  
 ## Options
 Optionally you can pass in `options` as the second parameter. The following options are available:
 - `include: [RegExp, ...]` (`null` by default)
@@ -162,8 +167,8 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `trackAllPureComponents: false`
 - `trackHooks: true`
 - `trackExtraHooks: []`
+- `logOwnerReasons: true`
 - `logOnDifferentValues: false`
-- `logOwnerReasons: false`
 - `hotReloadBufferMs: 500`
 - `onlyLogs: false`
 - `collapseGroups: false`
@@ -173,28 +178,34 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `notifier: ({Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason, options, ownerDataMap}) => void`
 
 #### include / exclude
-You can include or exclude tracking for re-renders for components
-by their displayName with the `include` and `exclude` options.
+##### (default: `null`)
 
-*Notice: **exclude** takes priority over both `include` and `whyDidYouRender` statics on components.*
+You can include or exclude tracking of components by their displayName using the `include` and `exclude` options.
 
-For example, the following code is used to [track all redundant re-renders that are caused by React-Redux](http://bit.ly/wdyr04):
+For example, the following code is used to [track all redundant re-renders that are caused by older React-Redux](http://bit.ly/wdyr04):
 ```js
 whyDidYouRender(React, { include: [/^ConnectFunction/] });
 ```
+> *Notice: **exclude** takes priority over both `include` and manually set `whyDidYouRender = `*
 
 #### trackAllPureComponents
+##### (default: `false`)
+
 You can track all pure components (both `React.memo` and `React.PureComponent` components)
 
-*Notice: You can exclude the tracking of any specific component with `whyDidYouRender = false`.*
+> *Notice: You can exclude the tracking of any specific component with `whyDidYouRender = false`*
 
 #### trackHooks
+##### (default: `true`)
+
 You can turn off tracking of hooks changes.
 
 [Understand and fix hook issues](http://bit.ly/wdyr3).
 
 #### trackExtraHooks
-Adding extra hooks to track for "redundant" results:
+##### (default: `[]`)
+
+Track custom hooks:
 
 ```js
 whyDidYouRender(React, {
@@ -204,60 +215,80 @@ whyDidYouRender(React, {
 });
 ```
 
-> There is currently a problem with rewriting exports of imported files in webpack.
+> There is currently a problem with rewriting exports of imported files in webpack. A workaround is available here: [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
 
-> To see available workarounds check out the discussion at bug [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
+#### logOwnerReasons
+##### (default: `true`)
+
+One way of fixing re-render issues is preventing the component's owner from re-rendering.
+
+This option is `true` by default and it lets you view the reasons why an owner component re-renders.
+
+![demo](images/logOwnerReasons.png)
 
 #### logOnDifferentValues
-Normally, you only want notifications about component re-renders when their props and state
-are the same, because it means these re-renders could have been avoided. But you can also track
-all re-renders, even on different state/props.
+##### (default: `false`)
 
+Normally, you only want logs about component re-renders when they could have been avoided.
+
+With this option, it is possible to track all re-renders.
+
+For example:
 ```js
 render(<BigListPureComponent a={1}/>)
 render(<BigListPureComponent a={2}/>)
-// this will only cause whyDidYouRender notifications for {logOnDifferentValues: true}
+// will only log if you use {logOnDifferentValues: true}
 ```
 
-#### logOwnerReasons
-One way of fixing re-render issues is preventing the component's owner from re-rendering.
-To make that easier, you can use `logOwnerReasons: true` to view the reasons why owner component re-renders.
-![demo](images/logOwnerReasons.png)
-
 #### hotReloadBufferMs
+##### (default: `500`)
+
 Time in milliseconds to ignore updates after a hot reload is detected.
 
-We can't currently know exactly if a render was triggered by hot reload,
-so instead, we ignore all updates for `hotReloadBufferMs` (default: 500) after a hot reload.
+When a hot reload is detected, we ignore all updates for `hotReloadBufferMs` to not spam the console.
 
 #### onlyLogs
-If you don't want to use `console.group` to group logs by component, you can print them as simple logs.
+##### (default: `false`)
+
+If you don't want to use `console.group` to group logs you can print them as simple logs.
 
 #### collapseGroups
-Grouped logs can start collapsed:
+##### (default: `false`)
+
+Grouped logs can be collapsed.
 
 #### titleColor / diffNameColor / diffPathColor
+##### (default titleColor: `'#058'`)
+##### (default diffNameColor: `'blue'`)
+##### (default diffPathColor: `'red'`)
+
 Controls the colors used in the console notifications
 
 #### notifier
+##### (default: defaultNotifier that is exposed from the library)
+
 You can create a custom notifier if the default one does not suite your needs.
 
 ## Troubleshooting
 
-### `Class constructors must be invoked with 'new'`.
-If you are building for latest browsers (or using es6 classes without building) you don't transpile the "class" keyword.
+### No tracking
+* If you are in production, WDYR is probably disabled.
+* Maybe no component is tracked
+    * Check out [Tracking Components](#tracking-components) once again.
+    * If you track all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)), maybe your none of your components are not pure.
+* Maybe you have no issues
+    * Try causing an issue by temporary rendering the whole app twice in it's entry point:
+    
+        `index.js`:
+        ```jsx
+        const HotApp = hot(App);
+        HotApp.whyDidYouRender = true;
+        ReactDOM.render(<HotApp/>, document.getElementById('root'));
+        ReactDOM.render(<HotApp/>, document.getElementById('root'));
+        ```
 
-This causes an error because the library uses transpiled classes, and [transpiled classes currently can't extend native classes](https://github.com/welldone-software/why-did-you-render/issues/5).
-
-To fix this, use the "no-classes-transpile" dist:
-```js
-import React from 'react';
-
-if (process.env.NODE_ENV === 'development') {
-  const whyDidYouRender = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js');
-  whyDidYouRender(React);
-}
-```
+### Custom Hooks tracking (like useSelector)
+There's currently a problem with rewriting exports of imported files in `webpack`. A quick workaround can help with it: [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85).
 
 ### React-Redux `connect` HOC is spamming the console
 Since `connect` hoists statics, if you add WDYR to the inner component, it is also added to the HOC component where complex hooks are running.

@@ -13,8 +13,7 @@ beforeEach(() => {
   updateInfos = []
   whyDidYouRender(React, {
     notifier: updateInfo => updateInfos.push(updateInfo),
-    trackAllPureComponents: true,
-    logOwnerReasons: true
+    trackAllPureComponents: true
   })
 })
 
