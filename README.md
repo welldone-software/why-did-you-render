@@ -305,6 +305,9 @@ To fix this, add the `whyDidYouRender = true` static to a component after the co
   SimpleComponent.whyDidYouRender = true
 ```
 
+### Sourcemaps
+To see sourcemaps using webpack, use [source-map-loader](https://webpack.js.org/loaders/source-map-loader/).
+
 ## Credit
 
 Inspired by the following previous work:
