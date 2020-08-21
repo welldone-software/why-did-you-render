@@ -32,7 +32,7 @@
     "clear": "rimraf .cache dist demo/dist",
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
     "checkHealth": "yarn lint && yarn test",
-    "version": "yarn checkHealth && yarn build && git add --all dist",
+    "version": "yarn checkHealth && yarn build",
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
