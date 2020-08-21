@@ -20,19 +20,22 @@ const testInputAndExpects = {
         title: 0,
         emptyValues: 1,
         changedObjects: 2,
-        changedObjectValues: 3
+        changedObjectValues: 3,
+        changedObjectValuesDeepEquals: 4
       },
       groupLogsCount: {
         title: 1,
         emptyValues: 0,
         changedObjects: 0,
-        changedObjectValues: 1
+        changedObjectValues: 1,
+        changedObjectValuesDeepEquals: 1
       },
       groupCollapsedLogsCount: {
         title: 0,
         emptyValues: 0,
         changedObjects: 0,
-        changedObjectValues: 0
+        changedObjectValues: 0,
+        changedObjectValuesDeepEquals: 0
       }
     }
   },
@@ -44,19 +47,22 @@ const testInputAndExpects = {
         title: 1,
         emptyValues: 1,
         changedObjects: 2,
-        changedObjectValues: 4
+        changedObjectValues: 4,
+        changedObjectValuesDeepEquals: 5
       },
       groupLogsCount: {
         title: 0,
         emptyValues: 0,
         changedObjects: 0,
-        changedObjectValues: 0
+        changedObjectValues: 0,
+        changedObjectValuesDeepEquals: 0
       },
       groupCollapsedLogsCount: {
         title: 0,
         emptyValues: 0,
         changedObjects: 0,
-        changedObjectValues: 0
+        changedObjectValues: 0,
+        changedObjectValuesDeepEquals: 0
       }
     }
   },
@@ -68,19 +74,22 @@ const testInputAndExpects = {
         title: 0,
         emptyValues: 1,
         changedObjects: 2,
-        changedObjectValues: 3
+        changedObjectValues: 3,
+        changedObjectValuesDeepEquals: 4
       },
       groupLogsCount: {
         title: 0,
         emptyValues: 0,
         changedObjects: 0,
-        changedObjectValues: 0
+        changedObjectValues: 0,
+        changedObjectValuesDeepEquals: 0
       },
       groupCollapsedLogsCount: {
         title: 1,
         emptyValues: 0,
         changedObjects: 0,
-        changedObjectValues: 1
+        changedObjectValues: 1,
+        changedObjectValuesDeepEquals: 1
       }
     }
   }
@@ -198,7 +207,7 @@ describe('For different hook', () => {
 
       defaultNotifier(updateInfo)
 
-      expectLogTypes(['title', 'changedObjectValues'], expects)
+      expectLogTypes(['title', 'changedObjectValuesDeepEquals'], expects)
     })
   })
 })
@@ -218,7 +227,7 @@ describe('For different deep equal props', () => {
 
       defaultNotifier(updateInfo)
 
-      expectLogTypes(['title', 'changedObjectValues'], expects)
+      expectLogTypes(['title', 'changedObjectValuesDeepEquals'], expects)
     })
   })
 })
@@ -238,7 +247,7 @@ describe('For different deep equal state', () => {
 
       defaultNotifier(updateInfo)
 
-      expectLogTypes(['title', 'changedObjectValues'], expects)
+      expectLogTypes(['title', 'changedObjectValuesDeepEquals'], expects)
     })
   })
 })
@@ -258,7 +267,7 @@ describe('For different deep equal state and props', () => {
 
       defaultNotifier(updateInfo)
 
-      expectLogTypes(['title', 'changedObjectValues', 'changedObjectValues'], expects)
+      expectLogTypes(['title', 'changedObjectValuesDeepEquals', 'changedObjectValuesDeepEquals'], expects)
     })
   })
 })
@@ -298,7 +307,7 @@ describe('Mix of changes', () => {
 
       defaultNotifier(updateInfo)
 
-      expectLogTypes(['title', 'changedObjectValues', 'changedObjectValues'], expects)
+      expectLogTypes(['title', 'changedObjectValues', 'changedObjectValuesDeepEquals'], expects)
     })
   })
 })

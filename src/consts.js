@@ -4,7 +4,18 @@ export const diffTypes = {
   'date': 'date',
   'regex': 'regex',
   'reactElement': 'reactElement',
-  'function': 'function'
+  'function': 'function',
+  'same': 'same'
+}
+
+export const diffTypesDescriptions = {
+  [diffTypes.different]: 'different objects',
+  [diffTypes.deepEquals]: 'different objects that are equal by value',
+  [diffTypes.date]: 'different date objects with the same value',
+  [diffTypes.regex]: 'different regular expressions with the same value',
+  [diffTypes.reactElement]: 'different React elements (remember that the <jsx/> syntax always produces a *NEW* immutable React element so a component that receives <jsx/> as props always re-renders)',
+  [diffTypes.function]: 'different functions with the same name',
+  [diffTypes.same]: 'same objects by ref (===)'
 }
 
 // copied from packages/shared/ReactSymbols.js in https://github.com/facebook/react
