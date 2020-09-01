@@ -1,4 +1,4 @@
-import {get} from 'lodash'
+import {get, isFunction} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -11,6 +11,7 @@ import patchMemoComponent from './patches/patchMemoComponent'
 import patchForwardRefComponent from './patches/patchForwardRefComponent'
 
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
+import {dependenciesMap} from './calculateDeepEqualDiffs'
 
 const initialHookValue = Symbol('initial-hook-value')
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options, ownerDataMap, hooksRef){
@@ -111,7 +112,8 @@ export const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
   useContext: true,
-  useMemo: true
+  useMemo: {dependenciesPath: '1'},
+  useCallback: {dependenciesPath: '1'}
 }
 
 export default function whyDidYouRender(React, userOptions){
@@ -237,6 +239,10 @@ export default function whyDidYouRender(React, userOptions){
       const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
       const newHook = function(...args){
         const hookResult = originalHook.call(this, ...args)
+        const {dependenciesPath} = hookTrackingConfig
+        if(dependenciesPath != null && isFunction(hookResult)){
+          dependenciesMap.set(hookResult, get(args, dependenciesPath))
+        }
         trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options, ownerDataMap, hooksRef)
         return hookResult
       }

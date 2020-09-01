@@ -19,6 +19,8 @@ function trackDiff(a, b, diffsAccumulator, pathString, diffType){
   return diffType !== diffTypes.different
 }
 
+export const dependenciesMap = new WeakMap()
+
 function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {detailed}){
   if(a === b){
     if(detailed){
@@ -101,9 +103,23 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
   }
 
   if(isFunction(a) && isFunction(b)){
-    return a.name === b.name ?
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function) :
-      trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+    if(a.name !== b.name){
+      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+    }
+
+    const aDependencies = dependenciesMap.get(a)
+    const bDependencies = dependenciesMap.get(b)
+
+    if(aDependencies != null && bDependencies != null){
+      const dependenciesAreDeepEqual =
+        accumulateDeepEqualDiffs(aDependencies, bDependencies, diffsAccumulator, `${pathString}:dependencies`, {detailed})
+
+      return dependenciesAreDeepEqual ?
+        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function) :
+        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
+    }
+
+    return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function)
   }
 
   if(isPlainObject(a) && isPlainObject(b)){
