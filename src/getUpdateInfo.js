@@ -5,7 +5,12 @@ function getOwnerDifferences({prevOwnerData, nextOwnerData}){
     return false
   }
 
-  const hookDifferences = prevOwnerData.hooks.map(({hookName, result}, i) => ({
+  // in strict mode prevOwnerData might be twice as lengthy because of double renders
+  const prevOwnerDataHooks = prevOwnerData.hooks.length === nextOwnerData.hooks.length * 2 ?
+    prevOwnerData.hooks.slice(prevOwnerData.hooks.length / 2) :
+    prevOwnerData.hooks
+
+  const hookDifferences = prevOwnerDataHooks.map(({hookName, result}, i) => ({
     hookName,
     differences: findObjectsDifferences(result, nextOwnerData.hooks[i].result, {shallow: false})
   }))

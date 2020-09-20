@@ -45,7 +45,9 @@ let updateInfos = []
 beforeEach(() => {
   updateInfos = []
   whyDidYouRender(React, {
-    notifier: updateInfo => updateInfos.push(updateInfo)
+    notifier: updateInfo => updateInfos.push(updateInfo),
+    logOwnerReasons: true,
+    trackHooks: true
   })
 })
 
@@ -188,7 +190,11 @@ test('Strict mode- functional component no props change', () => {
     propsDifferences: [],
     stateDifferences: false,
     hookDifferences: false,
-    ownerDifferences: false
+    ownerDifferences: {
+      hookDifferences: false,
+      propsDifferences: [],
+      stateDifferences: false
+    }
   })
 })
 
@@ -220,7 +226,18 @@ test('Strict mode- functional component with props change', () => {
     }],
     stateDifferences: false,
     hookDifferences: false,
-    ownerDifferences: false
+    ownerDifferences: {
+      hookDifferences: false,
+      propsDifferences: [
+        {
+          diffType: 'deepEquals',
+          nextValue: [],
+          pathString: 'a',
+          prevValue: []
+        }
+      ],
+      stateDifferences: false
+    }
   })
 })
 
@@ -282,4 +299,77 @@ test('Strict mode- functional component with hooks with props change', () => {
     }],
     ownerDifferences: false
   })
+})
+
+test('Strict mode- strict parent and child', () => {
+  const App = React.memo(() => {
+    const [whatever, setWhatever] = React.useState({a: 'b'})
+    const [whatever2, setWhatever2] = React.useState({a2: 'b2'})
+
+    const clickme = () => {
+      setWhatever({a: 'b'})
+      setWhatever2({a2: 'b2'})
+    }
+
+    return (
+      <div>
+        <button onClick={clickme}>test</button>
+        <div>{whatever.a} {whatever2.a2}</div>
+        <Child />
+      </div>
+    )
+  })
+
+  function Child(){
+    return <div>child</div>
+  }
+
+  Child.whyDidYouRender = true
+
+  const StrictApp = () => (
+    <React.StrictMode>
+      <App/>
+    </React.StrictMode>
+  )
+
+  const {getByText} = rtl.render(<StrictApp/>)
+  const buttonReference = getByText('test')
+  buttonReference.click()
+  buttonReference.click()
+  buttonReference.click()
+
+  const ownerDifferences = {
+    hookDifferences: [
+      {
+        hookName: 'useState',
+        differences: [
+          {
+            diffType: 'deepEquals',
+            pathString: '',
+            prevValue: {a: 'b'},
+            nextValue: {a: 'b'}
+          }
+        ]
+      },
+      {
+        hookName: 'useState',
+        differences: [
+          {
+            diffType: 'deepEquals',
+            pathString: '',
+            prevValue: {a2: 'b2'},
+            nextValue: {a2: 'b2'}
+          }
+        ]
+      }
+    ],
+    propsDifferences: false,
+    stateDifferences: false
+  }
+
+  expect(updateInfos).toHaveLength(3)
+
+  expect(updateInfos[0].reason.ownerDifferences).toEqual(ownerDifferences)
+  expect(updateInfos[1].reason.ownerDifferences).toEqual(ownerDifferences)
+  expect(updateInfos[2].reason.ownerDifferences).toEqual(ownerDifferences)
 })
