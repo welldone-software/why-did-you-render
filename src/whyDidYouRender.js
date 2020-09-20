@@ -237,6 +237,7 @@ export default function whyDidYouRender(React, userOptions){
     hooksToTrack.forEach(([hookParent, hookName, hookTrackingConfig = {}]) => {
       const originalHook = hookParent[hookName]
       const newHookName = hookName[0].toUpperCase() + hookName.slice(1)
+
       const newHook = function(...args){
         const hookResult = originalHook.call(this, ...args)
         const {dependenciesPath} = hookTrackingConfig
@@ -246,6 +247,7 @@ export default function whyDidYouRender(React, userOptions){
         trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options, ownerDataMap, hooksRef)
         return hookResult
       }
+
       Object.defineProperty(newHook, 'name', {value: newHookName, writable: false})
       Object.assign(newHook, {originalHook})
       hookParent[hookName] = newHook
