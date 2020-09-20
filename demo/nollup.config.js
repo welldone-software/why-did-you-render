@@ -22,6 +22,6 @@ module.exports = {
     nodeResolve({
       mainFields: ['module', 'browser', 'main']
     }),
-    commonjs()
+    commonjs({})
   ]
 }
