@@ -7,10 +7,6 @@ cache:
   directories:
     - ~/.cache
 
-branches:
-  only:
-    - master
-
 jobs:
   include:
     - stage: Health Checks
