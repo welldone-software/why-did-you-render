@@ -181,7 +181,7 @@ describe('track hooks', () => {
       <ComponentWithHooks/>
     )
 
-    expect(updateInfos).toHaveLength(2)
+    expect(updateInfos).toHaveLength(1)
   })
 
   test('deep equals', () => {

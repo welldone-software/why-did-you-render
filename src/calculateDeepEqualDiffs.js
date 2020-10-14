@@ -107,12 +107,12 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
       return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different)
     }
 
-    const aDependencies = dependenciesMap.get(a)
-    const bDependencies = dependenciesMap.get(b)
+    const aDependenciesObj = dependenciesMap.get(a)
+    const bDependenciesObj = dependenciesMap.get(b)
 
-    if(aDependencies != null && bDependencies != null){
+    if(aDependenciesObj && bDependenciesObj){
       const dependenciesAreDeepEqual =
-        accumulateDeepEqualDiffs(aDependencies, bDependencies, diffsAccumulator, `${pathString}:dependencies`, {detailed})
+        accumulateDeepEqualDiffs(aDependenciesObj.deps, bDependenciesObj.deps, diffsAccumulator, `${pathString}:parent-hook-${aDependenciesObj.hookName}-deps`, {detailed})
 
       return dependenciesAreDeepEqual ?
         trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function) :

@@ -116,7 +116,6 @@ export default function defaultNotifier(updateInfo){
     })
   }
 
-
   if(reason.propsDifferences && reason.ownerDifferences){
     const prevOwnerData = ownerDataMap.get(prevProps)
     const nextOwnerData = ownerDataMap.get(nextProps)
