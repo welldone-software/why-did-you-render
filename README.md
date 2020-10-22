@@ -20,6 +20,8 @@ It can also help you to simply track when and why a certain component re-renders
 ## Setup
 The last version of the library has been tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
 
+> Support for React@17 is under development.
+
 ```
 npm install @welldone-software/why-did-you-render --save
 ```
