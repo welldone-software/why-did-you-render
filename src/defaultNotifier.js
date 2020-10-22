@@ -1,16 +1,8 @@
-import {diffTypes} from './consts'
+import {diffTypes, diffTypesDescriptions} from './consts'
+import printDiff from './printDiff'
 
 const moreInfoUrl = 'http://bit.ly/wdyr02'
 const moreInfoHooksUrl = 'http://bit.ly/wdyr3'
-
-const diffTypesDescriptions = {
-  [diffTypes.different]: 'different objects.',
-  [diffTypes.deepEquals]: 'different objects that are equal by value.',
-  [diffTypes.date]: 'different date objects with the same value.',
-  [diffTypes.regex]: 'different regular expressions with the same value.',
-  [diffTypes.reactElement]: 'different React elements (remember that the <jsx/> syntax always produces a *NEW* immutable React element so a component that receives <jsx/> as props always re-renders.).',
-  [diffTypes.function]: 'different functions with the same name.'
-}
 
 let inHotReload = false
 
@@ -45,14 +37,20 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
   if(differences && differences.length > 0){
     options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`)
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
+      function diffFn(){
+        printDiff(prevValue, nextValue, {pathString, consoleLog: options.consoleLog})
+      }
       options.consoleGroup(
         `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
         `color:${options.diffNameColor};`, `color:${options.diffPathColor};`, 'color:default;'
       )
       options.consoleLog(
-        `${diffTypesDescriptions[diffType]} (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
+        `${diffTypesDescriptions[diffType]}. (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
       )
       options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue})
+      if(diffType === diffTypes.deepEquals){
+        options.consoleLog({'For detailed diff, right click the following fn, save as global, and run: ': diffFn})
+      }
       options.consoleGroupEnd()
     })
   }
@@ -117,7 +115,6 @@ export default function defaultNotifier(updateInfo){
       options
     })
   }
-
 
   if(reason.propsDifferences && reason.ownerDifferences){
     const prevOwnerData = ownerDataMap.get(prevProps)

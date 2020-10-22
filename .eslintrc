@@ -50,6 +50,6 @@
       "as": {"before": true, "after": true}
     }}],
     "space-before-blocks": ["error", "never"],
-    "comma-dangle": ["error", "never"],
+    "comma-dangle": ["error", "never"]
   }
 }

@@ -1,4 +1,4 @@
-import {get} from 'lodash'
+import {get, isFunction} from 'lodash'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
@@ -11,12 +11,13 @@ import patchMemoComponent from './patches/patchMemoComponent'
 import patchForwardRefComponent from './patches/patchForwardRefComponent'
 
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
+import {dependenciesMap} from './calculateDeepEqualDiffs'
 
 const initialHookValue = Symbol('initial-hook-value')
 function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options, ownerDataMap, hooksRef){
   const nextHook = hookPath ? get(hookResult, hookPath) : hookResult
   const renderNumber = React.useRef(1)
-  if(hooksRef.current[0] != null && renderNumber.current !== hooksRef.current[0].renderNumber){
+  if(hooksRef.current[0] && renderNumber.current !== hooksRef.current[0].renderNumber){
     hooksRef.current = []
   }
   hooksRef.current.push({hookName, result: nextHook, renderNumber: renderNumber.current})
@@ -110,8 +111,9 @@ function getIsSupportedComponentType(Comp){
 export const hooksConfig = {
   useState: {path: '0'},
   useReducer: {path: '0'},
-  useContext: true,
-  useMemo: true
+  useContext: undefined,
+  useMemo: {dependenciesPath: '1', dontReport: true},
+  useCallback: {dependenciesPath: '1', dontReport: true}
 }
 
 export default function whyDidYouRender(React, userOptions){
@@ -134,7 +136,7 @@ export default function whyDidYouRender(React, userOptions){
         Component,
         displayName,
         props: OwnerInstance.pendingProps,
-        state: OwnerInstance.stateNode != null ? OwnerInstance.stateNode.state : null,
+        state: OwnerInstance.stateNode ? OwnerInstance.stateNode.state : null,
         hooks: hooksRef.current
       })
     }
@@ -221,7 +223,8 @@ export default function whyDidYouRender(React, userOptions){
 
   Object.assign(React.cloneElement, origCloneElement)
 
-  if(options.trackHooks){
+  const hooksSupported = !!React.useState
+  if(options.trackHooks && hooksSupported){
     const nativeHooks = Object.entries(hooksConfig).map(([hookName, hookTrackingConfig]) => {
       return [React, hookName, hookTrackingConfig]
     })
@@ -237,7 +240,13 @@ export default function whyDidYouRender(React, userOptions){
 
       const newHook = function(...args){
         const hookResult = originalHook.call(this, ...args)
-        trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options, ownerDataMap, hooksRef)
+        const {dependenciesPath, dontReport} = hookTrackingConfig
+        if(dependenciesPath && isFunction(hookResult)){
+          dependenciesMap.set(hookResult, {hookName, deps: get(args, dependenciesPath)})
+        }
+        if(!dontReport){
+          trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options, ownerDataMap, hooksRef)
+        }
         return hookResult
       }
 

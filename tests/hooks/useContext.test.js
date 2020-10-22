@@ -135,7 +135,19 @@ describe('hooks - useContext', () => {
       hookDifferences: false,
       propsDifferences: [],
       stateDifferences: false,
-      ownerDifferences: false
+      ownerDifferences: {
+        hookDifferences: [{
+          differences: [{
+            diffType: diffTypes.deepEquals,
+            pathString: '',
+            nextValue: {c: 'c'},
+            prevValue: {c: 'c'}
+          }],
+          hookName: 'useState'
+        }],
+        propsDifferences: false,
+        stateDifferences: false
+      }
     })
     expect(updateInfos[1].reason).toEqual({
       hookDifferences: [{

@@ -485,3 +485,41 @@ test('Mix of differences', () => {
     }
   })
 })
+
+test('deep equals and same object', () => {
+  const sameProp = {a: {b: 'c'}}
+
+  const prevProps = {className: 'aa', style: {width: '100%'}, sameProp}
+  const nextProps = {className: 'aa', style: {width: '100%'}, sameProp}
+
+  const input = getUpdateInfo({
+    Component: TestComponent,
+    displayName: getDisplayName(TestComponent),
+    prevProps,
+    prevState: null,
+    nextProps,
+    nextState: null,
+    options: normalizeOptions(),
+    ownerDataMap
+  })
+
+  const updateInfo = getUpdateInfo(input)
+
+  expect(updateInfo).toEqual({
+    ...input,
+    displayName: 'TestComponent',
+    reason: {
+      propsDifferences: [
+        {
+          pathString: 'style',
+          diffType: diffTypes.deepEquals,
+          prevValue: input.prevProps.style,
+          nextValue: input.nextProps.style
+        }
+      ],
+      stateDifferences: false,
+      hookDifferences: false,
+      ownerDifferences: false
+    }
+  })
+})

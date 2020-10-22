@@ -18,7 +18,7 @@ import createFactory from './createFactory'
 import cloneElement from './cloneElement'
 import useState from './hooks/useState'
 import useContext from './hooks/useContext'
-import useMemo from './hooks/useMemo'
+import useMemoAndCallbackChild from './hooks/useMemoAndCallbackChild'
 import useReducer from './hooks/useReducer'
 import reactReduxHOC from './reactReduxHOC'
 import strict from './strict'
@@ -42,7 +42,7 @@ const demosList = {
   cloneElement,
   useState,
   useContext,
-  useMemo,
+  useMemoAndCallbackChild,
   useReducer,
   strict,
   reactRedux,

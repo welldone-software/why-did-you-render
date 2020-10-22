@@ -38,5 +38,19 @@ export default {
 
     stepLogger('Deep equal nested props', true)
     ReactDom.render(<Main a={{b: {c: {d: 'd'}}}} />, domElement)
+
+    stepLogger('Mixed Props')
+    ReactDom.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart'}} />, domElement)
+
+    stepLogger('Mixed Props again', true)
+    ReactDom.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart'}} />, domElement)
+
+    const sameObj = {a: {b: 'c'}}
+
+    stepLogger('Mixed Props including eq obj')
+    ReactDom.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart', sameObj}} />, domElement)
+
+    stepLogger('Mixed Props including eq obj', true)
+    ReactDom.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart', sameObj}} />, domElement)
   }
 }

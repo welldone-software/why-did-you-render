@@ -8,17 +8,13 @@ module.exports = function(api){
 
   const presets = [
     ['@babel/preset-env', {
-      modules: isTest ? 'commonjs' : false,
-      exclude: compact([
-        isProd && 'babel-plugin-transform-classes'
-      ])
+      modules: isTest ? 'commonjs' : false
     }],
     '@babel/preset-react'
   ]
 
   const plugins = compact([
     (!isProd && !isTest) && 'react-hot-loader/babel',
-    'babel-plugin-lodash',
     !isProd && '@babel/plugin-proposal-class-properties'
   ])
 
