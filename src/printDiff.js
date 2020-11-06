@@ -1,4 +1,5 @@
 import {sortBy, groupBy} from 'lodash'
+
 import calculateDeepEqualDiffs from './calculateDeepEqualDiffs'
 import {diffTypesDescriptions} from './consts'
 

@@ -1,3 +1,5 @@
+import wdyrStore from './wdyrStore'
+
 import {diffTypes, diffTypesDescriptions} from './consts'
 import printDiff from './printDiff'
 
@@ -6,12 +8,12 @@ const moreInfoHooksUrl = 'http://bit.ly/wdyr3'
 
 let inHotReload = false
 
-function shouldLog(reason, Component, options){
+function shouldLog(reason, Component){
   if(inHotReload){
     return false
   }
 
-  if(options.logOnDifferentValues){
+  if(wdyrStore.options.logOnDifferentValues){
     return true
   }
 
@@ -33,29 +35,29 @@ function shouldLog(reason, Component, options){
   return !hasDifferentValues
 }
 
-function logDifference({Component, displayName, hookName, prefixMessage, diffObjType, differences, values, options}){
+function logDifference({Component, displayName, hookName, prefixMessage, diffObjType, differences, values}){
   if(differences && differences.length > 0){
-    options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`)
+    wdyrStore.options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`)
     differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
       function diffFn(){
-        printDiff(prevValue, nextValue, {pathString, consoleLog: options.consoleLog})
+        printDiff(prevValue, nextValue, {pathString, consoleLog: wdyrStore.options.consoleLog})
       }
-      options.consoleGroup(
+      wdyrStore.options.consoleGroup(
         `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
-        `color:${options.diffNameColor};`, `color:${options.diffPathColor};`, 'color:default;'
+        `color:${wdyrStore.options.diffNameColor};`, `color:${wdyrStore.options.diffPathColor};`, 'color:default;'
       )
-      options.consoleLog(
+      wdyrStore.options.consoleLog(
         `${diffTypesDescriptions[diffType]}. (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
       )
-      options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue})
+      wdyrStore.options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue})
       if(diffType === diffTypes.deepEquals){
-        options.consoleLog({'For detailed diff, right click the following fn, save as global, and run: ': diffFn})
+        wdyrStore.options.consoleLog({'For detailed diff, right click the following fn, save as global, and run: ': diffFn})
       }
-      options.consoleGroupEnd()
+      wdyrStore.options.consoleGroupEnd()
     })
   }
   else if(differences){
-    options.consoleLog(
+    wdyrStore.options.consoleLog(
       {[displayName]: Component},
       `${prefixMessage} the ${diffObjType} object itself changed but its values are all equal.`,
       diffObjType === 'props' ?
@@ -63,18 +65,18 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
         'This usually means this component called setState when no changes in its state actually occurred.',
       `More info at ${moreInfoUrl}`
     )
-    options.consoleLog(`prev ${diffObjType}:`, values.prev, ' !== ', values.next, `:next ${diffObjType}`)
+    wdyrStore.options.consoleLog(`prev ${diffObjType}:`, values.prev, ' !== ', values.next, `:next ${diffObjType}`)
   }
 }
 
 export default function defaultNotifier(updateInfo){
-  const {Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason, options, ownerDataMap} = updateInfo
+  const {Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason} = updateInfo
 
-  if(!shouldLog(reason, Component, options)){
+  if(!shouldLog(reason, Component, wdyrStore.options)){
     return
   }
 
-  options.consoleGroup(`%c${displayName}`, `color: ${options.titleColor};`)
+  wdyrStore.options.consoleGroup(`%c${displayName}`, `color: ${wdyrStore.options.titleColor};`)
 
   let prefixMessage = 'Re-rendered because'
 
@@ -85,8 +87,7 @@ export default function defaultNotifier(updateInfo){
       prefixMessage,
       diffObjType: 'props',
       differences: reason.propsDifferences,
-      values: {prev: prevProps, next: nextProps},
-      options
+      values: {prev: prevProps, next: nextProps}
     })
     prefixMessage = 'And because'
   }
@@ -98,8 +99,7 @@ export default function defaultNotifier(updateInfo){
       prefixMessage,
       diffObjType: 'state',
       differences: reason.stateDifferences,
-      values: {prev: prevState, next: nextState},
-      options
+      values: {prev: prevState, next: nextState}
     })
   }
 
@@ -111,16 +111,15 @@ export default function defaultNotifier(updateInfo){
       diffObjType: 'hook',
       differences: reason.hookDifferences,
       values: {prev: prevHook, next: nextHook},
-      hookName,
-      options
+      hookName
     })
   }
 
   if(reason.propsDifferences && reason.ownerDifferences){
-    const prevOwnerData = ownerDataMap.get(prevProps)
-    const nextOwnerData = ownerDataMap.get(nextProps)
+    const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps)
+    const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps)
 
-    options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`)
+    wdyrStore.options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`)
     let prefixMessage = 'Re-rendered because'
 
     if(reason.ownerDifferences.propsDifferences){
@@ -130,8 +129,7 @@ export default function defaultNotifier(updateInfo){
         prefixMessage,
         diffObjType: 'props',
         differences: reason.ownerDifferences.propsDifferences,
-        values: {prev: prevOwnerData.props, next: nextOwnerData.props},
-        options
+        values: {prev: prevOwnerData.props, next: nextOwnerData.props}
       })
       prefixMessage = 'And because'
     }
@@ -143,8 +141,7 @@ export default function defaultNotifier(updateInfo){
         prefixMessage,
         diffObjType: 'state',
         differences: reason.ownerDifferences.stateDifferences,
-        values: {prev: prevOwnerData.state, next: nextOwnerData.state},
-        options
+        values: {prev: prevOwnerData.state, next: nextOwnerData.state}
       })
     }
 
@@ -157,16 +154,15 @@ export default function defaultNotifier(updateInfo){
           diffObjType: 'hook',
           differences,
           values: {prev: prevOwnerData.hooks[i].result, next: nextOwnerData.hooks[i].result},
-          hookName,
-          options
+          hookName
         })
       )
     }
-    options.consoleGroupEnd()
+    wdyrStore.options.consoleGroupEnd()
   }
 
   if(!reason.propsDifferences && !reason.stateDifferences && !reason.hookDifferences){
-    options.consoleLog(
+    wdyrStore.options.consoleLog(
       {[displayName]: Component},
       'Re-rendered although props and state objects are the same.',
       'This usually means there was a call to this.forceUpdate() inside the component.',
@@ -174,7 +170,7 @@ export default function defaultNotifier(updateInfo){
     )
   }
 
-  options.consoleGroupEnd()
+  wdyrStore.options.consoleGroupEnd()
 }
 
 export function createDefaultNotifier(hotReloadBufferMs){

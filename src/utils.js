@@ -4,9 +4,13 @@ import {REACT_FORWARD_REF_TYPE, REACT_MEMO_TYPE} from './consts'
 const StrictMode = 0b0001
 
 // based on "findStrictRoot" from https://github.com/facebook/react/blob/master/packages/react-reconciler/src/ReactStrictModeWarnings.js
-// notice: this is only used for class components. functional components doesn't re-rendered inside strict mode
+// notice: this is only used for class components. functional components doesn't render twice inside strict mode
 export function checkIfInsideAStrictModeTree(reactComponentInstance){
-  let reactInternalFiber = reactComponentInstance && reactComponentInstance._reactInternalFiber
+  let reactInternalFiber = reactComponentInstance && (
+    reactComponentInstance._reactInternalFiber ||
+    reactComponentInstance._reactInternals
+  )
+
   while(reactInternalFiber){
     if(reactInternalFiber.mode & StrictMode){
       return true
