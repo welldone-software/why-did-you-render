@@ -32,7 +32,7 @@ export default {
     'lodash.isstring',
     'lodash.keys',
     'lodash.reduce',
-    'lodash.has',
+    'lodash.has'
   ],
   output: [
     {
@@ -58,7 +58,7 @@ export default {
         'lodash.isstring': 'isString',
         'lodash.keys': 'keys',
         'lodash.reduce': 'reduce',
-        'lodash.has': 'has',
+        'lodash.has': 'has'
       }
     }
   ],
