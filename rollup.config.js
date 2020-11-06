@@ -15,7 +15,25 @@ Generated at <%= moment().format('YYYY-MM-DD') %>
 
 export default {
   input: 'src/index.js',
-  external: ['lodash'],
+  external: [
+    'lodash.times',
+    'lodash.sortby',
+    'lodash.compact',
+    'lodash.clonedeep',
+    'lodash.defaults',
+    'lodash.get',
+    'lodash.groupby',
+    'lodash.isarray',
+    'lodash.isplainobject',
+    'lodash.isdate',
+    'lodash.isregexp',
+    'lodash.isfunction',
+    'lodash.isset',
+    'lodash.isstring',
+    'lodash.keys',
+    'lodash.reduce',
+    'lodash.has',
+  ],
   output: [
     {
       name: 'whyDidYouRender',
@@ -24,7 +42,23 @@ export default {
       sourcemap: true,
       exports: 'default',
       globals: {
-        lodash: 'lodash'
+        'lodash.times':'times',
+        'lodash.sortby': 'sortBy',
+        'lodash.compact': 'compact',
+        'lodash.clonedeep': 'cloneDeep',
+        'lodash.defaults': 'defaults',
+        'lodash.get': 'get',
+        'lodash.groupby': 'groupBy',
+        'lodash.isarray': 'isArray',
+        'lodash.isplainobject': 'isPlainObject',
+        'lodash.isdate': 'isDate',
+        'lodash.isregexp': 'isRegexp',
+        'lodash.isfunction': 'isFunction',
+        'lodash.isset': 'isSet',
+        'lodash.isstring': 'isString',
+        'lodash.keys': 'keys',
+        'lodash.reduce': 'reduce',
+        'lodash.has': 'has',
       }
     }
   ],
