@@ -1,4 +1,11 @@
-import {isArray, isPlainObject, isDate, isRegExp, isFunction, isSet, keys as getKeys, has} from 'lodash'
+import isArray from 'lodash.isarray'
+import isPlainObject from 'lodash.isplainobject'
+import isDate from 'lodash.isdate'
+import isRegExp from 'lodash.isregexp'
+import isFunction from 'lodash.isfunction'
+import isSet from 'lodash.isset'
+import getKeys from 'lodash.keys'
+import has from 'lodash.has'
 import {diffTypes} from './consts'
 
 const hasElementType = typeof Element !== 'undefined'

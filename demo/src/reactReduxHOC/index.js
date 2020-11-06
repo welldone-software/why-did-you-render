@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import {createStore} from 'redux'
 import * as Redux from 'react-redux'
-import _ from  'lodash'
+import cloneDeep from  'lodash.clonedeep'
 
 const connect = Redux.connect
 const Provider = Redux.Provider
@@ -20,7 +20,7 @@ export default {
       }
 
       if(action.type === 'deepEqlObj'){
-        return _.cloneDeep(state)
+        return cloneDeep(state)
       }
 
       return state

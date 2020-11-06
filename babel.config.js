@@ -1,4 +1,4 @@
-const compact = require('lodash/compact')
+const compact = require('lodash.compact')
 
 module.exports = function(api){
   const isProd = process.env.NODE_ENV === 'production'

@@ -2,7 +2,7 @@ import React from 'react'
 import {createStore} from 'redux'
 import * as Redux from 'react-redux'
 import {connect, Provider} from 'react-redux'
-import {cloneDeep} from 'lodash'
+import cloneDeep from 'lodash.clonedeep'
 import * as rtl from '@testing-library/react'
 import {diffTypes} from 'consts'
 

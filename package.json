@@ -54,7 +54,23 @@
     ]
   },
   "dependencies": {
-    "lodash": "^4"
+    "lodash.times": "^4",
+    "lodash.sortby": "^4",
+    "lodash.compact": "^4",
+    "lodash.clonedeep": "^4",
+    "lodash.defaults": "^4",
+    "lodash.get": "^4",
+    "lodash.groupby": "^4",
+    "lodash.isarray": "^4",
+    "lodash.isplainobject": "^4",
+    "lodash.isdate": "^4",
+    "lodash.isregexp": "^4",
+    "lodash.isfunction": "^4",
+    "lodash.isset": "^4",
+    "lodash.isstring": "^4",
+    "lodash.keys": "^4",
+    "lodash.reduce": "^4",
+    "lodash.has": "^4"
   },
   "peerDependencies": {
     "react": "^16"

@@ -1,4 +1,5 @@
-import {get, isFunction} from 'lodash'
+import get from 'lodash.get'
+import isFunction from 'lodash.isfunction'
 
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'

@@ -1,4 +1,4 @@
-import {reduce} from 'lodash'
+import reduce from 'lodash.reduce'
 import calculateDeepEqualDiffs from './calculateDeepEqualDiffs'
 
 const emptyObject = {}

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import {times} from 'lodash'
+import times from 'lodash.times'
 
 export default {
   description: 'Big List (Main Demo)',

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDom from 'react-dom'
-import _ from  'lodash'
+import cloneDeep from  'lodash.clonedeep'
 import {createStore} from 'redux'
 import * as Redux from 'react-redux'
 
@@ -38,7 +38,7 @@ export default {
         return {a: {b: `${Math.random()}`}}
       }
       if(action.type === 'deepEqlObj'){
-        return _.cloneDeep(state)
+        return cloneDeep(state)
       }
       return state
     })

@@ -1,4 +1,5 @@
-import {sortBy, groupBy} from 'lodash'
+import sortBy from 'lodash.sortby'
+import groupBy from 'lodash.groupby'
 import calculateDeepEqualDiffs from './calculateDeepEqualDiffs'
 import {diffTypesDescriptions} from './consts'
 
