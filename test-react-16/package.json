@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "description": "Used to test react 16",
+  "dependencies": {
+    "react": "^16.14.0",
+    "react-dom": "npm:@hot-loader/react-dom@^16.14.0",
+    "react-is": "^16.13.1"
+  }
+}

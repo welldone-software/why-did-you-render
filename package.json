@@ -23,9 +23,13 @@
     "tool"
   ],
   "scripts": {
+    "postinstall": "cd test-react-16 && yarn",
     "start": "cross-env PORT=3003 NODE_ENV=development node demo/serve",
     "build": "cross-env NODE_ENV=production rollup --config",
-    "test": "cross-env TEST=true jest \"./tests\"",
+    "test": "yarn test-react-17 && yarn test-react-16",
+    "test-react-17": "cross-env TEST=true USE_REACT_16=false jest \"./tests\" --config=jest.config.js",
+    "test-react-16": "cd test-react-16 && cross-env USE_REACT_16=true TEST=true jest \"./tests\" --config=jest.config.js",
+    "test:jsx": "cross-env USE_JSX=true yarn test:regular --config=jest.config.js",
     "test:ci": "yarn test --coverage && coveralls < coverage/lcov.info",
     "test:watch": "yarn test --watch",
     "lint": "eslint . --ext=js --cache --cache-location .cache/eslint-cache",
@@ -44,15 +48,6 @@
       "pre-commit": "npm run lint"
     }
   },
-  "jest": {
-    "cacheDirectory": ".cache/jest-cache",
-    "modulePaths": [
-      "<rootDir>/src"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/jestSetup.js"
-    ]
-  },
   "dependencies": {
     "lodash": "^4"
   },
@@ -65,49 +60,49 @@
     "@babel/eslint-parser": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
-    "@babel/preset-react": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
     "@rollup/plugin-babel": "^5.2.1",
-    "@rollup/plugin-commonjs": "^15.1.0",
-    "@rollup/plugin-replace": "^2.3.3",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@types/react-redux": "^7.1.9",
+    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-replace": "^2.3.4",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.1",
+    "@types/react-redux": "^7.1.11",
     "@welldone-software/jest-console-handler": "^0.1.1",
     "acorn-walk": "^8.0.0",
     "astring": "^1.4.3",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^26.6.0",
+    "babel-jest": "^26.6.3",
     "concurrently": "^5.3.0",
     "coveralls": "^3.1.0",
     "create-react-class": "^15.7.0",
     "cross-env": "^7.0.2",
-    "cypress": "^5.4.0",
-    "eslint": "^7.11.0",
+    "cypress": "^5.5.0",
+    "eslint": "^7.12.1",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-react": "^7.21.5",
     "express": "^4.17.1",
     "express-history-api-fallback": "^2.2.1",
     "husky": "^4.3.0",
-    "jest": "^26.6.0",
-    "jest-cli": "^26.6.0",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
     "magic-string": "^0.25.7",
     "nollup": "^0.13.13",
-    "react": "^16.13.1",
-    "react-dom": "npm:@hot-loader/react-dom@^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "npm:@hot-loader/react-dom@^17.0.0",
     "react-hot-loader": "^4.13.0",
     "react-is": "^17.0.1",
-    "react-redux": "^7.2.1",
+    "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "rimraf": "^3.0.2",
-    "rollup": "^2.32.1",
+    "rollup": "^2.33.1",
     "rollup-plugin-commonjs-alternate": "^0.7.1",
     "rollup-plugin-license": "^2.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "start-server-and-test": "^1.11.5",
-    "styled-components": "^5.2.0",
-    "typescript": "^4.0.3"
+    "styled-components": "^5.2.1",
+    "typescript": "^4.0.5"
   }
 }
