@@ -18,12 +18,19 @@ For example, if you pass `style={{width: '100%'}}` to a big pure component it wo
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-The last version of the library has been tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@16.13.1`** but it is expected to work with all `React@16` versions.
-
-> Support for React@17 is under development.
+The last version of the library has been tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@16.14`** and `React@17.0.1` but it is expected to work with all `React@16` and `React17` versions.
 
 ```
 npm install @welldone-software/why-did-you-render --save
+```
+
+If you use the automatic JSX transformation, set the library to be the import source, and make sure `preset-react` is in `development` mode.
+```js
+['@babel/preset-react', {
+  runtime: 'automatic',
+  development: process.env.NODE_ENV === 'development',
+  importSource: '@welldone-software/why-did-you-render',
+}]
 ```
 
 Create a `wdyr.js` file and import it as **the first import** in your application.
@@ -308,7 +315,7 @@ To fix this, add the `whyDidYouRender = true` static to a component after the co
 ```
 
 ### Sourcemaps
-To see sourcemaps using webpack, use [source-map-loader](https://webpack.js.org/loaders/source-map-loader/).
+To see the library's sourcemaps use the [source-map-loader](https://webpack.js.org/loaders/source-map-loader/).
 
 ## Credit
 

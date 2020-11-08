@@ -3,7 +3,7 @@
   "version": "5.0.0",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
   "types": "types.d.ts",
-  "main": "dist/whyDidYouRender.min.js",
+  "main": "dist/whyDidYouRender.js",
   "files": [
     "dist",
     "types.d.ts",
@@ -107,7 +107,6 @@
     "rollup-plugin-commonjs-alternate": "^0.7.1",
     "rollup-plugin-license": "^2.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-terser": "^7.0.2",
     "start-server-and-test": "^1.11.5",
     "styled-components": "^5.2.1",
     "typescript": "^4.0.5"

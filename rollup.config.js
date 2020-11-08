@@ -1,7 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
-import {terser} from 'rollup-plugin-terser'
 import license from 'rollup-plugin-license'
 
 import pkg from './package.json'
@@ -16,7 +15,7 @@ Generated at <%= moment().format('YYYY-MM-DD') %>
 export default [
   {
     input: 'src/index.js',
-    external: ['lodash'],
+    external: ['lodash', 'react'],
     output: [
       {
         name: 'whyDidYouRender',
@@ -25,7 +24,8 @@ export default [
         sourcemap: true,
         exports: 'default',
         globals: {
-          lodash: 'lodash'
+          lodash: 'lodash',
+          react: 'react'
         }
       }
     ],
@@ -36,7 +36,6 @@ export default [
       }),
       resolve(),
       commonjs(),
-      terser(),
       license({
         sourcemap: true,
         banner
