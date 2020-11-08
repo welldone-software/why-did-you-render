@@ -5,7 +5,7 @@ it('Hooks - useMemo and useCallback Child', () => {
 
   cy.getConsoleSpy(console => {
     expect(console.group).to.be.calledWithMatches([
-      {match: 'Comp', times: 1},
+      {match: 'Comp', times: 2},
       {match: /useMemoFn/, times: 2},
       {match: /useCallbackFn/, times: 2},
       {match: /props.*\..*count/, times: 1}

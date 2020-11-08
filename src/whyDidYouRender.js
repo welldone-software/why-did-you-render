@@ -15,6 +15,8 @@ import patchForwardRefComponent from './patches/patchForwardRefComponent'
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
 import {dependenciesMap} from './calculateDeepEqualDiffs'
 
+export {wdyrStore}
+
 const initialHookValue = Symbol('initial-hook-value')
 
 function trackHookChanges(hookName, {path: hookPath}, hookResult){
@@ -129,7 +131,7 @@ export const hooksConfig = {
   useCallback: {dependenciesPath: '1', dontReport: true}
 }
 
-function storeOwnerData(element){
+export function storeOwnerData(element){
   const OwnerInstance = wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
   if(OwnerInstance){
     const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
@@ -196,6 +198,28 @@ function trackHooksIfNeeded(){
   }
 }
 
+export function getWDYRType(origType){
+  const isShouldTrack = (
+    getIsSupportedComponentType(origType) &&
+    shouldTrack(origType, {isHookChange: false})
+  )
+
+  if(!isShouldTrack){
+    return null
+  }
+
+  const displayName = (
+    origType &&
+    origType.whyDidYouRender &&
+    origType.whyDidYouRender.customName ||
+    getDisplayName(origType)
+  )
+
+  const WDYRPatchedComponent = getPatchedComponent(origType, {displayName})
+
+  return WDYRPatchedComponent
+}
+
 export default function whyDidYouRender(React, userOptions){
   Object.assign(wdyrStore, {
     React,
@@ -208,50 +232,29 @@ export default function whyDidYouRender(React, userOptions){
 
   resetHooksPerRenderIfNeeded()
 
-  React.createElement = function(componentNameOrComponent, ...rest){
-    let isShouldTrack = null
-    let displayName = null
-    let WDYRPatchedComponent = null
-
-    try{
-      isShouldTrack = (
-        getIsSupportedComponentType(componentNameOrComponent) &&
-        shouldTrack(componentNameOrComponent, {isHookChange: false})
-      )
-
-      if(isShouldTrack){
-        displayName = (
-          componentNameOrComponent &&
-          componentNameOrComponent.whyDidYouRender &&
-          componentNameOrComponent.whyDidYouRender.customName ||
-          getDisplayName(componentNameOrComponent)
-        )
-
-        WDYRPatchedComponent = getPatchedComponent(componentNameOrComponent, {displayName})
-
-        const element = wdyrStore.origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
+  React.createElement = function(origType, ...rest){
+    const WDYRType = getWDYRType(origType)
+    if(WDYRType){
+      try{
+        const element = wdyrStore.origCreateElement.apply(React, [WDYRType, ...rest])
         if(wdyrStore.options.logOwnerReasons){
           storeOwnerData(element)
         }
-
         return element
       }
-    }
-    catch(e){
-      wdyrStore.options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
-        errorInfo: {
-          error: e,
-          componentNameOrComponent,
-          rest,
-          options: wdyrStore.options,
-          isShouldTrack,
-          displayName,
-          WDYRPatchedComponent
-        }
-      })
+      catch(e){
+        wdyrStore.options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
+          errorInfo: {
+            error: e,
+            componentNameOrComponent: origType,
+            rest,
+            options: wdyrStore.options
+          }
+        })
+      }
     }
 
-    return wdyrStore.origCreateElement.apply(React, [componentNameOrComponent, ...rest])
+    return wdyrStore.origCreateElement.apply(React, [origType, ...rest])
   }
   Object.assign(React.createElement, wdyrStore.origCreateElement)
 
@@ -274,6 +277,8 @@ export default function whyDidYouRender(React, userOptions){
 
   trackHooksIfNeeded()
 
+  React.isWDYR = true
+
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     Object.assign(React, {
       createElement: wdyrStore.origCreateElement,
@@ -294,6 +299,7 @@ export default function whyDidYouRender(React, userOptions){
     })
 
     delete React.__REVERT_WHY_DID_YOU_RENDER__
+    delete React.isWDYR
   }
 
   return React

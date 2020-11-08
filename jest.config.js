@@ -5,5 +5,8 @@ module.exports = {
   ],
   'setupFilesAfterEnv': [
     '<rootDir>/jestSetup.js'
-  ]
+  ],
+  'moduleNameMapper': {
+    '^@welldone-software/why-did-you-render$': '<rootDir>/src/whyDidYouRender.js'
+  }
 }
