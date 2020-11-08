@@ -6,6 +6,6 @@ export default function getDisplayName(type){
     type.name ||
     (type.type && getDisplayName(type.type)) ||
     (type.render && getDisplayName(type.render)) ||
-    (isString(type) ? type : undefined)
+    (isString(type) ? type : 'Unknown')
   )
 }

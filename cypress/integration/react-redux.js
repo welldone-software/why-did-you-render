@@ -33,7 +33,7 @@ describe('react-redux', () => {
   it('React Redux HOC', () => {
     const checkConsole = times => cy.getConsoleSpy(console => {
       expect(console.group).to.be.calledWithMatches([
-        {match: 'SimpleComponent', times},
+        {match: 'SimpleComponent', times: times * 2},
         {match: /props.*a\W/, times}
       ])
 

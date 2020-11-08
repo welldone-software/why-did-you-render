@@ -24,12 +24,16 @@ FunctionalTestComponent.whyDidYouRender = true
 FunctionalTestComponent.dispalyName = 'FunctionalTestComponent'
 
 const FunctionalTestComponentWithHooks = () => {
-  const [state, setState] = React.useState({count: 0})
+  const [state1, setState1] = React.useState({count1: 1})
+  const [state2, setState2] = React.useState({count2: 2})
+
   React.useLayoutEffect(() => {
-    setState({count: 0})
+    setState1({count1: 1})
+    setState2({count2: 2})
   }, [])
+
   return (
-    <div>hi! {state.count}</div>
+    <div>hi! {state1.count1} {state2.count2}</div>
   )
 }
 FunctionalTestComponentWithHooks.whyDidYouRender = true
@@ -254,7 +258,7 @@ test('Strict mode- functional component with hooks no props change', () => {
     <Main a={1}/>
   )
 
-  expect(updateInfos).toHaveLength(1)
+  expect(updateInfos).toHaveLength(2)
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: false,
     stateDifferences: false,
@@ -262,8 +266,21 @@ test('Strict mode- functional component with hooks no props change', () => {
       {
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: {count: 0},
-        prevValue: {count: 0}
+        nextValue: {count1: 1},
+        prevValue: {count1: 1}
+      }
+    ],
+    ownerDifferences: false
+  })
+  expect(updateInfos[1].reason).toEqual({
+    propsDifferences: false,
+    stateDifferences: false,
+    hookDifferences: [
+      {
+        diffType: diffTypes.deepEquals,
+        pathString: '',
+        nextValue: {count2: 2},
+        prevValue: {count2: 2}
       }
     ],
     ownerDifferences: false
@@ -285,16 +302,31 @@ test('Strict mode- functional component with hooks with props change', () => {
     <Main a={[]}/>
   )
 
-  expect(updateInfos).toHaveLength(1)
+  expect(updateInfos).toHaveLength(2)
   expect(updateInfos[0].reason).toEqual({
     propsDifferences: false,
     stateDifferences: false,
-    hookDifferences: [{
-      diffType: diffTypes.deepEquals,
-      pathString: '',
-      nextValue: {count: 0},
-      prevValue: {count: 0}
-    }],
+    hookDifferences: [
+      {
+        diffType: diffTypes.deepEquals,
+        pathString: '',
+        nextValue: {count1: 1},
+        prevValue: {count1: 1}
+      }
+    ],
+    ownerDifferences: false
+  })
+  expect(updateInfos[1].reason).toEqual({
+    propsDifferences: false,
+    stateDifferences: false,
+    hookDifferences: [
+      {
+        diffType: diffTypes.deepEquals,
+        pathString: '',
+        nextValue: {count2: 2},
+        prevValue: {count2: 2}
+      }
+    ],
     ownerDifferences: false
   })
 })

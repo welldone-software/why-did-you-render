@@ -6,7 +6,9 @@
   "main": "dist/whyDidYouRender.min.js",
   "files": [
     "dist",
-    "types.d.ts"
+    "types.d.ts",
+    "jsx-runtime.js",
+    "jsx-dev-runtime.js"
   ],
   "authors": [
     "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"
@@ -23,11 +25,17 @@
     "tool"
   ],
   "scripts": {
-    "start": "cross-env PORT=3003 NODE_ENV=development node demo/serve",
+    "postinstall": "cd test-react-16 && yarn",
+    "start": "cross-env PORT=3003 NODE_ENV=development USE_AUTOMATIC_JSX=true node demo/serve",
+    "start:jsx": "cross-env USE_AUTOMATIC_JSX=true yarn start",
     "build": "cross-env NODE_ENV=production rollup --config",
-    "test": "cross-env TEST=true jest \"./tests\"",
+    "test": "yarn test:react-17-classic && yarn test:react-16-classic && yarn test:react-17-automatic && yarn test:react-16-automatic",
+    "test:watch": "yarn test:react-17-classic --watch",
+    "test:react-17-classic": "cross-env TEST=true USE_REACT_16=false jest \"./tests\" --config=jest.config.js",
+    "test:react-17-automatic": "cross-env TEST=true USE_REACT_16=false USE_AUTOMATIC_JSX=true jest \"./tests\" --config=jest.config.js",
+    "test:react-16-classic": "cd test-react-16 && cross-env USE_REACT_16=true TEST=true jest \"./tests\" --config=jest.config.js",
+    "test:react-16-automatic": "cd test-react-16 && cross-env USE_REACT_16=true TEST=true USE_AUTOMATIC_JSX=true jest \"./tests\" --config=jest.config.js",
     "test:ci": "yarn test --coverage && coveralls < coverage/lcov.info",
-    "test:watch": "yarn test --watch",
     "lint": "eslint . --ext=js --cache --cache-location .cache/eslint-cache",
     "clear": "rimraf .cache dist demo/dist",
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
@@ -36,28 +44,21 @@
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
-    "_cypress:run:ci": "yarn cypress:run --record --parallel",
-    "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:run:ci"
+    "_cypress:run:ci": "yarn cypress:run --record --parallel --group main",
+    "_cypress:run:ci:jsx": "yarn cypress:run --record --parallel --group jsx",
+    "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:run:ci",
+    "cypress:ci:jsx": "start-server-and-test start:jsx http://localhost:3003 _cypress:run:ci:jsx"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint"
     }
   },
-  "jest": {
-    "cacheDirectory": ".cache/jest-cache",
-    "modulePaths": [
-      "<rootDir>/src"
-    ],
-    "setupFilesAfterEnv": [
-      "<rootDir>/jestSetup.js"
-    ]
-  },
   "dependencies": {
     "lodash": "^4"
   },
   "peerDependencies": {
-    "react": "^16"
+    "react": "^16 || ^17"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",
@@ -65,49 +66,50 @@
     "@babel/eslint-parser": "^7.12.1",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
-    "@babel/preset-react": "^7.12.1",
+    "@babel/preset-react": "^7.12.5",
     "@rollup/plugin-babel": "^5.2.1",
-    "@rollup/plugin-commonjs": "^15.1.0",
-    "@rollup/plugin-replace": "^2.3.3",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@types/react-redux": "^7.1.9",
+    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-replace": "^2.3.4",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.1",
+    "@types/react-redux": "^7.1.11",
     "@welldone-software/jest-console-handler": "^0.1.1",
     "acorn-walk": "^8.0.0",
     "astring": "^1.4.3",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^26.6.0",
+    "babel-jest": "^26.6.3",
     "concurrently": "^5.3.0",
     "coveralls": "^3.1.0",
     "create-react-class": "^15.7.0",
     "cross-env": "^7.0.2",
-    "cypress": "^5.4.0",
-    "eslint": "^7.11.0",
+    "cypress": "^5.5.0",
+    "eslint": "^7.12.1",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-react": "^7.21.5",
     "express": "^4.17.1",
     "express-history-api-fallback": "^2.2.1",
     "husky": "^4.3.0",
-    "jest": "^26.6.0",
-    "jest-cli": "^26.6.0",
+    "jest": "^26.6.3",
+    "jest-cli": "^26.6.3",
     "magic-string": "^0.25.7",
     "nollup": "^0.13.13",
-    "react": "^16.13.1",
-    "react-dom": "npm:@hot-loader/react-dom@^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "npm:@hot-loader/react-dom@^17.0.0",
     "react-hot-loader": "^4.13.0",
     "react-is": "^17.0.1",
-    "react-redux": "^7.2.1",
+    "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "rimraf": "^3.0.2",
-    "rollup": "^2.32.1",
+    "rollup": "^2.33.1",
+    "rollup-plugin-alias": "^2.2.0",
     "rollup-plugin-commonjs-alternate": "^0.7.1",
     "rollup-plugin-license": "^2.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
     "start-server-and-test": "^1.11.5",
-    "styled-components": "^5.2.0",
-    "typescript": "^4.0.3"
+    "styled-components": "^5.2.1",
+    "typescript": "^4.0.5"
   }
 }

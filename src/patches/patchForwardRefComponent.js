@@ -1,10 +1,12 @@
 import {defaults} from 'lodash'
 
+import wdyrStore from '../wdyrStore'
+
 import getDisplayName from '../getDisplayName'
 import {isMemoComponent} from '../utils'
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
-export default function patchForwardRefComponent(ForwardRefComponent, displayName, React, options, ownerDataMap){
+export default function patchForwardRefComponent(ForwardRefComponent, {displayName}){
   const {render: InnerForwardRefComponent} = ForwardRefComponent
 
   const isInnerComponentMemoized = isMemoComponent(InnerForwardRefComponent)
@@ -12,16 +14,16 @@ export default function patchForwardRefComponent(ForwardRefComponent, displayNam
     InnerForwardRefComponent.type : InnerForwardRefComponent
 
   const WDYRWrappedByReactForwardRefFunctionalComponent = (
-    patchFunctionalOrStrComponent(WrappedFunctionalComponent, isInnerComponentMemoized, displayName, React, options, ownerDataMap)
+    patchFunctionalOrStrComponent(WrappedFunctionalComponent, {isPure: isInnerComponentMemoized, displayName})
   )
 
   WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)
   WDYRWrappedByReactForwardRefFunctionalComponent.ComponentForHooksTracking = WrappedFunctionalComponent
   defaults(WDYRWrappedByReactForwardRefFunctionalComponent, WrappedFunctionalComponent)
 
-  const WDYRForwardRefFunctionalComponent = React.forwardRef(
+  const WDYRForwardRefFunctionalComponent = wdyrStore.React.forwardRef(
     isInnerComponentMemoized ?
-      React.memo(WDYRWrappedByReactForwardRefFunctionalComponent, InnerForwardRefComponent.compare) :
+      wdyrStore.React.memo(WDYRWrappedByReactForwardRefFunctionalComponent, InnerForwardRefComponent.compare) :
       WDYRWrappedByReactForwardRefFunctionalComponent
   )
 

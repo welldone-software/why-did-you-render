@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main Jest - React 16" type="JavaScriptTestRunnerJest">
+    <config-file value="$PROJECT_DIR$/test-react-16/jest.config.js" />
+    <node-interpreter value="project" />
+    <node-options value="" />
+    <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+    <working-dir value="$PROJECT_DIR$/test-react-16" />
+    <jest-options value="--watch" />
+    <envs>
+      <env name="TEST" value="true" />
+      <env name="NODE_ENV" value="development" />
+      <env name="USE_AUTOMATIC_JSX" value="true" />
+      <env name="USE_REACT_16" value="true" />
+    </envs>
+    <scope-kind value="ALL" />
+    <method v="2" />
+  </configuration>
+</component>

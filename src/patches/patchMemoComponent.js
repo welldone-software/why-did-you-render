@@ -1,12 +1,13 @@
 import {defaults} from 'lodash'
 
-import getDisplayName from '../getDisplayName'
+import wdyrStore from '../wdyrStore'
 
+import getDisplayName from '../getDisplayName'
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from '../utils'
 import patchClassComponent from './patchClassComponent'
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
 
-export default function patchMemoComponent(MemoComponent, displayName, React, options, ownerDataMap){
+export default function patchMemoComponent(MemoComponent, {displayName}){
   const {type: InnerMemoComponent} = MemoComponent
 
   const isInnerMemoComponentAClassComponent = isReactClassComponent(InnerMemoComponent)
@@ -18,10 +19,10 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
     InnerMemoComponent
 
   const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
-    patchClassComponent(WrappedFunctionalComponent, displayName, React, options, ownerDataMap) :
+    patchClassComponent(WrappedFunctionalComponent, {displayName}) :
     (isInnerMemoComponentAnotherMemoComponent ?
-      patchMemoComponent(WrappedFunctionalComponent, displayName, React, options, ownerDataMap) :
-      patchFunctionalOrStrComponent(WrappedFunctionalComponent, true, displayName, React, options, ownerDataMap)
+      patchMemoComponent(WrappedFunctionalComponent, {displayName}) :
+      patchFunctionalOrStrComponent(WrappedFunctionalComponent, {displayName, isPure: true})
     )
 
   try{
@@ -33,8 +34,8 @@ export default function patchMemoComponent(MemoComponent, displayName, React, op
   PatchedInnerComponent.ComponentForHooksTracking = MemoComponent
   defaults(PatchedInnerComponent, WrappedFunctionalComponent)
 
-  const WDYRMemoizedFunctionalComponent = React.memo(
-    isInnerMemoComponentForwardRefs ? React.forwardRef(PatchedInnerComponent) : PatchedInnerComponent,
+  const WDYRMemoizedFunctionalComponent = wdyrStore.React.memo(
+    isInnerMemoComponentForwardRefs ? wdyrStore.React.forwardRef(PatchedInnerComponent) : PatchedInnerComponent,
     MemoComponent.compare
   )
 

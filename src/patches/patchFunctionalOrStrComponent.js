@@ -1,19 +1,21 @@
 import {defaults} from 'lodash'
 
+import wdyrStore from '../wdyrStore'
+
 import getUpdateInfo from '../getUpdateInfo'
 
-const getFunctionalComponentFromStringComponent = (componentTypeStr, React) => props => (
-  React.createElement(componentTypeStr, props)
+const getFunctionalComponentFromStringComponent = (componentTypeStr) => props => (
+  wdyrStore.React.createElement(componentTypeStr, props)
 )
 
-export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, isPure, displayName, React, options, ownerDataMap){
+export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, {isPure, displayName}){
   const FunctionalComponent = typeof(FunctionalOrStringComponent) === 'string' ?
-    getFunctionalComponentFromStringComponent(FunctionalOrStringComponent, React) :
+    getFunctionalComponentFromStringComponent(FunctionalOrStringComponent) :
     FunctionalOrStringComponent
 
   function WDYRFunctionalComponent(){
     const nextProps = arguments[0]
-    const ref = React.useRef()
+    const ref = wdyrStore.React.useRef()
 
     const prevProps = ref.current
     ref.current = nextProps
@@ -23,9 +25,7 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
         Component: FunctionalComponent,
         displayName,
         prevProps,
-        nextProps,
-        options,
-        ownerDataMap
+        nextProps
       })
 
       const notifiedByHooks = (
@@ -35,7 +35,7 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
       )
 
       if(!notifiedByHooks){
-        options.notifier(updateInfo)
+        wdyrStore.options.notifier(updateInfo)
       }
     }
 

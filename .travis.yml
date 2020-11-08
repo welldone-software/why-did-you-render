@@ -19,6 +19,15 @@ jobs:
     - name: "Cypress E2E Test Parallel 3"
       script: yarn cypress:ci
 
+    - name: "Cypress E2E Test Parallel 1 (jsx)"
+      script: yarn cypress:ci:jsx
+
+    - name: "Cypress E2E Test Parallel 2 (jsx)"
+      script: yarn cypress:ci:jsx
+
+    - name: "Cypress E2E Test Parallel 3 (jsx)"
+      script: yarn cypress:ci:jsx
+
     - name: "Unit Tests, Lint, and Audit"
       script:
         - yarn test:ci

@@ -1,9 +1,11 @@
 import {defaults} from 'lodash'
 
+import wdyrStore from '../wdyrStore'
+
 import {checkIfInsideAStrictModeTree} from '../utils'
 import getUpdateInfo from '../getUpdateInfo'
 
-export default function patchClassComponent(ClassComponent, displayName, React, options, ownerDataMap){
+export default function patchClassComponent(ClassComponent, {displayName}){
   class WDYRPatchedClassComponent extends ClassComponent{
     constructor(props, context){
       super(props, context)
@@ -13,7 +15,8 @@ export default function patchClassComponent(ClassComponent, displayName, React, 
       }
 
       const origRender = super.render || this.render
-      // this probably means render is an arrow function or this.render.bind(this) was called on the original class
+
+      // this probably means that render is an arrow function or this.render.bind(this) was called on the original class
       const renderIsABindedFunction = origRender !== ClassComponent.prototype.render
       if(renderIsABindedFunction){
         this.render = () => {
@@ -38,12 +41,10 @@ export default function patchClassComponent(ClassComponent, displayName, React, 
             prevProps: this._WDYR.prevProps,
             prevState: this._WDYR.prevState,
             nextProps: this.props,
-            nextState: this.state,
-            options,
-            ownerDataMap
+            nextState: this.state
           })
 
-          options.notifier(updateInfo)
+          wdyrStore.options.notifier(updateInfo)
         }
 
         this._WDYR.prevProps = this.props

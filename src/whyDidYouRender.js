@@ -1,5 +1,7 @@
 import {get, isFunction} from 'lodash'
 
+import wdyrStore from './wdyrStore'
+
 import normalizeOptions from './normalizeOptions'
 import getDisplayName from './getDisplayName'
 import getUpdateInfo from './getUpdateInfo'
@@ -13,21 +15,35 @@ import patchForwardRefComponent from './patches/patchForwardRefComponent'
 import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from './utils'
 import {dependenciesMap} from './calculateDeepEqualDiffs'
 
+export {wdyrStore}
+
 const initialHookValue = Symbol('initial-hook-value')
-function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options, ownerDataMap, hooksRef){
+
+function trackHookChanges(hookName, {path: hookPath}, hookResult){
   const nextHook = hookPath ? get(hookResult, hookPath) : hookResult
-  const renderNumber = React.useRef(1)
-  if(hooksRef.current[0] && renderNumber.current !== hooksRef.current[0].renderNumber){
-    hooksRef.current = []
-  }
-  hooksRef.current.push({hookName, result: nextHook, renderNumber: renderNumber.current})
-  renderNumber.current++
-  const ComponentHookDispatchedFromInstance = (
-    React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
-    React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+
+  const renderNumberForTheHook = wdyrStore.React.useRef(true)
+
+  // TODO: improve
+  const isSecondCycleOfRenders = (
+    wdyrStore.hooksPerRender[0] &&
+    wdyrStore.hooksPerRender[0].renderNumberForTheHook !== renderNumberForTheHook.current
   )
 
-  const prevHookResultRef = React.useRef(initialHookValue)
+  if(isSecondCycleOfRenders){
+    wdyrStore.hooksPerRender = []
+  }
+
+  wdyrStore.hooksPerRender.push({hookName, result: nextHook, renderNumberForTheHook: renderNumberForTheHook.current})
+
+  renderNumberForTheHook.current++
+
+  const ComponentHookDispatchedFromInstance = (
+    wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
+    wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+  )
+
+  const prevHookRef = wdyrStore.React.useRef(initialHookValue)
 
   if(!ComponentHookDispatchedFromInstance){
     return hookResult
@@ -36,57 +52,56 @@ function trackHookChanges(hookName, {path: hookPath}, hookResult, React, options
   const Component = ComponentHookDispatchedFromInstance.type.ComponentForHooksTracking || ComponentHookDispatchedFromInstance.type
   const displayName = getDisplayName(Component)
 
-  const isShouldTrack = shouldTrack({Component, displayName, options, React, isHookChange: true})
+  const isShouldTrack = shouldTrack(Component, {isHookChange: true})
   if(!isShouldTrack){
     return hookResult
   }
 
-  const prevHookResult = prevHookResultRef.current
-  prevHookResultRef.current = hookResult
+  const newPrevHookRef = prevHookRef.current
+  prevHookRef.current = hookResult
 
-  if(prevHookResult !== initialHookValue){
+  if(newPrevHookRef !== initialHookValue){
     const notification = getUpdateInfo({
       Component: Component,
       displayName,
       hookName,
-      prevHook: hookPath ? get(prevHookResult, hookPath) : prevHookResult,
-      nextHook,
-      options,
-      ownerDataMap
+      prevHook: hookPath ? get(newPrevHookRef, hookPath) : newPrevHookRef,
+      nextHook
     })
 
     if(notification.reason.hookDifferences){
-      options.notifier(notification)
+      wdyrStore.options.notifier(notification)
     }
   }
 
   return hookResult
 }
 
-function createPatchedComponent(componentsMap, Component, displayName, React, options, ownerDataMap){
+function createPatchedComponent(Component, {displayName}){
   if(isMemoComponent(Component)){
-    return patchMemoComponent(Component, displayName, React, options, ownerDataMap)
+    return patchMemoComponent(Component, {displayName})
   }
 
   if(isForwardRefComponent(Component)){
-    return patchForwardRefComponent(Component, displayName, React, options, ownerDataMap)
+    return patchForwardRefComponent(Component, {displayName})
   }
 
   if(isReactClassComponent(Component)){
-    return patchClassComponent(Component, displayName, React, options, ownerDataMap)
+    return patchClassComponent(Component, {displayName})
   }
 
-  return patchFunctionalOrStrComponent(Component, false, displayName, React, options, ownerDataMap)
+  return patchFunctionalOrStrComponent(Component, {displayName, isPure: false})
 }
 
-function getPatchedComponent(componentsMap, Component, displayName, React, options, ownerDataMap){
-  if(componentsMap.has(Component)){
-    return componentsMap.get(Component)
+function getPatchedComponent(Component, {displayName}){
+  if(wdyrStore.componentsMap.has(Component)){
+    return wdyrStore.componentsMap.get(Component)
   }
 
-  const WDYRPatchedComponent = createPatchedComponent(componentsMap, Component, displayName, React, options, ownerDataMap)
+  const WDYRPatchedComponent = createPatchedComponent(Component, {displayName})
 
-  componentsMap.set(Component, WDYRPatchedComponent)
+  wdyrStore.componentsMap.set(Component, WDYRPatchedComponent)
+
   return WDYRPatchedComponent
 }
 
@@ -116,122 +131,48 @@ export const hooksConfig = {
   useCallback: {dependenciesPath: '1', dontReport: true}
 }
 
-export default function whyDidYouRender(React, userOptions){
-  const options = normalizeOptions(userOptions)
-
-  const origCreateElement = React.createElement
-  const origCreateFactory = React.createFactory
-  const origCloneElement = React.cloneElement
-
-  let componentsMap = new WeakMap()
-  const ownerDataMap = new WeakMap()
-  const hooksRef = {current: []}
-
-  function storeOwnerData(element){
-    const OwnerInstance = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
-    if(OwnerInstance){
-      const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
-      const displayName = getDisplayName(Component)
-      ownerDataMap.set(element.props, {
-        Component,
-        displayName,
-        props: OwnerInstance.pendingProps,
-        state: OwnerInstance.stateNode ? OwnerInstance.stateNode.state : null,
-        hooks: hooksRef.current
-      })
-    }
+export function storeOwnerData(element){
+  const OwnerInstance = wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
+  if(OwnerInstance){
+    const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type
+    const displayName = getDisplayName(Component)
+    wdyrStore.ownerDataMap.set(element.props, {
+      Component,
+      displayName,
+      props: OwnerInstance.pendingProps,
+      state: OwnerInstance.stateNode ? OwnerInstance.stateNode.state : null,
+      hooks: wdyrStore.hooksPerRender
+    })
   }
+}
 
-  // Intercept assignments to ReactCurrentOwner.current and reset hooksRef
+function resetHooksPerRenderIfNeeded(){
+  // Intercept assignments to ReactCurrentOwner.current to reset hooksPerRender
   let currentOwner = null
-  if(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED){
-    Object.defineProperty(React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
+  if(wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED){
+    Object.defineProperty(wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
       get(){
         return currentOwner
       },
       set(value){
         currentOwner = value
-        hooksRef.current = []
+        wdyrStore.hooksPerRender = []
       }
     })
   }
+}
 
-  React.createElement = function(componentNameOrComponent, ...rest){
-    let isShouldTrack = null
-    let displayName = null
-    let WDYRPatchedComponent = null
+function trackHooksIfNeeded(){
+  const hooksSupported = !!wdyrStore.React.useState
 
-    try{
-      isShouldTrack = (
-        getIsSupportedComponentType(componentNameOrComponent) &&
-        shouldTrack({Component: componentNameOrComponent, displayName: getDisplayName(componentNameOrComponent), React, options})
-      )
-
-      if(isShouldTrack){
-        displayName = (
-          componentNameOrComponent &&
-          componentNameOrComponent.whyDidYouRender &&
-          componentNameOrComponent.whyDidYouRender.customName ||
-          getDisplayName(componentNameOrComponent)
-        )
-
-        WDYRPatchedComponent = getPatchedComponent(componentsMap, componentNameOrComponent, displayName, React, options, ownerDataMap)
-
-        const element = origCreateElement.apply(React, [WDYRPatchedComponent, ...rest])
-        if(options.logOwnerReasons){
-          storeOwnerData(element)
-        }
-
-        return element
-      }
-    }
-    catch(e){
-      options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
-        errorInfo: {
-          error: e,
-          componentNameOrComponent,
-          rest,
-          options,
-          isShouldTrack,
-          displayName,
-          WDYRPatchedComponent
-        }
-      })
-    }
-
-    return origCreateElement.apply(React, [componentNameOrComponent, ...rest])
-  }
-
-  Object.assign(React.createElement, origCreateElement)
-
-  React.createFactory = type => {
-    const factory = React.createElement.bind(null, type)
-    factory.type = type
-    return factory
-  }
-
-  Object.assign(React.createFactory, origCreateFactory)
-
-  React.cloneElement = (...args) => {
-    const element = origCloneElement.apply(React, args)
-    if(options.logOwnerReasons){
-      storeOwnerData(element)
-    }
-
-    return element
-  }
-
-  Object.assign(React.cloneElement, origCloneElement)
-
-  const hooksSupported = !!React.useState
-  if(options.trackHooks && hooksSupported){
+  if(wdyrStore.options.trackHooks && hooksSupported){
     const nativeHooks = Object.entries(hooksConfig).map(([hookName, hookTrackingConfig]) => {
-      return [React, hookName, hookTrackingConfig]
+      return [wdyrStore.React, hookName, hookTrackingConfig]
     })
 
     const hooksToTrack = [
       ...nativeHooks,
-      ...options.trackExtraHooks
+      ...wdyrStore.options.trackExtraHooks
     ]
 
     hooksToTrack.forEach(([hookParent, hookName, hookTrackingConfig = {}]) => {
@@ -245,7 +186,7 @@ export default function whyDidYouRender(React, userOptions){
           dependenciesMap.set(hookResult, {hookName, deps: get(args, dependenciesPath)})
         }
         if(!dontReport){
-          trackHookChanges(hookName, hookTrackingConfig, hookResult, React, options, ownerDataMap, hooksRef)
+          trackHookChanges(hookName, hookTrackingConfig, hookResult)
         }
         return hookResult
       }
@@ -255,19 +196,101 @@ export default function whyDidYouRender(React, userOptions){
       hookParent[hookName] = newHook
     })
   }
+}
+
+export function getWDYRType(origType){
+  const isShouldTrack = (
+    getIsSupportedComponentType(origType) &&
+    shouldTrack(origType, {isHookChange: false})
+  )
+
+  if(!isShouldTrack){
+    return null
+  }
+
+  const displayName = (
+    origType &&
+    origType.whyDidYouRender &&
+    origType.whyDidYouRender.customName ||
+    getDisplayName(origType)
+  )
+
+  const WDYRPatchedComponent = getPatchedComponent(origType, {displayName})
+
+  return WDYRPatchedComponent
+}
+
+export default function whyDidYouRender(React, userOptions){
+  Object.assign(wdyrStore, {
+    React,
+    options: normalizeOptions(userOptions),
+    origCreateElement: React.createElement,
+    origCreateFactory: React.createFactory,
+    origCloneElement: React.cloneElement,
+    componentsMap: new WeakMap()
+  })
+
+  resetHooksPerRenderIfNeeded()
+
+  React.createElement = function(origType, ...rest){
+    const WDYRType = getWDYRType(origType)
+    if(WDYRType){
+      try{
+        const element = wdyrStore.origCreateElement.apply(React, [WDYRType, ...rest])
+        if(wdyrStore.options.logOwnerReasons){
+          storeOwnerData(element)
+        }
+        return element
+      }
+      catch(e){
+        wdyrStore.options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
+          errorInfo: {
+            error: e,
+            componentNameOrComponent: origType,
+            rest,
+            options: wdyrStore.options
+          }
+        })
+      }
+    }
+
+    return wdyrStore.origCreateElement.apply(React, [origType, ...rest])
+  }
+  Object.assign(React.createElement, wdyrStore.origCreateElement)
+
+  React.createFactory = type => {
+    const factory = React.createElement.bind(null, type)
+    factory.type = type
+    return factory
+  }
+  Object.assign(React.createFactory, wdyrStore.origCreateFactory)
+
+  React.cloneElement = (...args) => {
+    const element = wdyrStore.origCloneElement.apply(React, args)
+    if(wdyrStore.options.logOwnerReasons){
+      storeOwnerData(element)
+    }
+
+    return element
+  }
+  Object.assign(React.cloneElement, wdyrStore.origCloneElement)
+
+  trackHooksIfNeeded()
+
+  React.isWDYR = true
 
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     Object.assign(React, {
-      createElement: origCreateElement,
-      createFactory: origCreateFactory,
-      cloneElement: origCloneElement
+      createElement: wdyrStore.origCreateElement,
+      createFactory: wdyrStore.origCreateFactory,
+      cloneElement: wdyrStore.origCloneElement
     })
 
-    componentsMap = null
+    wdyrStore.componentsMap = null
 
     const hooksToRevert = [
       ...Object.keys(hooksConfig).map(hookName => [React, hookName]),
-      ...options.trackExtraHooks
+      ...wdyrStore.options.trackExtraHooks
     ]
     hooksToRevert.forEach(([hookParent, hookName]) => {
       if(hookParent[hookName].originalHook){
@@ -276,6 +299,7 @@ export default function whyDidYouRender(React, userOptions){
     })
 
     delete React.__REVERT_WHY_DID_YOU_RENDER__
+    delete React.isWDYR
   }
 
   return React

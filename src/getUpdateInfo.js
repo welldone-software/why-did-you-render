@@ -1,4 +1,5 @@
 import findObjectsDifferences from './findObjectsDifferences'
+import wdyrStore from './wdyrStore'
 
 function getOwnerDifferences({prevOwnerData, nextOwnerData}){
   if(!prevOwnerData || !nextOwnerData){
@@ -22,9 +23,9 @@ function getOwnerDifferences({prevOwnerData, nextOwnerData}){
   }
 }
 
-function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook, ownerDataMap){
-  const prevOwnerData = ownerDataMap.get(prevProps)
-  const nextOwnerData = ownerDataMap.get(nextProps)
+function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook){
+  const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps)
+  const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps)
 
   return {
     propsDifferences: findObjectsDifferences(prevProps, nextProps),
@@ -34,7 +35,7 @@ function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, n
   }
 }
 
-export default function getUpdateInfo({Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, options, ownerDataMap}){
+export default function getUpdateInfo({Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook}){
   return {
     Component,
     displayName,
@@ -45,8 +46,6 @@ export default function getUpdateInfo({Component, displayName, hookName, prevPro
     nextProps,
     nextState,
     nextHook,
-    options,
-    ownerDataMap,
-    reason: getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook, ownerDataMap)
+    reason: getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook)
   }
 }

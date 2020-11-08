@@ -2,6 +2,7 @@ import ReactHotLoader from 'react-hot-loader'
 
 import React from 'react'
 import ReactDom from 'react-dom'
+import whyDidYouRender from '@welldone-software/why-did-you-render'
 
 import Menu from './Menu'
 
@@ -25,8 +26,6 @@ import strict from './strict'
 import reactRedux from './reactRedux'
 import styledComponents from './styledComponents'
 import logOwnerReasons from './logOwnerReasons'
-
-import whyDidYouRender from './whyDidYouRender'
 
 const demosList = {
   bigList,

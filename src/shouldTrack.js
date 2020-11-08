@@ -1,23 +1,28 @@
+import wdyrStore from './wdyrStore'
+
 import {isMemoComponent} from './utils'
+import getDisplayName from './getDisplayName'
 
-function shouldInclude(displayName, options){
+function shouldInclude(displayName){
   return (
-    options.include &&
-    options.include.length > 0 &&
-    options.include.some(regex => regex.test(displayName))
+    wdyrStore.options.include &&
+    wdyrStore.options.include.length > 0 &&
+    wdyrStore.options.include.some(regex => regex.test(displayName))
   )
 }
 
-function shouldExclude(displayName, options){
+function shouldExclude(displayName){
   return (
-    options.exclude &&
-    options.exclude.length > 0 &&
-    options.exclude.some(regex => regex.test(displayName))
+    wdyrStore.options.exclude &&
+    wdyrStore.options.exclude.length > 0 &&
+    wdyrStore.options.exclude.some(regex => regex.test(displayName))
   )
 }
 
-export default function shouldTrack({Component, displayName, options, React, isHookChange}){
-  if(shouldExclude(displayName, options)){
+export default function shouldTrack(Component, {isHookChange}){
+  const displayName = getDisplayName(Component)
+
+  if(shouldExclude(displayName)){
     return false
   }
 
@@ -33,11 +38,11 @@ export default function shouldTrack({Component, displayName, options, React, isH
 
   return !!(
     Component.whyDidYouRender || (
-      options.trackAllPureComponents && (
-        (Component && Component.prototype instanceof React.PureComponent) ||
+      wdyrStore.options.trackAllPureComponents && (
+        (Component && Component.prototype instanceof wdyrStore.React.PureComponent) ||
         isMemoComponent(Component)
       )
     ) ||
-    shouldInclude(displayName, options)
+    shouldInclude(displayName)
   )
 }

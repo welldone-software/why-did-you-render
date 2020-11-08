@@ -1,4 +1,9 @@
-import {isArray, isPlainObject, isDate, isRegExp, isFunction, isSet, keys as getKeys, has} from 'lodash'
+import {
+  isArray, isPlainObject, isDate,
+  isRegExp, isFunction, isSet,
+  keys as getKeys, has
+} from 'lodash'
+
 import {diffTypes} from './consts'
 
 const hasElementType = typeof Element !== 'undefined'
