@@ -25,7 +25,7 @@
     "tool"
   ],
   "scripts": {
-    "postinstall": "cd test-react-16 && yarn",
+    "prepare": "cd test-react-16 && yarn",
     "start": "cross-env PORT=3003 NODE_ENV=development USE_AUTOMATIC_JSX=true node demo/serve",
     "start:jsx": "cross-env USE_AUTOMATIC_JSX=true yarn start",
     "build": "cross-env NODE_ENV=production rollup --config",
