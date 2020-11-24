@@ -9,7 +9,6 @@
     <envs>
       <env name="TEST" value="true" />
       <env name="NODE_ENV" value="development" />
-      <env name="USE_AUTOMATIC_JSX" value="true" />
     </envs>
     <scope-kind value="ALL" />
     <method v="2" />

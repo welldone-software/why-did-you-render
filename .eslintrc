@@ -14,7 +14,8 @@
     "react"
   ],
   "globals": {
-    "flushConsoleOutput": true
+    "flushConsoleOutput": true,
+    "jest": true
   },
   "settings": {
     "react": {

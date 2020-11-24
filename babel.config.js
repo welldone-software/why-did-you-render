@@ -3,7 +3,7 @@ const compact = require('lodash/compact')
 module.exports = function(api){
   const isProd = process.env.NODE_ENV === 'production'
   const isTest = process.env.TEST === 'true'
-  const isUseAutomaticJSX = process.env.USE_AUTOMATIC_JSX === 'true'
+  const isUseClassicJSX = process.env.USE_CLASSIC_JSX === 'true'
 
   api.cache(false)
 
@@ -12,9 +12,9 @@ module.exports = function(api){
       modules: isTest ? 'commonjs' : false
     }],
     ['@babel/preset-react', {
-      runtime: isUseAutomaticJSX ? 'automatic' : 'classic',
+      runtime: isUseClassicJSX ? 'classic' : 'automatic',
       development: true,
-      importSource: isUseAutomaticJSX ? `${__dirname}` : undefined
+      importSource: isUseClassicJSX ? undefined : `${__dirname}`
     }]
   ]
 
