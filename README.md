@@ -24,7 +24,7 @@ The last version of the library has been tested [(unit tests and E2E)]((https://
 npm install @welldone-software/why-did-you-render --save
 ```
 
-If you use the automatic JSX transformation, set the library to be the import source, and make sure `preset-react` is in `development` mode.
+If you use the `automatic` JSX transformation, set the library to be the import source, and make sure `preset-react` is in `development` mode.
 ```js
 ['@babel/preset-react', {
   runtime: 'automatic',
@@ -32,6 +32,9 @@ If you use the automatic JSX transformation, set the library to be the import so
   importSource: '@welldone-software/why-did-you-render',
 }]
 ```
+
+> Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
+> [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-732738552)
 
 Create a `wdyr.js` file and import it as **the first import** in your application.
 
@@ -74,7 +77,7 @@ Otherwise, add `whyDidYouRender = true` to components you want to track.
 
 More information about what is tracked can be found in [Tracking Components](#tracking-components).
 
-Can't see any WDYR logs? Check out the troubleshoot or search the issues.
+Can't see any WDYR logs? Check out the [troubleshooting section](#troubleshooting) or search in the [issues](issues).
 
 ## Custom Hooks
 
