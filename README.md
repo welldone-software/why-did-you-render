@@ -29,17 +29,16 @@ If you use the `automatic` JSX transformation, set the library to be the import 
 ['@babel/preset-react', {
   runtime: 'automatic',
   development: process.env.NODE_ENV === 'development',
-  importSource: '@welldone-software/why-did-you-render',
 }]
 ```
 
 > Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
-> [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-732738552)
 
 Create a `wdyr.js` file and import it as **the first import** in your application.
 
 `wdyr.js`:
 ```jsx
+/** @jsxImportSource @welldone-software/why-did-you-render */
 import React from 'react';
 
 if (process.env.NODE_ENV === 'development') {
