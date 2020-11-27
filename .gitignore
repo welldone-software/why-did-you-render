@@ -13,3 +13,5 @@ dist
 cypress/videos
 
 coverage
+
+.history

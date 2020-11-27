@@ -18,10 +18,14 @@ For example, if you pass `style={{width: '100%'}}` to a big pure component it wo
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-The last version of the library has been tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@16.14`** and `React@17.0.1` but it is expected to work with all `React@16` and `React17` versions.
+The last version of the library has been tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@16.14`** and **`React@17.0.1`** but it is expected to work with all `React@16` and `React@17` versions.
 
 ```
 npm install @welldone-software/why-did-you-render --save
+```
+or
+```
+yarn add @welldone-software/why-did-you-render
 ```
 
 If you use the `automatic` JSX transformation, set the library to be the import source, and make sure `preset-react` is in `development` mode.
@@ -52,7 +56,12 @@ if (process.env.NODE_ENV === 'development') {
 
 > **Notice: The library should *NEVER* be used in production because it slows down React**
 
-Import `wdyr.js` as the first import (even before `react-hot-loader`):
+In [Typescript](issues/161), add the following line to import the package's types:
+```tsx
+/// <reference types="@welldone-software/why-did-you-render" />
+```
+
+Import `wdyr` as the first import (even before `react-hot-loader`):
 
 `index.js`:
 ```jsx
