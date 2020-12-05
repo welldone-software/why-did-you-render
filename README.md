@@ -1,5 +1,7 @@
 # Why Did You Render
 
+![logo](images/WDYR-logo.jpg)
+
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 [![Build Status](https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)](https://travis-ci.com/welldone-software/why-did-you-render)
 ![NPM](https://img.shields.io/npm/l/@welldone-software/why-did-you-render?style=flat)
@@ -12,8 +14,6 @@ For example, if you pass `style={{width: '100%'}}` to a big pure component it wo
 ```jsx
 <BigListPureComponent style={{width: '100%'}}/>
 ```
-
-![demo](images/demo.png)
 
 It can also help you to simply track when and why a certain component re-renders.
 
