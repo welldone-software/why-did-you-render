@@ -2,8 +2,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import * as rtl from '@testing-library/react';
-import whyDidYouRender from 'index';
-import { diffTypes } from 'consts';
+
+import whyDidYouRender from '~';
+import { diffTypes } from '~/consts';
 
 let updateInfos = [];
 beforeEach(() => {

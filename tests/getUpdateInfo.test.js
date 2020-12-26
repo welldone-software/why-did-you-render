@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { diffTypes } from 'consts';
-import getUpdateInfo from 'getUpdateInfo';
-import getDisplayName from 'getDisplayName';
-import whyDidYouRender from '../src';
+import { diffTypes } from '~/consts';
+import getUpdateInfo from '~/getUpdateInfo';
+import getDisplayName from '~/getDisplayName';
+import whyDidYouRender from '~';
 
 class TestComponent extends React.Component {
   render() {
@@ -321,7 +321,7 @@ describe('getUpdateInfo', () => {
   });
 
   test('Props change by function', () => {
-  const input = {
+    const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
       prevProps: { a: () => {} },

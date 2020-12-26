@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import * as rtl from '@testing-library/react';
-import whyDidYouRender from 'index';
+
+import whyDidYouRender from '~';
 
 let updateInfos = [];
 beforeEach(() => {

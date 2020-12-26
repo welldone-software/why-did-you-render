@@ -44,6 +44,7 @@
     "space-in-parens": ["error", "never"],
     "comma-dangle": ["error", "only-multiline"],
     "func-call-spacing": ["error", "never"],
-    "no-multi-spaces":"error"
+    "no-multi-spaces": "error",
+    "indent": ["error", 2]
   }
 }

@@ -1,8 +1,9 @@
 import React from 'react';
 import * as rtl from '@testing-library/react';
 import createReactClass from 'create-react-class';
-import whyDidYouRender from 'index';
-import { diffTypes } from 'consts';
+
+import whyDidYouRender from '~';
+import { diffTypes } from '~/consts';
 
 class TestComponent extends React.Component {
   static whyDidYouRender = true

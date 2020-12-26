@@ -1,11 +1,15 @@
 {
+  "include": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
+    "baseUrl": ".",
     "allowJs": true,
+    "noEmit": true,
     "esModuleInterop": true,
-    "jsx": "preserve"
+    "moduleResolution": "Node",
+    "jsx": "react",
+    "paths": {
+      "~*": ["src*"],
+    }
   },
-  "include": [
-    "./types.d.ts",
-    "./tsx-test.tsx"
-  ]
 }

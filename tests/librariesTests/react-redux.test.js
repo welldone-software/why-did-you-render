@@ -4,9 +4,10 @@ import * as Redux from 'react-redux';
 import { connect, Provider } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import * as rtl from '@testing-library/react';
-import { diffTypes } from 'consts';
 
-import whyDidYouRender from 'index';
+import { diffTypes } from '~/consts';
+
+import whyDidYouRender from '~';
 
 describe('react-redux - simple', () => {
   const initialState = { a: { b: 'c' } };

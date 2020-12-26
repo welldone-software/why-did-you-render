@@ -1,7 +1,7 @@
 import React from 'react';
 
-import shouldTrack from '../src/shouldTrack';
-import whyDidYouRender from '../src';
+import shouldTrack from '~/shouldTrack';
+import whyDidYouRender from '~';
 
 class TrackedTestComponent extends React.Component {
   static whyDidYouRender = true

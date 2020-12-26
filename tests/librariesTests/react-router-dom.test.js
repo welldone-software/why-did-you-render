@@ -5,8 +5,8 @@ import { connect, Provider } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import * as rtl from '@testing-library/react';
 
-import whyDidYouRender from 'index';
-import { diffTypes } from '../../src/consts';
+import whyDidYouRender from '~';
+import { diffTypes } from '~/consts';
 
 let updateInfos = [];
 beforeEach(() => {

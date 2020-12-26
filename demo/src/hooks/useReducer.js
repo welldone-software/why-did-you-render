@@ -10,14 +10,14 @@ export default {
     function reducer(state, action) {
       switch (action.type) {
 
-        case 'broken-set-count':
-          return { count: action.payload.count };
+      case 'broken-set-count':
+        return { count: action.payload.count };
 
-        case 'set-count':
-          if (action.payload.count === state.count) {
-            return state;
-          }
-          return { count: action.payload.count };
+      case 'set-count':
+        if (action.payload.count === state.count) {
+          return state;
+        }
+        return { count: action.payload.count };
       }
     }
 

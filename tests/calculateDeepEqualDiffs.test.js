@@ -1,6 +1,7 @@
 import React from 'react';
-import calculateDeepEqualDiffs from 'calculateDeepEqualDiffs';
-import { diffTypes } from 'consts';
+
+import calculateDeepEqualDiffs from '~/calculateDeepEqualDiffs';
+import { diffTypes } from '~/consts';
 
 test('same', () => {
   const prevValue = { a: 'b' };

@@ -1,7 +1,8 @@
-import whyDidYouRender from '../src';
 import React from 'react';
 import * as rtl from '@testing-library/react';
-import { diffTypes } from '../src/consts';
+
+import { diffTypes } from '~/consts';
+import whyDidYouRender from '~';
 
 class TestComponent extends React.Component {
   static whyDidYouRender = true

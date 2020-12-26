@@ -1,7 +1,8 @@
 import React from 'react';
 import * as rtl from '@testing-library/react';
-import whyDidYouRender from 'index';
-import { diffTypes } from '../../src/consts';
+
+import whyDidYouRender from '~';
+import { diffTypes } from '~/consts';
 
 let updateInfos = [];
 

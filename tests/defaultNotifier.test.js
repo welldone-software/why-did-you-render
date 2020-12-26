@@ -1,8 +1,8 @@
 import React from 'react';
 
-import defaultNotifier from 'defaultNotifier';
-import getUpdateInfo from 'getUpdateInfo';
-import whyDidYouRender from '../src';
+import defaultNotifier from '~/defaultNotifier';
+import getUpdateInfo from '~/getUpdateInfo';
+import whyDidYouRender from '~';
 
 class TestComponent extends React.Component {
   static whyDidYouRender = true

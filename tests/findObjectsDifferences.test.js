@@ -1,5 +1,5 @@
-import findObjectsDifferences from 'findObjectsDifferences';
-import { diffTypes } from 'consts';
+import findObjectsDifferences from '~/findObjectsDifferences';
+import { diffTypes } from '~/consts';
 
 describe('findObjectsDifferences shallow', () => {
   test('for empty values', () => {

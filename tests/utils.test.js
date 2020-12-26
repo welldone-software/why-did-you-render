@@ -1,6 +1,7 @@
 import React from 'react';
 import * as rtl from '@testing-library/react';
-import { checkIfInsideAStrictModeTree } from 'utils';
+
+import { checkIfInsideAStrictModeTree } from '~/utils';
 
 describe('checkIfInsideAStrictModeTree', () => {
   test('class component', () => {
