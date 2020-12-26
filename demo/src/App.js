@@ -26,6 +26,7 @@ import strict from './strict';
 import reactRedux from './reactRedux';
 import styledComponents from './styledComponents';
 import logOwnerReasons from './logOwnerReasons';
+import mobx from './mobx';
 
 const demosList = {
   bigList,
@@ -48,6 +49,7 @@ const demosList = {
   reactReduxHOC,
   styledComponents,
   logOwnerReasons,
+  mobx,
 };
 
 const defaultDemoName = 'bigList';
