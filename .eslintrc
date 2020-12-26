@@ -28,29 +28,25 @@
     "browser": true
   },
   "rules": {
-    "semi": ["error", "never"],
+    "semi": ["error", "always"],
     "curly": "error",
     "no-var": "error",
     "quotes": ["error", "single"],
-    "no-console": ["error"],
-    "no-debugger": ["warn"],
+    "no-console": "error",
+    "no-debugger": "warn",
     "no-unused-vars": ["error", {"ignoreRestSiblings": true}],
-    "eol-last": ["error"],
-    "object-curly-spacing": ["error"],
-    "react/prop-types": ["off"],
-    "react/display-name": ["off"],
+    "eol-last": "error",
+    "object-curly-spacing": ["error", "always"],
+    "react/prop-types": "off",
+    "react/display-name": "off",
     "space-before-function-paren": ["error", "never"],
-    "keyword-spacing": ["error", {"before": false, "after": false, "overrides": {
-      "from": {"before": true, "after": true},
-      "import": {"after": true},
-      "return": {"after": true},
-      "export": {"after": true},
-      "default": {"after": true},
-      "const": {"after": true},
-      "case": {"after": true},
-      "as": {"before": true, "after": true}
-    }}],
-    "space-before-blocks": ["error", "never"],
-    "comma-dangle": ["error", "never"]
+    "keyword-spacing": ["error", {
+      "before": true,
+      "after": true
+    }],
+    "space-before-blocks": ["error", "always"],
+    "space-in-parens": ["error", "never"],
+    "comma-dangle": ["error", "only-multiline"],
+    "func-call-spacing": ["error", "never"]
   }
 }

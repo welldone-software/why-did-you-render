@@ -1,37 +1,37 @@
-import React from 'react'
-import ReactDom from 'react-dom'
+import React from 'react';
+import ReactDom from 'react-dom';
 
-import createStepLogger from '../createStepLogger'
+import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Props And State Changes',
-  fn({domElement, whyDidYouRender}){
-    const stepLogger = createStepLogger()
+  fn({ domElement, whyDidYouRender }) {
+    const stepLogger = createStepLogger();
 
-    whyDidYouRender(React)
+    whyDidYouRender(React);
 
-    class ClassDemo extends React.Component{
+    class ClassDemo extends React.Component {
       static whyDidYouRender = true
 
       state = {
-        c: {d: 'd'}
+        c: { d: 'd' },
       }
 
-      static getDerivedStateFromProps(){
+      static getDerivedStateFromProps() {
         return {
-          c: {d: 'd'}
-        }
+          c: { d: 'd' },
+        };
       }
 
-      render(){
-        return <div>State And Props Changes</div>
+      render() {
+        return <div>State And Props Changes</div>;
       }
     }
 
-    stepLogger('First Render')
-    ReactDom.render(<ClassDemo a={{b: 'b'}}/>, domElement)
+    stepLogger('First Render');
+    ReactDom.render(<ClassDemo a={{ b: 'b' }}/>, domElement);
 
-    stepLogger('Second Render', true)
-    ReactDom.render(<ClassDemo a={{b: 'b'}}/>, domElement)
-  }
-}
+    stepLogger('Second Render', true);
+    ReactDom.render(<ClassDemo a={{ b: 'b' }}/>, domElement);
+  },
+};

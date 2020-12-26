@@ -18,4 +18,4 @@
 module.exports = (on, config) => { // eslint-disable-line no-unused-vars
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-}
+};

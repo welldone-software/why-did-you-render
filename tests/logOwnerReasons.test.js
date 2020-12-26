@@ -1,77 +1,77 @@
-import React from 'react'
-import * as rtl from '@testing-library/react'
-import whyDidYouRender from 'index'
-import {diffTypes} from '../src/consts'
+import React from 'react';
+import * as rtl from '@testing-library/react';
+import whyDidYouRender from 'index';
+import { diffTypes } from '../src/consts';
 
-let updateInfos = []
+let updateInfos = [];
 
 beforeEach(() => {
-  updateInfos = []
+  updateInfos = [];
   whyDidYouRender(React, {
-    notifier: updateInfo => updateInfos.push(updateInfo)
-  })
-})
+    notifier: updateInfo => updateInfos.push(updateInfo),
+  });
+});
 
 afterEach(() => {
-  if(React.__REVERT_WHY_DID_YOU_RENDER__){
-    React.__REVERT_WHY_DID_YOU_RENDER__()
+  if (React.__REVERT_WHY_DID_YOU_RENDER__) {
+    React.__REVERT_WHY_DID_YOU_RENDER__();
   }
-})
+});
 
-function createOwners(Child){
-  const Owner = () => <Child />
+function createOwners(Child) {
+  const Owner = () => <Child />;
 
-  class ClassOwner extends React.Component{
-    state = {a: 1}
-    componentDidMount(){
-      this.setState({a: 2})
+  class ClassOwner extends React.Component {
+    state = { a: 1 }
+    componentDidMount() {
+      this.setState({ a: 2 });
     }
 
-    render(){
-      return <Child />
+    render() {
+      return <Child />;
     }
   }
 
-  function HooksOwner(){
+  function HooksOwner() {
     /* eslint-disable no-unused-vars */
-    const [a, setA] = React.useState(1)
-    const [b, setB] = React.useState(1)
+    const [a, setA] = React.useState(1);
+    const [b, setB] = React.useState(1);
     /* eslint-enable */
     React.useEffect(() => {
-      setA(2)
-      setB(2)
-    }, [])
+      setA(2);
+      setB(2);
+    }, []);
 
-    return <Child />
+    return <Child />;
   }
 
-  return {Owner, ClassOwner, HooksOwner}
+  return { Owner, ClassOwner, HooksOwner };
 }
 
-function CloneOwner({children}){
+function CloneOwner({ children }) {
   /* eslint-disable no-unused-vars */
-  const [a, setA] = React.useState(1)
-  const [b, setB] = React.useState(1)
+  const [a, setA] = React.useState(1);
+  const [b, setB] = React.useState(1);
   /* eslint-enable */
   React.useEffect(() => {
-    setA(2)
-    setB(2)
-  }, [])
+    setA(2);
+    setB(2);
+  }, []);
 
-  return React.cloneElement(children)
+  return React.cloneElement(children);
 }
 
 describe('logOwnerReasons - function child', () => {
-  const Child = () => null
-  Child.whyDidYouRender = true
+  const Child = () => null;
+  Child.whyDidYouRender = true;
 
-  const {Owner, ClassOwner, HooksOwner} = createOwners(Child)
+  const { Owner, ClassOwner, HooksOwner } = createOwners(Child);
 
   test('owner props changed', () => {
-    const {rerender} = rtl.render(<Owner a={1}/>)
-    rerender(<Owner a={2} />)
+    const { rerender } = rtl.render(<Owner a={1}/>);
+    rerender(<Owner a={2} />);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -81,18 +81,18 @@ describe('logOwnerReasons - function child', () => {
           pathString: 'a',
           diffType: diffTypes.different,
           prevValue: 1,
-          nextValue: 2
+          nextValue: 2,
         }],
         stateDifferences: false,
-        hookDifferences: false
-      }
-    })
-  })
+        hookDifferences: false,
+      },
+    });
+  });
 
   test('owner state changed', () => {
-    rtl.render(<ClassOwner/>)
+    rtl.render(<ClassOwner/>);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -103,17 +103,17 @@ describe('logOwnerReasons - function child', () => {
           pathString: 'a',
           diffType: diffTypes.different,
           prevValue: 1,
-          nextValue: 2
+          nextValue: 2,
         }],
-        hookDifferences: false
-      }
-    })
-  })
+        hookDifferences: false,
+      },
+    });
+  });
 
   test('owner hooks changed', () => {
-    rtl.render(<HooksOwner/>)
+    rtl.render(<HooksOwner/>);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -128,8 +128,8 @@ describe('logOwnerReasons - function child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: 1,
-              nextValue: 2
-            }]
+              nextValue: 2,
+            }],
           },
           {
             hookName: 'useState',
@@ -137,28 +137,28 @@ describe('logOwnerReasons - function child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: 1,
-              nextValue: 2
-            }]
-          }
-        ]
-      }
-    })
-  })
+              nextValue: 2,
+            }],
+          },
+        ],
+      },
+    });
+  });
 
   test('owner state updated during render', () => {
-    function DerivedStateOwner({ready}){
-      const [wasReady, setWasReady] = React.useState(ready)
-      if(ready && !wasReady){
-        setWasReady(true)
+    function DerivedStateOwner({ ready }) {
+      const [wasReady, setWasReady] = React.useState(ready);
+      if (ready && !wasReady) {
+        setWasReady(true);
       }
 
-      return <Child />
+      return <Child />;
     }
-    const {rerender} = rtl.render(<DerivedStateOwner ready={false}/>)
-    rerender(<DerivedStateOwner ready/>)
-    rerender(<DerivedStateOwner ready={false}/>)
+    const { rerender } = rtl.render(<DerivedStateOwner ready={false}/>);
+    rerender(<DerivedStateOwner ready/>);
+    rerender(<DerivedStateOwner ready={false}/>);
 
-    expect(updateInfos).toHaveLength(2)
+    expect(updateInfos).toHaveLength(2);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -168,7 +168,7 @@ describe('logOwnerReasons - function child', () => {
           pathString: 'ready',
           diffType: diffTypes.different,
           prevValue: false,
-          nextValue: true
+          nextValue: true,
         }],
         stateDifferences: false,
         hookDifferences: [
@@ -178,12 +178,12 @@ describe('logOwnerReasons - function child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: false,
-              nextValue: true
-            }]
-          }
-        ]
-      }
-    })
+              nextValue: true,
+            }],
+          },
+        ],
+      },
+    });
     expect(updateInfos[1].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -193,18 +193,18 @@ describe('logOwnerReasons - function child', () => {
           pathString: 'ready',
           diffType: diffTypes.different,
           prevValue: true,
-          nextValue: false
+          nextValue: false,
         }],
         stateDifferences: false,
-        hookDifferences: [{hookName: 'useState', differences: false}]
-      }
-    })
-  })
+        hookDifferences: [{ hookName: 'useState', differences: false }],
+      },
+    });
+  });
 
   test('owner uses cloneElement', () => {
-    rtl.render(<CloneOwner><Child/></CloneOwner>)
+    rtl.render(<CloneOwner><Child/></CloneOwner>);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -219,8 +219,8 @@ describe('logOwnerReasons - function child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: 1,
-              nextValue: 2
-            }]
+              nextValue: 2,
+            }],
           },
           {
             hookName: 'useState',
@@ -228,31 +228,31 @@ describe('logOwnerReasons - function child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: 1,
-              nextValue: 2
-            }]
-          }
-        ]
-      }
-    })
-  })
-})
+              nextValue: 2,
+            }],
+          },
+        ],
+      },
+    });
+  });
+});
 
 
 describe('logOwnerReasons - class child', () => {
-  class Child extends React.Component{
+  class Child extends React.Component {
     static whyDidYouRender = true
-    render(){
-      return null
+    render() {
+      return null;
     }
   }
 
-  const {Owner, ClassOwner, HooksOwner} = createOwners(Child)
+  const { Owner, ClassOwner, HooksOwner } = createOwners(Child);
 
   test('owner props changed', () => {
-    const {rerender} = rtl.render(<Owner a={1}/>)
-    rerender(<Owner a={2} />)
+    const { rerender } = rtl.render(<Owner a={1}/>);
+    rerender(<Owner a={2} />);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -262,18 +262,18 @@ describe('logOwnerReasons - class child', () => {
           pathString: 'a',
           diffType: diffTypes.different,
           prevValue: 1,
-          nextValue: 2
+          nextValue: 2,
         }],
         stateDifferences: false,
-        hookDifferences: false
-      }
-    })
-  })
+        hookDifferences: false,
+      },
+    });
+  });
 
   test('owner state changed', () => {
-    rtl.render(<ClassOwner/>)
+    rtl.render(<ClassOwner/>);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -284,17 +284,17 @@ describe('logOwnerReasons - class child', () => {
           pathString: 'a',
           diffType: diffTypes.different,
           prevValue: 1,
-          nextValue: 2
+          nextValue: 2,
         }],
-        hookDifferences: false
-      }
-    })
-  })
+        hookDifferences: false,
+      },
+    });
+  });
 
   test('owner hooks changed', () => {
-    rtl.render(<HooksOwner/>)
+    rtl.render(<HooksOwner/>);
 
-    expect(updateInfos).toHaveLength(1)
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [],
       stateDifferences: false,
@@ -309,8 +309,8 @@ describe('logOwnerReasons - class child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: 1,
-              nextValue: 2
-            }]
+              nextValue: 2,
+            }],
           },
           {
             hookName: 'useState',
@@ -318,11 +318,11 @@ describe('logOwnerReasons - class child', () => {
               pathString: '',
               diffType: diffTypes.different,
               prevValue: 1,
-              nextValue: 2
-            }]
-          }
-        ]
-      }
-    })
-  })
-})
+              nextValue: 2,
+            }],
+          },
+        ],
+      },
+    });
+  });
+});

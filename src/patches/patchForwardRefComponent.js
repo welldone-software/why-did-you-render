@@ -1,39 +1,39 @@
-import {defaults} from 'lodash'
+import { defaults } from 'lodash';
 
-import wdyrStore from '../wdyrStore'
+import wdyrStore from '../wdyrStore';
 
-import getDisplayName from '../getDisplayName'
-import {isMemoComponent} from '../utils'
-import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent'
+import getDisplayName from '../getDisplayName';
+import { isMemoComponent } from '../utils';
+import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent';
 
-export default function patchForwardRefComponent(ForwardRefComponent, {displayName}){
-  const {render: InnerForwardRefComponent} = ForwardRefComponent
+export default function patchForwardRefComponent(ForwardRefComponent, { displayName }) {
+  const { render: InnerForwardRefComponent } = ForwardRefComponent;
 
-  const isInnerComponentMemoized = isMemoComponent(InnerForwardRefComponent)
+  const isInnerComponentMemoized = isMemoComponent(InnerForwardRefComponent);
   const WrappedFunctionalComponent = isInnerComponentMemoized ?
-    InnerForwardRefComponent.type : InnerForwardRefComponent
+    InnerForwardRefComponent.type : InnerForwardRefComponent;
 
   const WDYRWrappedByReactForwardRefFunctionalComponent = (
-    patchFunctionalOrStrComponent(WrappedFunctionalComponent, {isPure: isInnerComponentMemoized, displayName})
-  )
+    patchFunctionalOrStrComponent(WrappedFunctionalComponent, { isPure: isInnerComponentMemoized, displayName })
+  );
 
-  WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent)
-  WDYRWrappedByReactForwardRefFunctionalComponent.ComponentForHooksTracking = WrappedFunctionalComponent
-  defaults(WDYRWrappedByReactForwardRefFunctionalComponent, WrappedFunctionalComponent)
+  WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent);
+  WDYRWrappedByReactForwardRefFunctionalComponent.ComponentForHooksTracking = WrappedFunctionalComponent;
+  defaults(WDYRWrappedByReactForwardRefFunctionalComponent, WrappedFunctionalComponent);
 
   const WDYRForwardRefFunctionalComponent = wdyrStore.React.forwardRef(
     isInnerComponentMemoized ?
       wdyrStore.React.memo(WDYRWrappedByReactForwardRefFunctionalComponent, InnerForwardRefComponent.compare) :
       WDYRWrappedByReactForwardRefFunctionalComponent
-  )
+  );
 
-  try{
-    WDYRForwardRefFunctionalComponent.displayName = displayName
-  }catch(e){
+  try {
+    WDYRForwardRefFunctionalComponent.displayName = displayName;
+  } catch (e) {
     // not crucial if displayName couldn't be set
   }
 
-  defaults(WDYRForwardRefFunctionalComponent, ForwardRefComponent)
+  defaults(WDYRForwardRefFunctionalComponent, ForwardRefComponent);
 
-  return WDYRForwardRefFunctionalComponent
+  return WDYRForwardRefFunctionalComponent;
 }
