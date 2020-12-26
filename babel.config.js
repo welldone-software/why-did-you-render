@@ -2,7 +2,7 @@ const compact = require('lodash/compact');
 
 module.exports = function(api) {
   const isProd = process.env.NODE_ENV === 'production';
-  const isTest = process.env.TEST === 'true';
+  const isTest = process.env.NODE_ENV === 'test';
   const isUseClassicJSX = process.env.USE_CLASSIC_JSX === 'true';
 
   api.cache(false);

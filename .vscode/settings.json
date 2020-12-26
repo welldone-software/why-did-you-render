@@ -1,0 +1,26 @@
+{
+  "editor.snippetSuggestions": "top",
+  "editor.trimAutoWhitespace": true,
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+
+  "eslint.packageManager": "yarn",
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.alwaysShowStatus": true,
+  "eslint.format.enable": true,
+  "eslint.codeActionsOnSave.mode": "problems",
+
+  "flow.enabled": false,
+
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "typescript.locale": "en",
+  "typescript.preferences.quoteStyle": "single",
+
+  "jest.pathToJest": "node ./node_modules/jest/bin/jest",
+  "jest.pathToConfig": "./jest.config.js",
+  "jest.runAllTestsFirst": false,
+  "jest.autoEnable": true,
+  "jest.enableCodeLens": true
+}

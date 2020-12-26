@@ -40,13 +40,10 @@
     "react/prop-types": "off",
     "react/display-name": "off",
     "space-before-function-paren": ["error", "never"],
-    "keyword-spacing": ["error", {
-      "before": true,
-      "after": true
-    }],
     "space-before-blocks": ["error", "always"],
     "space-in-parens": ["error", "never"],
     "comma-dangle": ["error", "only-multiline"],
-    "func-call-spacing": ["error", "never"]
+    "func-call-spacing": ["error", "never"],
+    "no-multi-spaces":"error"
   }
 }

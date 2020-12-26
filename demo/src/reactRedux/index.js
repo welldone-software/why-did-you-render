@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import _ from  'lodash';
+import _ from 'lodash';
 import { createStore } from 'redux';
 import * as Redux from 'react-redux';
 

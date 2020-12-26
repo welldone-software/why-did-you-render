@@ -1,35 +1,5 @@
-"folders": [
-  {
-    "path": "."
-  }
-],
-"settings": {
-  "editor.snippetSuggestions": "top",
-  "editor.trimAutoWhitespace": true,
-  "editor.tabSize": 2,
 
-  "javascript.implicitProjectConfig.checkJs": true,
-  "javascript.validate.enable": true,
-  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
-
-  "flow.enabled": false,
-
-  "tslint.enable": false,
-  "typescript.tsdk": "./node_modules/typescript/lib",
-  "typescript.locale": "en",
-  "typescript.preferences.quoteStyle": "single",
-
-  "eslint.packageManager": "yarn",
-  "eslint.options": {
-    "configFile": "./.eslintrc.js"
-  },
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-  "eslint.alwaysShowStatus": true,
-  "eslint.format.enable": true,
-  "eslint.codeActionsOnSave.mode": "problems",
-  "editor.codeActionsOnSave": {
-    "source.fixAll": true
-  },
+{
   "recommendations": [
     "coenraads.bracket-pair-colorizer",
     "dbaeumer.vscode-eslint",

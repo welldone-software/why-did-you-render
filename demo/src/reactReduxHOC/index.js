@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import { createStore } from 'redux';
 import * as Redux from 'react-redux';
-import _ from  'lodash';
+import _ from 'lodash';
 
 const connect = Redux.connect;
 const Provider = Redux.Provider;

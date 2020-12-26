@@ -7,8 +7,7 @@
     <working-dir value="$PROJECT_DIR$" />
     <jest-options value="--watch" />
     <envs>
-      <env name="TEST" value="true" />
-      <env name="NODE_ENV" value="development" />
+      <env name="NODE_ENV" value="test" />
     </envs>
     <scope-kind value="ALL" />
     <method v="2" />
