@@ -1,43 +1,43 @@
-import React from 'react'
-import ReactDom from 'react-dom'
+import React from 'react';
+import ReactDom from 'react-dom';
 
 export default {
   description: 'Child of Pure Component',
-  fn({domElement, whyDidYouRender}){
+  fn({ domElement, whyDidYouRender }) {
     whyDidYouRender(React, {
-      trackAllPureComponents: true
-    })
+      trackAllPureComponents: true,
+    });
 
     const SomeChild = () => (
       <div>Child!</div>
-    )
+    );
 
-    class PureFather extends React.PureComponent{
-      render(){
+    class PureFather extends React.PureComponent {
+      render() {
         return (
           <div>
             {this.props.children}
           </div>
-        )
+        );
       }
     }
 
-    class Main extends React.Component{
-      state = {clicksCount: 0}
-      render(){
+    class Main extends React.Component {
+      state = { clicksCount: 0 }
+      render() {
         return (
           <div>
-            <button onClick={() => this.setState({clicksCount: this.state.clicksCount + 1})}>
+            <button onClick={() => this.setState({ clicksCount: this.state.clicksCount + 1 })}>
               clicks: {this.state.clicksCount}
             </button>
             <PureFather>
               <SomeChild/>
             </PureFather>
           </div>
-        )
+        );
       }
     }
 
-    ReactDom.render(<Main/>, domElement)
-  }
-}
+    ReactDom.render(<Main/>, domElement);
+  },
+};

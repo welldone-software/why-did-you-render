@@ -1,6 +1,7 @@
 {
   "extends": [
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "../.eslintrc"
   ],
   "rules": {
     "jest/expect-expect": "off",

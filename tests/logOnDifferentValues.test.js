@@ -1,32 +1,32 @@
-import React from 'react'
-import * as rtl from '@testing-library/react'
-import whyDidYouRender from 'index'
+import React from 'react';
+import * as rtl from '@testing-library/react';
+import whyDidYouRender from 'index';
 
-let updateInfos = []
+let updateInfos = [];
 beforeEach(() => {
-  updateInfos = []
+  updateInfos = [];
   whyDidYouRender(React, {
     include: [/.*/],
     logOnDifferentValues: true,
-    notifier: updateInfo => updateInfos.push(updateInfo)
-  })
-})
+    notifier: updateInfo => updateInfos.push(updateInfo),
+  });
+});
 
 afterEach(() => {
-  React.__REVERT_WHY_DID_YOU_RENDER__()
-})
+  React.__REVERT_WHY_DID_YOU_RENDER__();
+});
 
 test('hook value change', () => {
-  const Foo = React.memo(function Foo(props){
+  const Foo = React.memo(function Foo(props) {
     return (
       <div>
         Foo {props.a.v}
       </div>
-    )
-  })
+    );
+  });
 
-  const App = React.memo(function App(){
-    const [text, setText] = React.useState('Click me')
+  const App = React.memo(function App() {
+    const [text, setText] = React.useState('Click me');
 
     return (
       <div className="App">
@@ -37,22 +37,22 @@ test('hook value change', () => {
           {text}
         </button>
         <hr/>
-        <Foo a={{v: '1'}}/>
-        <Foo a={{v: '1'}}/>
+        <Foo a={{ v: '1' }}/>
+        <Foo a={{ v: '1' }}/>
       </div>
-    )
-  })
+    );
+  });
 
-  const {getByTestId} = rtl.render(
+  const { getByTestId } = rtl.render(
     <App/>
-  )
+  );
 
-  const button = getByTestId('button')
-  rtl.fireEvent.click(button)
+  const button = getByTestId('button');
+  rtl.fireEvent.click(button);
 
   expect(updateInfos).toEqual([
-    expect.objectContaining({displayName: 'App'}),
-    expect.objectContaining({displayName: 'Foo'}),
-    expect.objectContaining({displayName: 'Foo'})
-  ])
-})
+    expect.objectContaining({ displayName: 'App' }),
+    expect.objectContaining({ displayName: 'Foo' }),
+    expect.objectContaining({ displayName: 'Foo' }),
+  ]);
+});

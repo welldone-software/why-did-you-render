@@ -25,17 +25,17 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('visitAndSpyConsole', (...args) => {
-  cy.visit(...args)
+  cy.visit(...args);
   cy.window()
     .then((win) => {
-      cy.spy(win.console, 'log')
-      cy.spy(win.console, 'group')
-    })
-})
+      cy.spy(win.console, 'log');
+      cy.spy(win.console, 'group');
+    });
+});
 
 Cypress.Commands.add('getConsoleSpy', cb => {
   cy.window()
     .then((win) => {
-      cb(win.console)
-    })
-})
+      cb(win.console);
+    });
+});

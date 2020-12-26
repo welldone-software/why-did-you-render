@@ -1,39 +1,39 @@
-import wdyrStore from './wdyrStore'
+import wdyrStore from './wdyrStore';
 
-import {isMemoComponent} from './utils'
-import getDisplayName from './getDisplayName'
+import { isMemoComponent } from './utils';
+import getDisplayName from './getDisplayName';
 
-function shouldInclude(displayName){
+function shouldInclude(displayName) {
   return (
     wdyrStore.options.include &&
     wdyrStore.options.include.length > 0 &&
     wdyrStore.options.include.some(regex => regex.test(displayName))
-  )
+  );
 }
 
-function shouldExclude(displayName){
+function shouldExclude(displayName) {
   return (
     wdyrStore.options.exclude &&
     wdyrStore.options.exclude.length > 0 &&
     wdyrStore.options.exclude.some(regex => regex.test(displayName))
-  )
+  );
 }
 
-export default function shouldTrack(Component, {isHookChange}){
-  const displayName = getDisplayName(Component)
+export default function shouldTrack(Component, { isHookChange }) {
+  const displayName = getDisplayName(Component);
 
-  if(shouldExclude(displayName)){
-    return false
+  if (shouldExclude(displayName)) {
+    return false;
   }
 
-  if(Component.whyDidYouRender === false){
-    return false
+  if (Component.whyDidYouRender === false) {
+    return false;
   }
 
-  if(isHookChange && (
+  if (isHookChange && (
     Component.whyDidYouRender && Component.whyDidYouRender.trackHooks === false
-  )){
-    return false
+  )) {
+    return false;
   }
 
   return !!(
@@ -44,5 +44,5 @@ export default function shouldTrack(Component, {isHookChange}){
       )
     ) ||
     shouldInclude(displayName)
-  )
+  );
 }

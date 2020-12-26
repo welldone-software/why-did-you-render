@@ -1,25 +1,25 @@
 /* eslint-disable no-console */
-import {createDefaultNotifier} from './defaultNotifier'
+import { createDefaultNotifier } from './defaultNotifier';
 
-const emptyFn = () => {}
+const emptyFn = () => {};
 
-export default function normalizeOptions(userOptions = {}){
-  let consoleGroup = console.group
-  let consoleGroupEnd = console.groupEnd
+export default function normalizeOptions(userOptions = {}) {
+  let consoleGroup = console.group;
+  let consoleGroupEnd = console.groupEnd;
 
-  if(userOptions.collapseGroups){
-    consoleGroup = console.groupCollapsed
+  if (userOptions.collapseGroups) {
+    consoleGroup = console.groupCollapsed;
   }
-  else if(userOptions.onlyLogs){
-    consoleGroup = console.log
-    consoleGroupEnd = emptyFn
+  else if (userOptions.onlyLogs) {
+    consoleGroup = console.log;
+    consoleGroupEnd = emptyFn;
   }
 
   const notifier = userOptions.notifier || (
     createDefaultNotifier(
       ('hotReloadBufferMs' in userOptions) ? userOptions.hotReloadBufferMs : 500
     )
-  )
+  );
 
   return {
     include: null,
@@ -37,6 +37,6 @@ export default function normalizeOptions(userOptions = {}){
     diffPathColor: 'red',
     trackExtraHooks: [],
     trackAllPureComponents: false,
-    ...userOptions
-  }
+    ...userOptions,
+  };
 }

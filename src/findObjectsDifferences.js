@@ -1,30 +1,30 @@
-import {reduce} from 'lodash'
-import calculateDeepEqualDiffs from './calculateDeepEqualDiffs'
+import { reduce } from 'lodash';
+import calculateDeepEqualDiffs from './calculateDeepEqualDiffs';
 
-const emptyObject = {}
+const emptyObject = {};
 
-export default function findObjectsDifferences(userPrevObj, userNextObj, {shallow = true} = {}){
-  if(userPrevObj === userNextObj){
-    return false
+export default function findObjectsDifferences(userPrevObj, userNextObj, { shallow = true } = {}) {
+  if (userPrevObj === userNextObj) {
+    return false;
   }
 
-  if(!shallow){
-    return calculateDeepEqualDiffs(userPrevObj, userNextObj)
+  if (!shallow) {
+    return calculateDeepEqualDiffs(userPrevObj, userNextObj);
   }
 
-  const prevObj = userPrevObj || emptyObject
-  const nextObj = userNextObj || emptyObject
+  const prevObj = userPrevObj || emptyObject;
+  const nextObj = userNextObj || emptyObject;
 
-  const keysOfBothObjects = Object.keys({...prevObj, ...nextObj})
+  const keysOfBothObjects = Object.keys({ ...prevObj, ...nextObj });
 
   return reduce(keysOfBothObjects, (result, key) => {
-    const deepEqualDiffs = calculateDeepEqualDiffs(prevObj[key], nextObj[key], key)
-    if(deepEqualDiffs){
+    const deepEqualDiffs = calculateDeepEqualDiffs(prevObj[key], nextObj[key], key);
+    if (deepEqualDiffs) {
       result = [
         ...result,
-        ...deepEqualDiffs
-      ]
+        ...deepEqualDiffs,
+      ];
     }
-    return result
-  }, [])
+    return result;
+  }, []);
 }
