@@ -119,6 +119,7 @@ if (process.env.NODE_ENV === 'development') {
 ## Integration With Other Libraries
 * [Next.js example](https://github.com/zeit/next.js/tree/canary/examples/with-why-did-you-render)
 * [React-Redux With Hooks](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c)
+* [Mobx is currently not supported](https://github.com/welldone-software/why-did-you-render/issues/162)
 
 ## Sandbox
 You can test the library in [the official sandbox](http://bit.ly/wdyr-sb).
