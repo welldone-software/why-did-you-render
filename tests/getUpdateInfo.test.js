@@ -321,7 +321,7 @@ describe('getUpdateInfo', () => {
   });
 
   test('Props change by function', () => {
-  const input = {
+    const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
       prevProps: { a: () => {} },

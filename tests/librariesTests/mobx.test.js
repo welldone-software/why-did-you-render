@@ -1,33 +1,48 @@
 import React from 'react';
-import { createStore } from 'redux';
-import * as Redux from 'react-redux';
-import { connect, Provider } from 'react-redux';
-import { cloneDeep } from 'lodash';
+
+import { makeAutoObservable } from 'mobx';
+import { observer } from 'mobx-react-lite';
+ 
 import * as rtl from '@testing-library/react';
-import { diffTypes } from 'consts';
 
 import whyDidYouRender from 'index';
+import { diffTypes } from 'consts';
 
-describe('react-redux - simple', () => {
-  const initialState = { a: { b: 'c' } };
+describe('mobx-react-lite', () => {
+  const getInitialState = () => ({ nested: { value: '0' } });
+  const getDifferentState1 = () => ({ nested: { value: '1' } });
+  const getDifferentState2 = () => ({ nested: { value: '2' } });
+  
+  class TestStore {
+    state = getInitialState();
 
-  const rootReducer = (state, action) => {
-    if (action.type === 'differentState') {
-      return { a: { b: 'd' } };
+    constructor() {
+      makeAutoObservable(this);
     }
 
-    if (action.type === 'deepEqlState') {
-      return cloneDeep(state);
+    setSameState() {
+      // eslint-disable-next-line no-self-assign
+      this.state = this.state;
     }
 
-    return state;
-  };
+    setDifferentState1() {
+      this.state = getDifferentState1();
+    }
 
-  let store;
+    setDifferentState2() {
+      this.state = getDifferentState2();
+    }
+
+    setDeepEqualsState() {
+      this.state = getInitialState();
+    }
+  }
+
+  let testStore;
   let updateInfos;
 
   beforeEach(() => {
-    store = createStore(rootReducer, initialState);
+    testStore = new TestStore;
     updateInfos = [];
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo),
@@ -40,269 +55,135 @@ describe('react-redux - simple', () => {
     }
   });
 
-  test('same state after dispatch', () => {
-    const SimpleComponent = ({ a }) => (
-      <div data-testid="foo">{a.b}</div>
-    );
-    const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a })
-    )(SimpleComponent);
-
-    SimpleComponent.whyDidYouRender = true;
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
-    );
-
-    rtl.render(<Main/>);
-
-    expect(store.getState().a.b).toBe('c');
-
-    rtl.act(() => {
-      store.dispatch({ type: 'sameState' });
-    });
-
-    expect(store.getState().a.b).toBe('c');
-
-    expect(updateInfos).toHaveLength(0);
-  });
-
-  test('different state after dispatch', () => {
-    const SimpleComponent = ({ a }) => (
-      <div data-testid="foo">{a.b}</div>
-    );
-    const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a })
-    )(SimpleComponent);
-
-    SimpleComponent.whyDidYouRender = true;
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
-    );
-
-    rtl.render(<Main/>);
-
-    expect(store.getState().a.b).toBe('c');
-
-    rtl.act(() => {
-      store.dispatch({ type: 'differentState' });
-    });
-
-    expect(store.getState().a.b).toBe('d');
-
-    expect(updateInfos).toHaveLength(1);
-    expect(updateInfos[0].reason).toEqual({
-      propsDifferences: [
-        expect.objectContaining({ diffType: diffTypes.different }),
-        expect.objectContaining({ diffType: diffTypes.different }),
-      ],
-      stateDifferences: false,
-      hookDifferences: false,
-      ownerDifferences: {
-        hookDifferences: false,
-        propsDifferences: false,
-        stateDifferences: false,
-      },
-    });
-  });
-
-  test('deep equals state after dispatch', () => {
-    const SimpleComponent = ({ a }) => (
-      <div data-testid="foo">
-        {a.b}
+  test('change to different state', () => {
+    const SimpleComponent = ({ testStore }) => (
+      <div>
+        hi!
+        <span data-testid="foo">{testStore.state.nested.value}</span>
+        <button data-testid="set-different-state-1-button" onClick={() => testStore.setDifferentState1()}>
+          set different state 1
+        </button>
       </div>
     );
-    const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a })
-    )(SimpleComponent);
 
-    SimpleComponent.whyDidYouRender = true;
+    const ObservedSimpleComponent = observer(SimpleComponent);
+
+    ObservedSimpleComponent.whyDidYouRender = true;
 
     const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
+      <ObservedSimpleComponent testStore={testStore}/>
     );
 
-    rtl.render(<Main/>);
+    const { getByTestId } = rtl.render(<Main/>);
 
-    expect(store.getState().a.b).toBe('c');
+    expect(testStore.state.nested.value).toBe('0');
 
-    rtl.act(() => {
-      store.dispatch({ type: 'deepEqlState' });
-    });
+    rtl.fireEvent.click(getByTestId('set-different-state-1-button'));
 
-    expect(store.getState().a.b).toBe('c');
+    expect(testStore.state.nested.value).toBe('1');
 
-    expect(updateInfos).toHaveLength(1);
+    testStore.setDifferentState2();
+
+    expect(testStore.state.nested.value).toBe('2');
+
+    expect(updateInfos).toHaveLength(2);
+
     expect(updateInfos[0].reason).toEqual({
-      propsDifferences: [
-        expect.objectContaining({ diffType: diffTypes.deepEquals }),
-      ],
+      propsDifferences: false,
       stateDifferences: false,
-      hookDifferences: false,
-      ownerDifferences: {
-        hookDifferences: false,
-        propsDifferences: false,
-        stateDifferences: false,
-      },
-    });
-  });
-});
-
-describe('react-redux - hooks', () => {
-  const initialState = { a: { b: 'c' } };
-
-  const rootReducer = (state, action) => {
-    if (action.type === 'differentState') {
-      return { a: { b: 'd' } };
-    }
-
-    if (action.type === 'deepEqlState') {
-      return cloneDeep(state);
-    }
-
-    return state;
-  };
-
-  let store;
-  let updateInfos;
-
-  beforeEach(() => {
-    store = createStore(rootReducer, initialState);
-    updateInfos = [];
-    whyDidYouRender(React, {
-      notifier: updateInfo => updateInfos.push(updateInfo),
-      trackExtraHooks: [
-        [Redux, 'useSelector'],
+      hookDifferences: [
+        expect.objectContaining({ diffType: diffTypes.different }),
       ],
+      ownerDifferences: false,
+    });
+
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: [
+        expect.objectContaining({ diffType: diffTypes.different }),
+      ],
+      ownerDifferences: false,
     });
   });
 
-  afterEach(() => {
-    if (React.__REVERT_WHY_DID_YOU_RENDER__) {
-      React.__REVERT_WHY_DID_YOU_RENDER__();
-    }
-  });
-
-  test('same state after dispatch', () => {
-    const ConnectedSimpleComponent = () => {
-      const a = Redux.useSelector(state => state);
-      return (
-        <div data-testid="foo">{a.b}</div>
-      );
-    };
-    ConnectedSimpleComponent.whyDidYouRender = true;
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
+  test('change to same state', () => {
+    const SimpleComponent = ({ testStore }) => (
+      <div>
+        hi!
+        <span data-testid="foo">{testStore.state.nested.value}</span>
+        <button data-testid="set-same-state" onClick={() => testStore.setSameState()}>
+          set same state
+        </button>
+      </div>
     );
 
-    rtl.render(<Main/>);
+    const ObservedSimpleComponent = observer(SimpleComponent);
 
-    expect(store.getState().a.b).toBe('c');
+    ObservedSimpleComponent.whyDidYouRender = true;
 
-    rtl.act(() => {
-      store.dispatch({ type: 'sameState' });
-    });
+    const Main = () => (
+      <ObservedSimpleComponent testStore={testStore}/>
+    );
 
-    expect(store.getState().a.b).toBe('c');
+    const { getByTestId, rerender } = rtl.render(<Main/>);
+
+    expect(testStore.state.nested.value).toBe('0');
+
+    rtl.fireEvent.click(getByTestId('set-same-state'));
+
+    testStore.setSameState();
+
+    rerender();
 
     expect(updateInfos).toHaveLength(0);
   });
 
-  test('different state after dispatch', () => {
-    const ConnectedSimpleComponent = () => {
-      const a = Redux.useSelector(state => state.a);
-      return (
-        <div data-testid="foo">{a.b}</div>
-      );
-    };
-
-    ConnectedSimpleComponent.whyDidYouRender = true;
-
-    const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
+  test('change to deepEquals state', () => {
+    const SimpleComponent = ({ testStore }) => (
+      <div>
+        hi!
+        <span data-testid="foo">{testStore.state.nested.value}</span>
+        <button data-testid="set-deep-equals-state-button" onClick={() => testStore.setDifferentState1()}>
+          set deep equals state
+        </button>
+      </div>
     );
 
-    rtl.render(<Main/>);
+    const ObservedSimpleComponent = observer(SimpleComponent);
 
-    expect(store.getState().a.b).toBe('c');
-
-    rtl.act(() => {
-      store.dispatch({ type: 'differentState' });
-    });
-
-    expect(store.getState().a.b).toBe('d');
-
-    expect(updateInfos).toHaveLength(2);
-    expect(updateInfos[0]).toEqual(expect.objectContaining({
-      hookName: 'useReducer', // react-redux inner hook
-    }));
-    expect(updateInfos[1]).toEqual(expect.objectContaining({
-      hookName: 'useSelector',
-      reason: {
-        propsDifferences: false,
-        stateDifferences: false,
-        hookDifferences: [
-          { diffType: diffTypes.different, pathString: '.b', prevValue: 'c', nextValue: 'd' },
-          { diffType: diffTypes.different, pathString: '', prevValue: { b: 'c' }, nextValue: { b: 'd' } },
-        ],
-        ownerDifferences: false,
-      },
-    }));
-  });
-
-  test('deep equals state after dispatch', () => {
-    const ConnectedSimpleComponent = () => {
-      const a = Redux.useSelector(state => state.a);
-      return (
-        <div data-testid="foo">
-          {a.b}
-        </div>
-      );
-    };
-    ConnectedSimpleComponent.whyDidYouRender = true;
+    SimpleComponent.whyDidYouRender = true;
 
     const Main = () => (
-      <Provider store={store}>
-        <ConnectedSimpleComponent/>
-      </Provider>
+      <ObservedSimpleComponent testStore={testStore}/>
     );
 
-    rtl.render(<Main/>);
+    const { getByTestId } = rtl.render(<Main/>);
 
-    expect(store.getState().a.b).toBe('c');
+    expect(testStore.state.nested.value).toBe('0');
 
-    rtl.act(() => {
-      store.dispatch({ type: 'deepEqlState' });
-    });
+    rtl.fireEvent.click(getByTestId('set-deep-equals-state-button'));
 
-    expect(store.getState().a.b).toBe('c');
+    testStore.setDeepEqualsState();
 
     expect(updateInfos).toHaveLength(2);
-    expect(updateInfos[0]).toEqual(expect.objectContaining({
-      hookName: 'useReducer', // react-redux inner hook
-    }));
-    expect(updateInfos[1]).toEqual(expect.objectContaining({
-      hookName: 'useSelector',
-      reason: {
-        propsDifferences: false,
-        stateDifferences: false,
-        hookDifferences: [
-          { diffType: diffTypes.deepEquals, pathString: '', prevValue: { b: 'c' }, nextValue: { b: 'c' } },
-        ],
-        ownerDifferences: false,
-      },
-    }));
+
+    expect(updateInfos[0].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: [
+        expect.objectContaining({ diffType: diffTypes.different }),
+      ],
+      ownerDifferences: false,
+    });
+
+    expect(updateInfos[1].reason).toEqual({
+      propsDifferences: false,
+      stateDifferences: false,
+      hookDifferences: [
+        expect.objectContaining({ diffType: diffTypes.deepEquals }),
+      ],
+      ownerDifferences: false,
+    });
   });
 });
