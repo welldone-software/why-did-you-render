@@ -221,6 +221,10 @@ export function getWDYRType(origType) {
 }
 
 export default function whyDidYouRender(React, userOptions) {
+  if (React.isWDYR) {
+    return;
+  }
+
   Object.assign(wdyrStore, {
     React,
     options: normalizeOptions(userOptions),
