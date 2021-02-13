@@ -459,3 +459,17 @@ test('mix', () => {
     },
   ]);
 });
+
+test('Error', () => {
+  const prevValue = new Error('message');
+  const nextValue = new Error('message');
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue,
+      nextValue,
+      diffType: diffTypes.deepEquals,
+    },
+  ]);
+});

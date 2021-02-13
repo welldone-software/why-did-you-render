@@ -127,16 +127,18 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function);
   }
 
-  if (isPlainObject(a) && isPlainObject(b)) {
+  if (isPlainObject(a) && isPlainObject(b) || typeof a === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const keys = getKeys(a);
     const keysLength = keys.length;
+    const clonedA = isPlainObject(a) ? { ...a } : a;
+    const clonedB = isPlainObject(b) ? { ...b } : b;
     if (keysLength !== getKeys(b).length) {
-      return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.different);
+      return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
     }
 
     for (let i = keysLength; i--; i > 0) {
       if (!has(b, keys[i])) {
-        return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.different);
+        return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
       }
     }
 
@@ -155,10 +157,10 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     }
 
     if (numberOfDeepEqualsObjectValues === keysLength) {
-      return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.deepEquals);
+      return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.deepEquals);
     }
 
-    return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.different);
+    return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
   }
 
   return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
