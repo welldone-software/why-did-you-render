@@ -460,9 +460,12 @@ test('mix', () => {
   ]);
 });
 
-test('Error', () => {
+test('Equal Errors', () => {
+  const sharedStack = new Error().stack;
   const prevValue = new Error('message');
   const nextValue = new Error('message');
+  prevValue.stack = sharedStack;
+  nextValue.stack = sharedStack;
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
   expect(diffs).toEqual([
     {
@@ -470,6 +473,79 @@ test('Error', () => {
       prevValue,
       nextValue,
       diffType: diffTypes.deepEquals,
+    },
+  ]);
+});
+
+test('Different Errors', () => {
+  const sharedStack = new Error().stack;
+  const prevValue = new Error('message');
+  const nextValue = new Error('Second message');
+  prevValue.stack = sharedStack;
+  nextValue.stack = sharedStack;
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '.message',
+      prevValue: 'message',
+      nextValue: 'Second message',
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '',
+      prevValue,
+      nextValue,
+      diffType: diffTypes.different,
+    },
+  ]);
+});
+
+test('Equal class instances', () => {
+  class Person {
+    constructor(name) {
+      this.name = name;
+    }
+  }
+  
+  const prevValue = new Person('Jon Snow');
+  const nextValue = new Person('Jon Snow');
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue,
+      nextValue,
+      diffType: diffTypes.deepEquals,
+    },
+  ]);
+});
+
+test('Different class instances', () => {
+  class Person {
+    constructor(name) {
+      this.name = name;
+    }
+  }
+  
+  const prevValue = new Person('Jon Snow');
+  const nextValue = new Person('Aria Stark');
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '.name',
+      prevValue: 'Jon Snow',
+      nextValue: 'Aria Stark',
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '',
+      prevValue: {
+        name: 'Jon Snow',
+      },
+      nextValue: {
+        name: 'Aria Stark',
+      },
+      diffType: diffTypes.different,
     },
   ]);
 });
