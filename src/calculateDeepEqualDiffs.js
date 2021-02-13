@@ -127,7 +127,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function);
   }
 
-  if (isPlainObject(a) && isPlainObject(b) || typeof a === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
+  if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const keys = getKeys(a);
     const keysLength = keys.length;
     const clonedA = isPlainObject(a) ? { ...a } : a;
