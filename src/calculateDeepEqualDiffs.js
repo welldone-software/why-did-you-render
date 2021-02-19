@@ -1,6 +1,6 @@
 import {
   isArray, isPlainObject, isDate,
-  isRegExp, isFunction, isSet,
+  isRegExp, isError, isFunction, isSet,
   has,
 } from 'lodash';
 
@@ -125,6 +125,41 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     }
 
     return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function);
+  }
+
+  if (isError(a) && isError(b)) {
+    const keys = Object.getOwnPropertyNames(a);
+    if (keys.length !== Object.getOwnPropertyNames(b).length) {
+      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
+    }
+    // Do not compare the stack as it might differ even though the errors are identical.
+    const relevantKeys = keys.filter(k => k !== 'stack');
+
+    for (let i = relevantKeys.length; i--; i > 0) {
+      if (!has(b, relevantKeys[i])) {
+        return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
+      }
+    }
+
+    const objectValuesDiffs = [];
+    let numberOfDeepEqualsObjectValues = 0;
+    for (let i = relevantKeys.length; i--; i > 0) {
+      const key = relevantKeys[i];
+      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, { detailed });
+      if (deepEquals) {
+        numberOfDeepEqualsObjectValues++;
+      }
+    }
+
+    if (detailed || numberOfDeepEqualsObjectValues !== relevantKeys.length) {
+      diffsAccumulator.push(...objectValuesDiffs);
+    }
+
+    if (numberOfDeepEqualsObjectValues === relevantKeys.length) {
+      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.deepEquals);
+    }
+
+    return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
   }
 
   if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {

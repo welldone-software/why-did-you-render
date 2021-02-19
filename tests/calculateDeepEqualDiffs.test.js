@@ -459,46 +459,92 @@ test('mix', () => {
     },
   ]);
 });
+describe('calculateDeepEqualDiffs - Errors', () => {
+  test('Equal Native Errors', () => {
+    const prevValue = new Error('message');
+    const nextValue = new Error('message');
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.deepEquals,
+      },
+    ]);
+  });
+  
+  test('Different Native Errors', () => {
+    const prevValue = new Error('message');
+    const nextValue = new Error('Second message');
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '.message',
+        prevValue: 'message',
+        nextValue: 'Second message',
+        diffType: diffTypes.different,
+      },
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.different,
+      },
+    ]);
+  });
 
-test('Equal Errors', () => {
-  const sharedStack = new Error().stack;
-  const prevValue = new Error('message');
-  const nextValue = new Error('message');
-  prevValue.stack = sharedStack;
-  nextValue.stack = sharedStack;
-  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
-  expect(diffs).toEqual([
-    {
-      pathString: '',
-      prevValue,
-      nextValue,
-      diffType: diffTypes.deepEquals,
-    },
-  ]);
+  test('Equal Custom Errors', () => {
+    class CustomError extends Error {
+      constructor(message, code) {
+        super(message);
+        this.name = 'ValidationError';
+        this.code = code;
+      }
+    }
+
+    const prevValue = new CustomError('message', 1001);
+    const nextValue = new CustomError('message', 1001);
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.deepEquals,
+      },
+    ]);
+  });
+
+  test('Different Custom Errors', () => {
+    class CustomError extends Error {
+      constructor(message, code) {
+        super(message);
+        this.name = 'ValidationError';
+        this.code = code;
+      }
+    }
+
+    const prevValue = new CustomError('message', 1001);
+    const nextValue = new CustomError('message', 1002);
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '.code',
+        prevValue: 1001,
+        nextValue: 1002,
+        diffType: diffTypes.different,
+      },
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.different,
+      },
+    ]);
+  });
 });
 
-test('Different Errors', () => {
-  const sharedStack = new Error().stack;
-  const prevValue = new Error('message');
-  const nextValue = new Error('Second message');
-  prevValue.stack = sharedStack;
-  nextValue.stack = sharedStack;
-  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
-  expect(diffs).toEqual([
-    {
-      pathString: '.message',
-      prevValue: 'message',
-      nextValue: 'Second message',
-      diffType: diffTypes.different,
-    },
-    {
-      pathString: '',
-      prevValue,
-      nextValue,
-      diffType: diffTypes.different,
-    },
-  ]);
-});
 
 test('Equal class instances', () => {
   class Person {
