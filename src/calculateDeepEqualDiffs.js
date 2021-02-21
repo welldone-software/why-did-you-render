@@ -127,52 +127,19 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function);
   }
 
-  if (isError(a) && isError(b)) {
-    const keys = Object.getOwnPropertyNames(a);
-    if (keys.length !== Object.getOwnPropertyNames(b).length) {
-      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
-    }
-    // Do not compare the stack as it might differ even though the errors are identical.
-    const relevantKeys = keys.filter(k => k !== 'stack');
-
-    for (let i = relevantKeys.length; i--; i > 0) {
-      if (!has(b, relevantKeys[i])) {
-        return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
-      }
-    }
-
-    const objectValuesDiffs = [];
-    let numberOfDeepEqualsObjectValues = 0;
-    for (let i = relevantKeys.length; i--; i > 0) {
-      const key = relevantKeys[i];
-      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, { detailed });
-      if (deepEquals) {
-        numberOfDeepEqualsObjectValues++;
-      }
-    }
-
-    if (detailed || numberOfDeepEqualsObjectValues !== relevantKeys.length) {
-      diffsAccumulator.push(...objectValuesDiffs);
-    }
-
-    if (numberOfDeepEqualsObjectValues === relevantKeys.length) {
-      return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.deepEquals);
-    }
-
-    return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
-  }
-
   if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
-    const keys = Object.getOwnPropertyNames(a);
-    const keysLength = keys.length;
+    const allKeys = Object.getOwnPropertyNames(a);
     const clonedA = isPlainObject(a) ? { ...a } : a;
     const clonedB = isPlainObject(b) ? { ...b } : b;
-    if (keysLength !== Object.getOwnPropertyNames(b).length) {
+    if (allKeys.length !== Object.getOwnPropertyNames(b).length) {
       return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
     }
+    // Do not compare the stack as it might differ even though the errors are identical.
+    const relevantKeys = isError(a) ? allKeys.filter(k => k !== 'stack') : allKeys;
+    const keysLength = relevantKeys.length;
 
     for (let i = keysLength; i--; i > 0) {
-      if (!has(b, keys[i])) {
+      if (!has(b, relevantKeys[i])) {
         return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
       }
     }
@@ -180,7 +147,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     const objectValuesDiffs = [];
     let numberOfDeepEqualsObjectValues = 0;
     for (let i = keysLength; i--; i > 0) {
-      const key = keys[i];
+      const key = relevantKeys[i];
       const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, { detailed });
       if (deepEquals) {
         numberOfDeepEqualsObjectValues++;
