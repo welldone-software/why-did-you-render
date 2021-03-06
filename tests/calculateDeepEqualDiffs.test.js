@@ -459,3 +459,139 @@ test('mix', () => {
     },
   ]);
 });
+describe('calculateDeepEqualDiffs - Errors', () => {
+  test('Equal Native Errors', () => {
+    const prevValue = new Error('message');
+    const nextValue = new Error('message');
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.deepEquals,
+      },
+    ]);
+  });
+  
+  test('Different Native Errors', () => {
+    const prevValue = new Error('message');
+    const nextValue = new Error('Second message');
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '.message',
+        prevValue: 'message',
+        nextValue: 'Second message',
+        diffType: diffTypes.different,
+      },
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.different,
+      },
+    ]);
+  });
+
+  test('Equal Custom Errors', () => {
+    class CustomError extends Error {
+      constructor(message, code) {
+        super(message);
+        this.name = 'ValidationError';
+        this.code = code;
+      }
+    }
+
+    const prevValue = new CustomError('message', 1001);
+    const nextValue = new CustomError('message', 1001);
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.deepEquals,
+      },
+    ]);
+  });
+
+  test('Different Custom Errors', () => {
+    class CustomError extends Error {
+      constructor(message, code) {
+        super(message);
+        this.name = 'ValidationError';
+        this.code = code;
+      }
+    }
+
+    const prevValue = new CustomError('message', 1001);
+    const nextValue = new CustomError('message', 1002);
+    const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+    expect(diffs).toEqual([
+      {
+        pathString: '.code',
+        prevValue: 1001,
+        nextValue: 1002,
+        diffType: diffTypes.different,
+      },
+      {
+        pathString: '',
+        prevValue,
+        nextValue,
+        diffType: diffTypes.different,
+      },
+    ]);
+  });
+});
+
+
+test('Equal class instances', () => {
+  class Person {
+    constructor(name) {
+      this.name = name;
+    }
+  }
+  
+  const prevValue = new Person('Jon Snow');
+  const nextValue = new Person('Jon Snow');
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '',
+      prevValue,
+      nextValue,
+      diffType: diffTypes.deepEquals,
+    },
+  ]);
+});
+
+test('Different class instances', () => {
+  class Person {
+    constructor(name) {
+      this.name = name;
+    }
+  }
+  
+  const prevValue = new Person('Jon Snow');
+  const nextValue = new Person('Aria Stark');
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '.name',
+      prevValue: 'Jon Snow',
+      nextValue: 'Aria Stark',
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '',
+      prevValue: {
+        name: 'Jon Snow',
+      },
+      nextValue: {
+        name: 'Aria Stark',
+      },
+      diffType: diffTypes.different,
+    },
+  ]);
+});

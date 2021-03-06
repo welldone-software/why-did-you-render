@@ -57,3 +57,42 @@ test('hook value change', () => {
     expect.objectContaining({ displayName: 'Foo' }),
   ]);
 });
+
+test('Non simple objects', () => {
+  const Foo = React.memo(function Foo({ error }) {
+    return (
+      <div>
+        <h1>{error.message}</h1>
+        <p>{error.stack}</p>
+      </div>
+    );
+  });
+
+  const App = React.memo(function App() {
+    const [text, setText] = React.useState('Click me');
+
+    return (
+      <div className="App">
+        <button
+          onClick={() => setText(state => state + '.')}
+          data-testid="button"
+        >
+          {text}
+        </button>
+        <hr/>
+        <Foo error={new Error('message')}/>
+      </div>
+    );
+  });
+
+  const { getByTestId } = rtl.render(
+    <App/>
+  );
+
+  const button = getByTestId('button');
+  rtl.fireEvent.click(button);
+
+  expect(updateInfos[1].reason.propsDifferences[0]).toEqual(
+    expect.objectContaining({ diffType: 'deepEquals', 'pathString': 'error' }),
+  );
+});

@@ -1,7 +1,7 @@
 import {
   isArray, isPlainObject, isDate,
-  isRegExp, isFunction, isSet,
-  keys as getKeys, has,
+  isRegExp, isError, isFunction, isSet,
+  has,
 } from 'lodash';
 
 import { diffTypes } from './consts';
@@ -127,23 +127,27 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function);
   }
 
-  if (isPlainObject(a) && isPlainObject(b)) {
-    const keys = getKeys(a);
-    const keysLength = keys.length;
-    if (keysLength !== getKeys(b).length) {
-      return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.different);
+  if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
+    const allKeys = Object.getOwnPropertyNames(a);
+    const clonedA = isPlainObject(a) ? { ...a } : a;
+    const clonedB = isPlainObject(b) ? { ...b } : b;
+    if (allKeys.length !== Object.getOwnPropertyNames(b).length) {
+      return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
     }
+    // Do not compare the stack as it might differ even though the errors are identical.
+    const relevantKeys = isError(a) ? allKeys.filter(k => k !== 'stack') : allKeys;
+    const keysLength = relevantKeys.length;
 
     for (let i = keysLength; i--; i > 0) {
-      if (!has(b, keys[i])) {
-        return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.different);
+      if (!has(b, relevantKeys[i])) {
+        return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
       }
     }
 
     const objectValuesDiffs = [];
     let numberOfDeepEqualsObjectValues = 0;
     for (let i = keysLength; i--; i > 0) {
-      const key = keys[i];
+      const key = relevantKeys[i];
       const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, { detailed });
       if (deepEquals) {
         numberOfDeepEqualsObjectValues++;
@@ -155,10 +159,10 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     }
 
     if (numberOfDeepEqualsObjectValues === keysLength) {
-      return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.deepEquals);
+      return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.deepEquals);
     }
 
-    return trackDiff({ ...a }, { ...b }, diffsAccumulator, pathString, diffTypes.different);
+    return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
   }
 
   return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
