@@ -18,9 +18,6 @@
   "typescript.locale": "en",
   "typescript.preferences.quoteStyle": "single",
 
-  "jest.pathToJest": "node ./node_modules/jest/bin/jest",
-  "jest.pathToConfig": "./jest.config.js",
-  "jest.runAllTestsFirst": true,
-  "jest.autoEnable": true,
-  "jest.enableCodeLens": true
+  "jestrunner.debugOptions": {"args": ["--watch"]},
+  "jestrunner.configPath": "jest.config.js",
 }

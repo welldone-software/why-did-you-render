@@ -12,7 +12,6 @@
     "christian-kohler.path-intellisense",
     "saharavr.react-component-splitter",
     "mhutchie.git-graph",
-    "dsznajder.es7-react-js-snippets",
-    "orta.vscode-jest"
+    "dsznajder.es7-react-js-snippets"
   ]
 }
