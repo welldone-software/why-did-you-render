@@ -18,8 +18,11 @@ module.exports = {
       },
     }),
     replace({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.PORT': JSON.stringify(process.env.PORT),
+      preventAssignment: true,
+      values: {
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        'process.env.PORT': JSON.stringify(process.env.PORT),
+      }
     }),
     babel({
       exclude: 'node_modules/**',
