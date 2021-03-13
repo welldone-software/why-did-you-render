@@ -1,7 +1,13 @@
 import {
-  isArray, isPlainObject, isDate,
-  isRegExp, isError, isFunction, isSet,
+  isArray,
+  isPlainObject,
+  isDate,
+  isRegExp,
+  isError,
+  isFunction,
+  isSet,
   has,
+  uniq,
 } from 'lodash';
 
 import { diffTypes } from './consts';
@@ -22,6 +28,10 @@ function trackDiff(a, b, diffsAccumulator, pathString, diffType) {
     nextValue: b,
   });
   return diffType !== diffTypes.different;
+}
+
+function isGetter(obj, prop) {
+  return !!Object.getOwnPropertyDescriptor(obj, prop)['get'];
 }
 
 export const dependenciesMap = new WeakMap();
@@ -128,14 +138,33 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
   }
 
   if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
-    const allKeys = Object.getOwnPropertyNames(a);
+    const aKeys = Object.getOwnPropertyNames(a);
+    const bKeys = Object.getOwnPropertyNames(b);
+    
+    const allKeys = uniq([...aKeys, ...bKeys]);
+
     const clonedA = isPlainObject(a) ? { ...a } : a;
     const clonedB = isPlainObject(b) ? { ...b } : b;
-    if (allKeys.length !== Object.getOwnPropertyNames(b).length) {
+
+    if (allKeys.length !== aKeys.length || allKeys.length !== bKeys.length) {
       return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
     }
-    // Do not compare the stack as it might differ even though the errors are identical.
-    const relevantKeys = isError(a) ? allKeys.filter(k => k !== 'stack') : allKeys;
+
+    const relevantKeys = allKeys.filter(key => {
+      // do not compare the stack as it differ even though the errors are identical.
+      if (key === 'stack' && isError(a)) {
+        return false;
+      }
+
+      // getters checking is causing too much problems because of how it's used in js.
+      // not only getters can throw errors, they also cause side effects in many cases.
+      if (isGetter(a, key)) {
+        return false;
+      }
+
+      return true;
+    });
+
     const keysLength = relevantKeys.length;
 
     for (let i = keysLength; i--; i > 0) {
