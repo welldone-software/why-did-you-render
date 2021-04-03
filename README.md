@@ -8,7 +8,7 @@
 ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/@welldone-software/why-did-you-render)
 [![Coverage Status](https://coveralls.io/repos/github/welldone-software/why-did-you-render/badge.svg?branch=add-e2e-tests-using-cypress)](https://coveralls.io/github/welldone-software/why-did-you-render?branch=add-e2e-tests-using-cypress)
 
-`why-did-you-render` by [Welldone Software](https://welldone.software/) monkey patches **`React`** to notify you about avoidable re-renders. (Works with **`React Native`** as well.)
+`why-did-you-render` by [Welldone Software](https://welldone.software/) monkey patches **`React`** to notify you about potentially avoidable re-renders. (Works with **`React Native`** as well.)
 
 For example, if you pass `style={{width: '100%'}}` to a big pure component it would always re-render on every element creation:
 ```jsx
