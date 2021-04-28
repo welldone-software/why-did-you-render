@@ -4,6 +4,7 @@ import wdyrStore from './wdyrStore';
 
 import normalizeOptions from './normalizeOptions';
 import getDisplayName from './getDisplayName';
+import getDefaultProps from './getDefaultProps';
 import getUpdateInfo from './getUpdateInfo';
 import shouldTrack from './shouldTrack';
 
@@ -77,28 +78,28 @@ function trackHookChanges(hookName, { path: hookPath }, hookResult) {
   return hookResult;
 }
 
-function createPatchedComponent(Component, { displayName }) {
+function createPatchedComponent(Component, { displayName, defaultProps }) {
   if (isMemoComponent(Component)) {
-    return patchMemoComponent(Component, { displayName });
+    return patchMemoComponent(Component, { displayName, defaultProps });
   }
 
   if (isForwardRefComponent(Component)) {
-    return patchForwardRefComponent(Component, { displayName });
+    return patchForwardRefComponent(Component, { displayName, defaultProps });
   }
 
   if (isReactClassComponent(Component)) {
-    return patchClassComponent(Component, { displayName });
+    return patchClassComponent(Component, { displayName, defaultProps });
   }
 
-  return patchFunctionalOrStrComponent(Component, { displayName, isPure: false });
+  return patchFunctionalOrStrComponent(Component, { displayName, defaultProps, isPure: false });
 }
 
-function getPatchedComponent(Component, { displayName }) {
+function getPatchedComponent(Component, { displayName, defaultProps }) {
   if (wdyrStore.componentsMap.has(Component)) {
     return wdyrStore.componentsMap.get(Component);
   }
 
-  const WDYRPatchedComponent = createPatchedComponent(Component, { displayName });
+  const WDYRPatchedComponent = createPatchedComponent(Component, { displayName, defaultProps });
 
   wdyrStore.componentsMap.set(Component, WDYRPatchedComponent);
 
@@ -215,7 +216,9 @@ export function getWDYRType(origType) {
     getDisplayName(origType)
   );
 
-  const WDYRPatchedComponent = getPatchedComponent(origType, { displayName });
+  const defaultProps = getDefaultProps(origType);
+
+  const WDYRPatchedComponent = getPatchedComponent(origType, { displayName, defaultProps });
 
   return WDYRPatchedComponent;
 }

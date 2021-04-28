@@ -7,7 +7,7 @@ import { isForwardRefComponent, isMemoComponent, isReactClassComponent } from '.
 import patchClassComponent from './patchClassComponent';
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent';
 
-export default function patchMemoComponent(MemoComponent, { displayName }) {
+export default function patchMemoComponent(MemoComponent, { displayName, defaultProps }) {
   const { type: InnerMemoComponent } = MemoComponent;
 
   const isInnerMemoComponentAClassComponent = isReactClassComponent(InnerMemoComponent);
@@ -19,9 +19,9 @@ export default function patchMemoComponent(MemoComponent, { displayName }) {
     InnerMemoComponent;
 
   const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
-    patchClassComponent(WrappedFunctionalComponent, { displayName }) :
+    patchClassComponent(WrappedFunctionalComponent, { displayName, defaultProps }) :
     (isInnerMemoComponentAnotherMemoComponent ?
-      patchMemoComponent(WrappedFunctionalComponent, { displayName }) :
+      patchMemoComponent(WrappedFunctionalComponent, { displayName, defaultProps }) :
       patchFunctionalOrStrComponent(WrappedFunctionalComponent, { displayName, isPure: true })
     );
 
@@ -44,6 +44,8 @@ export default function patchMemoComponent(MemoComponent, { displayName }) {
   } catch (e) {
     // not crucial if displayName couldn't be set
   }
+
+  WDYRMemoizedFunctionalComponent.defaultProps = defaultProps;
 
   defaults(WDYRMemoizedFunctionalComponent, MemoComponent);
 

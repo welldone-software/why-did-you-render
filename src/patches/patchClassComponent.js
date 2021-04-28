@@ -5,7 +5,7 @@ import wdyrStore from '../wdyrStore';
 import { checkIfInsideAStrictModeTree } from '../utils';
 import getUpdateInfo from '../getUpdateInfo';
 
-export default function patchClassComponent(ClassComponent, { displayName }) {
+export default function patchClassComponent(ClassComponent, { displayName, defaultProps }) {
   class WDYRPatchedClassComponent extends ClassComponent {
     constructor(props, context) {
       super(props, context);
@@ -60,6 +60,8 @@ export default function patchClassComponent(ClassComponent, { displayName }) {
   } catch (e) {
     // not crucial if displayName couldn't be set
   }
+
+  WDYRPatchedClassComponent.defaultProps = defaultProps;
 
   defaults(WDYRPatchedClassComponent, ClassComponent);
 

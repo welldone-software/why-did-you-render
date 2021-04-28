@@ -8,7 +8,7 @@ const getFunctionalComponentFromStringComponent = (componentTypeStr) => props =>
   wdyrStore.React.createElement(componentTypeStr, props)
 );
 
-export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, { isPure, displayName }) {
+export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, { isPure, displayName, defaultProps }) {
   const FunctionalComponent = typeof(FunctionalOrStringComponent) === 'string' ?
     getFunctionalComponentFromStringComponent(FunctionalOrStringComponent) :
     FunctionalOrStringComponent;
@@ -47,6 +47,8 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
   } catch (e) {
     // not crucial if displayName couldn't be set
   }
+
+  WDYRFunctionalComponent.defaultProps = defaultProps;
 
   WDYRFunctionalComponent.ComponentForHooksTracking = FunctionalComponent;
   defaults(WDYRFunctionalComponent, FunctionalComponent);
