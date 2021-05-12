@@ -56,7 +56,7 @@ if (process.env.NODE_ENV === 'development') {
 
 > **Notice: The library should *NEVER* be used in production because it slows down React**
 
-In [Typescript](issues/161), call the file wdyr.ts and add the following line to the top of the file to import the package's types:
+In [Typescript](https://github.com/welldone-software/why-did-you-render/issues/161), call the file wdyr.ts and add the following line to the top of the file to import the package's types:
 ```tsx
 /// <reference types="@welldone-software/why-did-you-render" />
 ```
