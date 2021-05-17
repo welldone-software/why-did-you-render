@@ -6,7 +6,7 @@ import getDisplayName from '../getDisplayName';
 import { isMemoComponent } from '../utils';
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent';
 
-export default function patchForwardRefComponent(ForwardRefComponent, { displayName }) {
+export default function patchForwardRefComponent(ForwardRefComponent, { displayName, defaultProps }) {
   const { render: InnerForwardRefComponent } = ForwardRefComponent;
 
   const isInnerComponentMemoized = isMemoComponent(InnerForwardRefComponent);
@@ -32,6 +32,8 @@ export default function patchForwardRefComponent(ForwardRefComponent, { displayN
   } catch (e) {
     // not crucial if displayName couldn't be set
   }
+
+  WDYRForwardRefFunctionalComponent.defaultProps = defaultProps;
 
   defaults(WDYRForwardRefFunctionalComponent, ForwardRefComponent);
 
