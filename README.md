@@ -38,7 +38,7 @@ If you use the `automatic` JSX transformation, set the library to be the import 
 ```
 
 > Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
-> [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-732738552)
+> [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-773905769)
 
 Create a `wdyr.js` file and import it as **the first import** in your application.
 
