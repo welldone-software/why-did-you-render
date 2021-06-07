@@ -291,7 +291,7 @@ Controls the colors used in the console notifications
 
 You can create a custom notifier if the default one does not suite your needs.
 
-#### getAddititionalOwnerData
+#### getAdditionalOwnerData
 ##### (default: undefined)
 You can provide a function that harvests additional data from the original react element. The object returned from this function will be added to the ownerDataMap which can be accessed later within your notifier function override.
 

@@ -139,8 +139,8 @@ export function storeOwnerData(element) {
     const displayName = getDisplayName(Component);
 
     let additionalOwnerData = {};
-    if (wdyrStore.options.getAddititionalOwnerData) {
-      additionalOwnerData = wdyrStore.options.getAddititionalOwnerData(element);
+    if (wdyrStore.options.getAdditionalOwnerData) {
+      additionalOwnerData = wdyrStore.options.getAdditionalOwnerData(element);
     }
 
     wdyrStore.ownerDataMap.set(element.props, {
