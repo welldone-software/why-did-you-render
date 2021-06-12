@@ -35,7 +35,7 @@ function shouldLog(reason, Component) {
   return !hasDifferentValues;
 }
 
-function logDifference({ Component, displayName, hookName, prefixMessage, diffObjType, differences, values }) {
+function logDifference({ Component, displayName, hookName, prefixMessage, diffObjType, differences, values, lineHook }) {
   if (differences && differences.length > 0) {
     wdyrStore.options.consoleLog({ [displayName]: Component }, `${prefixMessage} of ${diffObjType} changes:`);
     differences.forEach(({ pathString, diffType, prevValue, nextValue }) => {
@@ -43,7 +43,7 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
         printDiff(prevValue, nextValue, { pathString, consoleLog: wdyrStore.options.consoleLog });
       }
       wdyrStore.options.consoleGroup(
-        `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
+        `%c${diffObjType === 'hook' ? `[hook ${hookName} result] (${lineHook}` : `${diffObjType}.`}%c${pathString}%c`,
         `color:${wdyrStore.options.diffNameColor};`, `color:${wdyrStore.options.diffPathColor};`, 'color:default;'
       );
       wdyrStore.options.consoleLog(
@@ -70,7 +70,7 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
 }
 
 export default function defaultNotifier(updateInfo) {
-  const { Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason } = updateInfo;
+  const { Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason, lineHook } = updateInfo;
 
   if (!shouldLog(reason, Component, wdyrStore.options)) {
     return;
@@ -112,6 +112,7 @@ export default function defaultNotifier(updateInfo) {
       differences: reason.hookDifferences,
       values: { prev: prevHook, next: nextHook },
       hookName,
+      lineHook,
     });
   }
 
@@ -155,6 +156,7 @@ export default function defaultNotifier(updateInfo) {
           differences,
           values: { prev: prevOwnerData.hooks[i].result, next: nextOwnerData.hooks[i].result },
           hookName,
+          lineHook,
         })
       );
     }
