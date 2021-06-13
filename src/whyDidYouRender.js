@@ -149,7 +149,7 @@ export function storeOwnerData(element) {
       props: OwnerInstance.pendingProps,
       state: OwnerInstance.stateNode ? OwnerInstance.stateNode.state : null,
       hooks: wdyrStore.hooksPerRender,
-      ...additionalOwnerData
+      additionalOwnerData,
     });
   }
 }
