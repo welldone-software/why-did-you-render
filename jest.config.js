@@ -7,6 +7,7 @@ module.exports = {
     '~(.*)$': '<rootDir>/src$1',
     '^@welldone-software/why-did-you-render$': '<rootDir>/src/whyDidYouRender.js',
   },
+  'testEnvironment': 'jsdom',
 };
 
 if (process.env.USE_REACT_16 === 'true') {

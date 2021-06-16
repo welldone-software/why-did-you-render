@@ -144,12 +144,19 @@ export function storeOwnerData(element) {
   if (OwnerInstance) {
     const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type;
     const displayName = getDisplayName(Component);
+
+    let additionalOwnerData = {};
+    if (wdyrStore.options.getAdditionalOwnerData) {
+      additionalOwnerData = wdyrStore.options.getAdditionalOwnerData(element);
+    }
+
     wdyrStore.ownerDataMap.set(element.props, {
       Component,
       displayName,
       props: OwnerInstance.pendingProps,
       state: OwnerInstance.stateNode ? OwnerInstance.stateNode.state : null,
       hooks: wdyrStore.hooksPerRender,
+      additionalOwnerData,
     });
   }
 }

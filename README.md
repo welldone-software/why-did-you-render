@@ -198,6 +198,7 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `diffNameColor`
 - `diffPathColor`
 - `notifier: ({Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason, options, ownerDataMap}) => void`
+- `getAdditionalOwnerData: (element) => {...}`
 
 #### include / exclude
 ##### (default: `null`)
@@ -290,6 +291,10 @@ Controls the colors used in the console notifications
 ##### (default: defaultNotifier that is exposed from the library)
 
 You can create a custom notifier if the default one does not suite your needs.
+
+#### getAdditionalOwnerData
+##### (default: `undefined`)
+You can provide a function that harvests additional data from the original react element. The object returned from this function will be added to the ownerDataMap which can be accessed later within your notifier function override.
 
 ## Troubleshooting
 
