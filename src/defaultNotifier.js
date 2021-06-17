@@ -43,7 +43,7 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
         printDiff(prevValue, nextValue, { pathString, consoleLog: wdyrStore.options.consoleLog });
       }
       wdyrStore.options.consoleGroup(
-        `%c${diffObjType === 'hook' ? `[hook ${hookName} result] (${lineHook}` : `${diffObjType}.`}%c${pathString}%c`,
+        `%c${diffObjType === 'hook' ? `[hook ${hookName} result] ${wdyrStore.options.showLineHook ? lineHook : ''}` : `${diffObjType}.`}%c${pathString}%c`,
         `color:${wdyrStore.options.diffNameColor};`, `color:${wdyrStore.options.diffPathColor};`, 'color:default;'
       );
       wdyrStore.options.consoleLog(
