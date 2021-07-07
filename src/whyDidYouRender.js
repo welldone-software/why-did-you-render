@@ -72,13 +72,10 @@ function trackHookChanges(hookName, { path: hookPath }, hookResult) {
 
     if (notification.reason.hookDifferences) {
       if (wdyrStore.options.showLineHook) {
-        try {
-          throw new Error().stack.split(' at ')
-            .find(line => line.match(displayName)).split('/').pop();
-        } catch (error) {
-          const lineHook = '(' + error;
-          notification.lineHook = lineHook;
-        }
+        const matchedLine = new Error().stack.split(' at ')
+          .find(line => line.match(displayName)).split('/').pop();
+        const lineHook = `(${matchedLine}`;
+        notification.lineHook = lineHook;
       }
       wdyrStore.options.notifier(notification);
     }
