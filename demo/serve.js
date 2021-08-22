@@ -5,6 +5,7 @@ const fallback = require('express-history-api-fallback');
 const config = require('./nollup.config.js');
 const nollupDevServer = require('nollup/lib/dev-middleware');
 const DemoComponent = require('./src/ssr/DemoComponent');
+const http = require('http');
 
 const port = process.env.PORT;
 if (!port) {
@@ -21,18 +22,18 @@ app.get('/ssrComponent', (req, res) => {
   stream.on('end', () => res.end());
 });
 
+const server = http.createServer(app);
+
 app.use(nollupDevServer(app, config, {
   watch: ['demo/src', 'src'],
   hot: true,
-}));
+}, server));
 
 app.use(express.static('demo/public'));
 
 app.use(fallback('index.html', { root: 'demo/public' }));
 
-app.listen(port, () => {
+server.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on http://localhost:${port}`);
 });
-
-
