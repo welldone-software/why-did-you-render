@@ -8,7 +8,9 @@
     "dist",
     "types.d.ts",
     "jsx-runtime.js",
-    "jsx-dev-runtime.js"
+    "jsx-runtime.d.ts",
+    "jsx-dev-runtime.js",
+    "jsx-dev-runtime.d.ts"
   ],
   "authors": [
     "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"
