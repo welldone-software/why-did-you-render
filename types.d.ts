@@ -64,6 +64,10 @@ declare module 'react' {
     whyDidYouRender?: WhyDidYouRenderComponentMember;
   }
 
+  interface VoidFunctionComponent<P = {}> {
+    whyDidYouRender?: WhyDidYouRenderComponentMember;
+  }
+
   interface ExoticComponent<P = {}> {
     whyDidYouRender?: WhyDidYouRenderComponentMember;
   }
