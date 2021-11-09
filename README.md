@@ -82,7 +82,7 @@ ReactDOM.render(<HotApp/>, document.getElementById('root'));
 
 If you use `trackAllPureComponents` like we suggest, all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) will be tracked.
 
-Otherwise, add `whyDidYouRender = true` to components you want to track.
+Otherwise, add `whyDidYouRender = true` to component classes/functions you want to track. (f.e `Component.whyDidYouRender = true`)
 
 More information about what is tracked can be found in [Tracking Components](#tracking-components).
 
