@@ -4,14 +4,14 @@ import shouldTrack from '~/shouldTrack';
 import whyDidYouRender from '~';
 
 class TrackedTestComponent extends React.Component {
-  static whyDidYouRender = true
+  static whyDidYouRender = true;
   render() {
     return <div>hi!</div>;
   }
 }
 
 class TrackedTestComponentNoHooksTracking extends React.Component {
-  static whyDidYouRender = { trackHooks: false }
+  static whyDidYouRender = { trackHooks: false };
   render() {
     return <div>hi!</div>;
   }
@@ -24,7 +24,7 @@ class NotTrackedTestComponent extends React.Component {
 }
 
 class ExcludedTestComponent extends React.Component {
-  static whyDidYouRender = false
+  static whyDidYouRender = false;
   render() {
     return <div>hi!</div>;
   }

@@ -11,7 +11,7 @@ export default {
     whyDidYouRender(React);
 
     class ClassDemo extends React.Component {
-      static whyDidYouRender = true
+      static whyDidYouRender = true;
 
       componentDidMount() {
         stepLogger('forceUpdate', true);

@@ -7,7 +7,7 @@ describe('checkIfInsideAStrictModeTree', () => {
   test('class component', () => {
     let isStrictMode;
     class TestComponent extends React.Component {
-      static whyDidYouRender = true
+      static whyDidYouRender = true;
       render() {
         isStrictMode = checkIfInsideAStrictModeTree(this);
         return <div>hi!</div>;
@@ -41,7 +41,7 @@ describe('checkIfInsideAStrictModeTree', () => {
   test('pure class component', () => {
     let isStrictMode;
     class TestComponent extends React.PureComponent {
-      static whyDidYouRender = true
+      static whyDidYouRender = true;
       render() {
         isStrictMode = checkIfInsideAStrictModeTree(this);
         return <div>hi!</div>;

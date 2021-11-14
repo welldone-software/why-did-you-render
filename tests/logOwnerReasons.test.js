@@ -23,7 +23,7 @@ function createOwners(Child) {
   const Owner = () => <Child />;
 
   class ClassOwner extends React.Component {
-    state = { a: 1 }
+    state = { a: 1 };
     componentDidMount() {
       this.setState({ a: 2 });
     }
@@ -241,7 +241,7 @@ describe('logOwnerReasons - function child', () => {
 
 describe('logOwnerReasons - class child', () => {
   class Child extends React.Component {
-    static whyDidYouRender = true
+    static whyDidYouRender = true;
     render() {
       return null;
     }

@@ -113,6 +113,7 @@ describe('react-router-dom-6', () => {
     const InnerComp = () => {
       const location = useLocation6();
 
+      // eslint-disable-next-line no-console
       console.log(`location is: ${location.pathname}`);
 
       return (
@@ -125,7 +126,7 @@ describe('react-router-dom-6', () => {
     const Comp = () => (
       <Router6>
         <Routes6>
-            <Route6 exact path="/" element={<InnerComp/>}/>
+          <Route6 exact path="/" element={<InnerComp/>}/>
         </Routes6>
       </Router6>
     );
@@ -136,8 +137,8 @@ describe('react-router-dom-6', () => {
 
     const consoleOutputs = flushConsoleOutput();
     expect(consoleOutputs).toEqual([
-      {level: 'log', args: ['location is: /']},
-      {level: 'log', args: ['location is: /']},
+      { level: 'log', args: ['location is: /'] },
+      { level: 'log', args: ['location is: /'] },
     ]);
 
     expect(updateInfos).toHaveLength(3);
@@ -163,6 +164,7 @@ describe('react-router-dom-6', () => {
     const InnerFn = ({ a, setDeepEqlState }) => {
       const location = useLocation6();
 
+      // eslint-disable-next-line no-console
       console.log(`location is: ${location.pathname}`);
 
       React.useLayoutEffect(() => {
@@ -195,8 +197,8 @@ describe('react-router-dom-6', () => {
 
     const consoleOutputs = flushConsoleOutput();
     expect(consoleOutputs).toEqual([
-      {level: 'log', args: ['location is: /']},
-      {level: 'log', args: ['location is: /']},
+      { level: 'log', args: ['location is: /'] },
+      { level: 'log', args: ['location is: /'] },
     ]);
 
     expect(updateInfos).toHaveLength(1);

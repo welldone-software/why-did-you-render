@@ -8,7 +8,7 @@ export default {
     whyDidYouRender(React);
 
     class BigListPureComponent extends React.PureComponent {
-      static whyDidYouRender = { customName: 'BigList' }
+      static whyDidYouRender = { customName: 'BigList' };
       render() {
         return (
           <div style={this.props.style}>
@@ -25,7 +25,7 @@ export default {
 
     // Notice, that unlike the huge list, we don't track Main's re-renders because we don't care about it's re-renders.
     class Main extends React.Component {
-      state = { count: 0 }
+      state = { count: 0 };
       render() {
         return (
           <div style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column' }}>

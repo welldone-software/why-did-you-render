@@ -26,7 +26,7 @@ test('dont swallow errors', () => {
     );
   };
 
-  expect(mountBrokenComponent).toThrow("Cannot read properties of null (reading 'propTypes')");
+  expect(mountBrokenComponent).toThrow('Cannot read properties of null (reading \'propTypes\')');
 
   expect(global.flushConsoleOutput()).toEqual([
     {
@@ -53,7 +53,7 @@ test('dont swallow errors', () => {
 
 test('render to static markup', () => {
   class MyComponent extends React.Component {
-    static whyDidYouRender = true
+    static whyDidYouRender = true;
     render() {
       return (
         <div>

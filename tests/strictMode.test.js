@@ -5,14 +5,14 @@ import { diffTypes } from '~/consts';
 import whyDidYouRender from '~';
 
 class TestComponent extends React.Component {
-  static whyDidYouRender = true
+  static whyDidYouRender = true;
   render() {
     return <div>hi!</div>;
   }
 }
 
 class PureTestComponent extends React.PureComponent {
-  static whyDidYouRender = true
+  static whyDidYouRender = true;
   render() {
     return <div>hi!</div>;
   }

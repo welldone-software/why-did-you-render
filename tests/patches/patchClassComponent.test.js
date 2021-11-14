@@ -6,7 +6,7 @@ import whyDidYouRender from '~';
 import { diffTypes } from '~/consts';
 
 class TestComponent extends React.Component {
-  static whyDidYouRender = true
+  static whyDidYouRender = true;
   render() {
     return <div>hi!</div>;
   }
@@ -14,8 +14,8 @@ class TestComponent extends React.Component {
 
 const createStateTestComponent = (initialState, newState) => {
   return class StateTestComponent extends React.Component {
-    static whyDidYouRender = true
-    state = initialState
+    static whyDidYouRender = true;
+    state = initialState;
     componentDidMount() {
       this.setState(newState);
     }
@@ -114,7 +114,7 @@ test('Props change', () => {
 test('With implemented "componentDidUpdate()"', () => {
   let innerComponentDidUpdateCalled = false;
   class OwnTestComponent extends React.Component {
-    static whyDidYouRender = true
+    static whyDidYouRender = true;
     componentDidUpdate() {
       innerComponentDidUpdateCalled = true;
     }
@@ -147,13 +147,13 @@ test('With implemented "componentDidUpdate()"', () => {
 
 test('With render as an arrow function', () => {
   class OwnTestComponent extends React.Component {
-    static whyDidYouRender = true
+    static whyDidYouRender = true;
     componentDidMount() {
       this.setState({ c: 'c' });
     }
     render = () => {
       return <div>hi!</div>;
-    }
+    };
   }
 
   const { rerender } = rtl.render(
@@ -193,7 +193,7 @@ test('With render as an arrow function', () => {
 
 test('With render as a binded function', () => {
   class OwnTestComponent extends React.Component {
-    static whyDidYouRender = true
+    static whyDidYouRender = true;
     constructor(props, context) {
       super(props, context);
       this.render = this.render.bind(this);
@@ -269,7 +269,7 @@ test('With implemented "componentDidUpdate()" with a snapshot - not tracked', ()
 test('With implemented "componentDidUpdate()" with a snapshot', () => {
   let resolve = false;
   class OwnTestComponent extends React.Component {
-    static whyDidYouRender = true
+    static whyDidYouRender = true;
     getSnapshotBeforeUpdate() {
       return true;
     }

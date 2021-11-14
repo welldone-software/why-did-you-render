@@ -7,7 +7,7 @@ export default {
     whyDidYouRender(React);
 
     class TestComponent extends React.Component {
-      static whyDidYouRender = true
+      static whyDidYouRender = true;
       render() {
         return (
           <div>

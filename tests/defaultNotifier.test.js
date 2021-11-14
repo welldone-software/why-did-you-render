@@ -5,7 +5,7 @@ import getUpdateInfo from '~/getUpdateInfo';
 import whyDidYouRender from '~';
 
 class TestComponent extends React.Component {
-  static whyDidYouRender = true
+  static whyDidYouRender = true;
   render() {
     return <div>hi!</div>;
   }
@@ -415,7 +415,7 @@ describe('logOnDifferentProps option', () => {
     whyDidYouRender(React, { onlyLogs: true });
 
     class OwnTestComponent extends React.Component {
-      static whyDidYouRender = { logOnDifferentValues: true }
+      static whyDidYouRender = { logOnDifferentValues: true };
       render() {
         return <div>hi!</div>;
       }

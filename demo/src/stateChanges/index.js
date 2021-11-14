@@ -11,11 +11,11 @@ export default {
     whyDidYouRender(React);
 
     class ClassDemo extends React.Component {
-      static whyDidYouRender = true
+      static whyDidYouRender = true;
 
       state = {
         stateKey: 'stateValue',
-      }
+      };
 
       componentDidMount() {
         stepLogger('Set an existing state key with the same value', true);

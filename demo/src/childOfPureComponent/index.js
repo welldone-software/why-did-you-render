@@ -23,7 +23,7 @@ export default {
     }
 
     class Main extends React.Component {
-      state = { clicksCount: 0 }
+      state = { clicksCount: 0 };
       render() {
         return (
           <div>

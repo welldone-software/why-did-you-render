@@ -16,7 +16,7 @@ export default {
     const Owner = () => <Child />;
 
     class ClassOwner extends React.Component {
-      state = { a: 1 }
+      state = { a: 1 };
       componentDidMount() {
         this.setState({ a: 2 });
       }
