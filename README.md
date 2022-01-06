@@ -86,7 +86,7 @@ Otherwise, add `whyDidYouRender = true` to component classes/functions you want 
 
 More information about what is tracked can be found in [Tracking Components](#tracking-components).
 
-Can't see any WDYR logs? Check out the [troubleshooting section](#troubleshooting) or search in the [issues](issues).
+Can't see any WDYR logs? Check out the [troubleshooting section](#troubleshooting) or search in the [issues](https://github.com/welldone-software/why-did-you-render/issues).
 
 ## Custom Hooks
 
