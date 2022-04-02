@@ -26,5 +26,6 @@ if (process.env.USE_REACT_16 === 'true') {
     '^react-dom((\\/.*)?)$': 'react-dom-17$1',
     '^react((\\/.*)?)$': 'react-17$1',
   };
+} else if (process.env.USE_REACT_18 === 'true') {
+  module.exports.cacheDirectory = '.cache/jest-cache-react-18';
 }
-

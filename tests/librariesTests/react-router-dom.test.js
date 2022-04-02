@@ -12,31 +12,7 @@ import { cloneDeep } from 'lodash';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes, REACT_VERSION } from '~/consts';
-
-const CONSOLE_OUTPUT = { level: 'log', args: ['location is: /'] };
-
-const REACT_18_DEPRECATION_WARNING = {
-  level: 'error',
-  args: ['Warning: ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it\'s running React 17. Learn more: https://reactjs.org/link/switch-to-createroot']
-};
-
-const CONSOLE_OUTPUTS_SIMPLE = REACT_VERSION >= 18
-  ? [
-    REACT_18_DEPRECATION_WARNING,
-    CONSOLE_OUTPUT,
-    REACT_18_DEPRECATION_WARNING,
-    CONSOLE_OUTPUT
-  ]
-  : [CONSOLE_OUTPUT, CONSOLE_OUTPUT];
-
-const CONSOLE_OUTPUTS_REDUX = REACT_VERSION >= 18
-  ? [
-    REACT_18_DEPRECATION_WARNING,
-    CONSOLE_OUTPUT,
-    CONSOLE_OUTPUT
-  ]
-  : [CONSOLE_OUTPUT, CONSOLE_OUTPUT];
+import { diffTypes } from '~/consts';
 
 let updateInfos = [];
 beforeEach(() => {
@@ -160,7 +136,10 @@ describe('react-router-dom-6', () => {
     rerender(<Comp/>);
 
     const consoleOutputs = flushConsoleOutput();
-    expect(consoleOutputs).toEqual(CONSOLE_OUTPUTS_SIMPLE);
+    expect(consoleOutputs).toEqual([
+      expect.objectContaining({ args: ['location is: /'] }),
+      expect.objectContaining({ args: ['location is: /'] }),
+    ]);
 
     expect(updateInfos).toHaveLength(3);
   });
@@ -217,7 +196,10 @@ describe('react-router-dom-6', () => {
     rtl.render(<Comp/>);
 
     const consoleOutputs = flushConsoleOutput();
-    expect(consoleOutputs).toEqual(CONSOLE_OUTPUTS_REDUX);
+    expect(consoleOutputs).toEqual([
+      expect.objectContaining({ args: ['location is: /'] }),
+      expect.objectContaining({ args: ['location is: /'] }),
+    ]);
 
     expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({

@@ -1675,10 +1675,10 @@
     "@typescript-eslint/types" "5.17.0"
     eslint-visitor-keys "^3.0.0"
 
-"@welldone-software/jest-console-handler@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@welldone-software/jest-console-handler/-/jest-console-handler-1.0.0.tgz#0fb72a4c4ef851f472d25cddee97f8d2bc78a544"
-  integrity sha512-c15GWclyWblRRGl/KwXdg7tAZKVXNGcX0xQ/sAzGXd+MSQYE8gO6J0EDkKxYUfbruoaoySsKcepAHzN0hOmJJw==
+"@welldone-software/jest-console-handler@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@welldone-software/jest-console-handler/-/jest-console-handler-2.0.1.tgz#ffada4fe17c05e84c41cd0b05d646b489dc825f4"
+  integrity sha512-A7x6ysR5lztjdOxdw4TlSaAse01EscSt2qcDD5c0SErg5HPTUcfcKY0149C+CsKQb+aMcFePqRNPhRETs1H+YA==
 
 abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"
@@ -5265,7 +5265,7 @@ raw-body@^2.3.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
-    
+
 react-dom@^18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.0.0.tgz#26b88534f8f1dbb80853e1eabe752f24100d8023"

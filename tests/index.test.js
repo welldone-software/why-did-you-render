@@ -26,13 +26,13 @@ test('dont swallow errors', () => {
     );
   };
 
-  expect(mountBrokenComponent).toThrow('Cannot read property \'propTypes\' of null');
+  expect(mountBrokenComponent).toThrow(/(Cannot read property 'propTypes' of null|Cannot read properties of null \(reading 'propTypes'\))/);
 
-  expect(global.flushConsoleOutput()).toEqual(expect.arrayContaining([
+  expect(global.flushConsoleOutput()).toEqual([
     {
-      // console.error('Warning: memo: The first argument must be a component. Instead received: %s', 'null')
       level: 'error',
       args: expect.arrayContaining([
+        //        console.error('Warning: memo: The first argument must be a component. Instead received: %s', 'null')
         expect.stringContaining('Warning: memo: The first argument must be a component'),
       ]),
     },
@@ -48,7 +48,7 @@ test('dont swallow errors', () => {
         expect.stringContaining('Consider adding an error boundary'),
       ]),
     },
-  ]));
+  ]);
 });
 
 test('render to static markup', () => {
