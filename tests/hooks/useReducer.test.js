@@ -2,7 +2,9 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import { diffTypes, REACT_VERSION } from '~/consts';
+
+const RENDER_AMOUNT = REACT_VERSION >= 18 ? 2 : 1;
 
 describe('hooks - useReducer', () => {
   let updateInfos = [];
@@ -45,7 +47,7 @@ describe('hooks - useReducer', () => {
       <ComponentWithHooks/>
     );
 
-    expect(numOfRenders).toBe(1);
+    expect(numOfRenders).toBe(RENDER_AMOUNT);
     expect(updateInfos).toHaveLength(0);
   });
 
