@@ -1,9 +1,5 @@
 it('Strict mode', () => {
-  cy.visitAndSpyConsole('/#strict');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#strict', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'ClassDemo', times: 3 },
       { match: 'Rendered by Main', times: 3 },

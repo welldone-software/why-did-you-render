@@ -1,7 +1,5 @@
 it('state changes', () => {
-  cy.visitAndSpyConsole('/#stateChanges');
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#stateChanges', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'ClassDemo', times: 2 },
       { match: /state.*objectKey\W/, times: 1 },

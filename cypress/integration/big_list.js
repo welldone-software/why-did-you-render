@@ -1,7 +1,7 @@
 it('Big list basic example', () => {
-  cy.visitAndSpyConsole('/#bigList');
-  cy.contains('button', 'Increase!').click();
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#bigList',console => {
+    cy.contains('button', 'Increase!').click();
+
     expect(console.group).to.be.calledWithMatches([
       { match: 'BigList', times: 1 },
       { match: /props.*style\W/, times: 1 },

@@ -24,18 +24,17 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('visitAndSpyConsole', (...args) => {
-  cy.visit(...args);
-  cy.window()
-    .then((win) => {
+Cypress.Commands.add('visitAndSpyConsole', (url, cb) => {
+  const context = {};
+
+  cy.visit(url, {
+    onBeforeLoad: win => {
       cy.spy(win.console, 'log');
       cy.spy(win.console, 'group');
-    });
-});
+    },
+    onLoad: win => context.win = win,
+  });
 
-Cypress.Commands.add('getConsoleSpy', cb => {
-  cy.window()
-    .then((win) => {
-      cb(win.console);
-    });
+  cy.waitFor(context.win)
+    .then(() => cb(context.win.console));
 });

@@ -1,9 +1,5 @@
 it('Props And State Changes', () => {
-  cy.visitAndSpyConsole('/#bothChanges');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#bothChanges', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'ClassDemo', times: 1 },
       { match: /props.*a\W/, times: 1 },

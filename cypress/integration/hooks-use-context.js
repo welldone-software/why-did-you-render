@@ -1,9 +1,5 @@
 it('Hooks - useContext', () => {
-  cy.visitAndSpyConsole('/#useContext');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#useContext', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: /ComponentWithContextHook$/, times: 2 },
       { match: 'Rendered by Main', times: 1 },
