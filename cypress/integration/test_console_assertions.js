@@ -1,7 +1,6 @@
 it('Test console testing throws on wrong console appearance amounts', () => {
-  cy.visitAndSpyConsole('/#bigList');
-  cy.contains('button', 'Increase!').click();
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#bigList', console => {
+    cy.contains('button', 'Increase!').click();
 
     expect(
       () => expect(console.group).to.be.calledWithMatches([

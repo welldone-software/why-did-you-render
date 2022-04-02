@@ -1,9 +1,7 @@
 it('Server Side (hydrate)', () => {
-  cy.visitAndSpyConsole('/#ssr');
+  cy.visitAndSpyConsole('/#ssr', console => {
+    cy.contains('hydrated hi');
 
-  cy.contains('hydrated hi');
-
-  cy.getConsoleSpy(console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'DemoComponent', times: 1 },
     ]);

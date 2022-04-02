@@ -1,9 +1,5 @@
 it('Creating react element using React.cloneElement', () => {
-  cy.visitAndSpyConsole('/#cloneElement');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#cloneElement', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'TestComponent', times: 1 },
     ]);

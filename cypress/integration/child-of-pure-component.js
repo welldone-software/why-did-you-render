@@ -1,12 +1,10 @@
 it('Child of Pure Component', () => {
-  cy.visitAndSpyConsole('/#childOfPureComponent');
+  cy.visitAndSpyConsole('/#childOfPureComponent', console => {
+    cy.contains('button', 'clicks:').click();
+    cy.contains('button', 'clicks:').click();
+  
+    cy.contains('button', 'clicks:').should('contain', '2');
 
-  cy.contains('button', 'clicks:').click();
-  cy.contains('button', 'clicks:').click();
-
-  cy.contains('button', 'clicks:').should('contain', '2');
-
-  cy.getConsoleSpy(console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'PureFather', times: 2 },
       { match: /props.*children\W/, times: 2 },

@@ -1,9 +1,7 @@
 it('Hooks - useMemo and useCallback Child', () => {
-  cy.visitAndSpyConsole('/#useMemoAndCallbackChild');
+  cy.visitAndSpyConsole('/#useMemoAndCallbackChild', console => {
+    cy.contains('button', 'count: 0').click();
 
-  cy.contains('button', 'count: 0').click();
-
-  cy.getConsoleSpy(console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'Comp', times: 2 },
       { match: /useMemoFn/, times: 2 },

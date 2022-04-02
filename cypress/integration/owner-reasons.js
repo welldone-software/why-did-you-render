@@ -1,9 +1,5 @@
 it('Log Owner Reasons', () => {
-  cy.visitAndSpyConsole('/#logOwnerReasons');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#logOwnerReasons', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'Child', times: 3 },
       { match: 'Rendered by Owner', times: 1 },

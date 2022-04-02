@@ -1,9 +1,5 @@
 it('React Hot Reload Of Tracked Component', () => {
-  cy.visitAndSpyConsole('/#hotReload');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#hotReload', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'HotExportedDemoComponent', times: 1 },
     ]);

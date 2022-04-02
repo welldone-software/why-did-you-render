@@ -1,9 +1,5 @@
 it('No Changes', () => {
-  cy.visitAndSpyConsole('/#noChanges');
-
-  cy.wait(100); // eslint-disable-line cypress/no-unnecessary-waiting
-
-  cy.getConsoleSpy(console => {
+  cy.visitAndSpyConsole('/#noChanges', console => {
     expect(console.group).to.be.calledWithMatches([
       { match: 'ClassDemo', times: 1 },
     ]);
