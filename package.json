@@ -58,7 +58,7 @@
     "lodash": "^4"
   },
   "peerDependencies": {
-    "react": "^16 || ^17 | ^18"
+    "react": "^16 || ^17 || ^18"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
