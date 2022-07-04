@@ -1,6 +1,8 @@
-# Why Did You Render
+<p align="center">
+  <img src="images/WDYR-logo.jpg" width="300px" />
+</p>
 
-![logo](images/WDYR-logo.jpg)
+# Why Did You Render
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 [![Build Status](https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)](https://travis-ci.com/welldone-software/why-did-you-render)
