@@ -233,9 +233,8 @@ Track custom hooks:
 ```js
 whyDidYouRender(React, {
   trackExtraHooks: [
+    // notice that 'useSelector' is a named export
     [ReactRedux, 'useSelector'],
-    // If you want to use named imports
-    [require("./hooks/useCustomHook"), 'useCustomHook'],
   ]
 });
 ```
