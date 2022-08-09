@@ -166,8 +166,8 @@ describe('findObjectsDifferences not shallow', () => {
   });
 
   test('For sets with same values', () => {
-    const prev = new Set([1, 2, 3]);
-    const next = new Set([1, 2, 3]);
+    const prev = new Set([1, 2, 3, { foo: 'bar' }]);
+    const next = new Set([1, 2, 3, { foo: 'bar' }]);
     const diffs = findObjectsDifferences(prev, next, { shallow: false });
     expect(diffs).toEqual([{
       pathString: '',
@@ -178,8 +178,42 @@ describe('findObjectsDifferences not shallow', () => {
   });
 
   test('For sets with different values', () => {
+    const prevValues = [1, 2, 3];
+    const nextValues = [4, 5, 6];
+    const prev = new Set(prevValues);
+    const next = new Set(nextValues);
+    const diffs = findObjectsDifferences(prev, next, { shallow: false });
+    expect(diffs).toEqual([
+      {
+        pathString: '.values()[2]',
+        diffType: diffTypes.different,
+        prevValue: prevValues[2],
+        nextValue: nextValues[2],
+      },
+      {
+        pathString: '.values()[1]',
+        diffType: diffTypes.different,
+        prevValue: prevValues[1],
+        nextValue: nextValues[1],
+      },
+      {
+        pathString: '.values()[0]',
+        diffType: diffTypes.different,
+        prevValue: prevValues[0],
+        nextValue: nextValues[0],
+      },
+      {
+        pathString: '',
+        diffType: diffTypes.different,
+        prevValue: prev,
+        nextValue: next,
+      },
+    ]);
+  });
+
+  test('For sets with different length', () => {
     const prev = new Set([1, 2, 3]);
-    const next = new Set([4, 5, 6]);
+    const next = new Set([1, 2, 3, 4]);
     const diffs = findObjectsDifferences(prev, next, { shallow: false });
     expect(diffs).toEqual([
       {
@@ -191,9 +225,89 @@ describe('findObjectsDifferences not shallow', () => {
     ]);
   });
 
-  test('For sets with different value length', () => {
-    const prev = new Set([1, 2, 3]);
-    const next = new Set([1, 2, 3, 4]);
+  test('For maps with same entries', () => {
+    const prev = new Map([[1, 'a'], [2, 'b'], [3, 'c'], [{ foo: 'bar' }, { bar: 'foo' }]]);
+    const next = new Map([[1, 'a'], [2, 'b'], [3, 'c'], [{ foo: 'bar' }, { bar: 'foo' }]]);
+    const diffs = findObjectsDifferences(prev, next, { shallow: false });
+    expect(diffs).toEqual([{
+      pathString: '',
+      diffType: diffTypes.deepEquals,
+      prevValue: prev,
+      nextValue: next,
+    }]);
+  });
+
+  test('For maps with different keys', () => {
+    const prevEntries = [[1, ''], [2, ''], [3, '']];
+    const nextEntries = [[4, ''], [5, ''], [6, '']];
+    const prev = new Map(prevEntries);
+    const next = new Map(nextEntries);
+    const diffs = findObjectsDifferences(prev, next, { shallow: false });
+    expect(diffs).toEqual([
+      {
+        pathString: '.keys()[2]',
+        diffType: diffTypes.different,
+        prevValue: prevEntries[2][0],
+        nextValue: nextEntries[2][0],
+      },
+      {
+        pathString: '.keys()[1]',
+        diffType: diffTypes.different,
+        prevValue: prevEntries[1][0],
+        nextValue: nextEntries[1][0],
+      },
+      {
+        pathString: '.keys()[0]',
+        diffType: diffTypes.different,
+        prevValue: prevEntries[0][0],
+        nextValue: nextEntries[0][0],
+      },
+      {
+        pathString: '',
+        diffType: diffTypes.different,
+        prevValue: prev,
+        nextValue: next,
+      },
+    ]);
+  });
+
+  test('For maps with different values', () => {
+    const prevEntries = [[1, 'a'], [2, 'b'], [3, 'c']];
+    const nextEntries = [[1, 'd'], [2, 'e'], [3, 'f']];
+    const prev = new Map(prevEntries);
+    const next = new Map(nextEntries);
+    const diffs = findObjectsDifferences(prev, next, { shallow: false });
+    expect(diffs).toEqual([
+      {
+        pathString: '.values()[2]',
+        diffType: diffTypes.different,
+        prevValue: prevEntries[2][1],
+        nextValue: nextEntries[2][1],
+      },
+      {
+        pathString: '.values()[1]',
+        diffType: diffTypes.different,
+        prevValue: prevEntries[1][1],
+        nextValue: nextEntries[1][1],
+      },
+      {
+        pathString: '.values()[0]',
+        diffType: diffTypes.different,
+        prevValue: prevEntries[0][1],
+        nextValue: nextEntries[0][1],
+      },
+      {
+        pathString: '',
+        diffType: diffTypes.different,
+        prevValue: prev,
+        nextValue: next,
+      },
+    ]);
+  });
+
+  test('For maps with different length', () => {
+    const prev = new Map([[1, 1], [2, 2], [3, 3]]);
+    const next = new Map([[1, 1], [2, 2], [3, 3], [4, 4]]);
     const diffs = findObjectsDifferences(prev, next, { shallow: false });
     expect(diffs).toEqual([
       {
