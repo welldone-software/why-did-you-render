@@ -42,6 +42,8 @@ If you use the `automatic` JSX transformation, set the library to be the import 
 > Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
 > [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-773905769)
 
+If you use `react-native` setup in babel [like this](https://github.com/welldone-software/why-did-you-render/issues/235#issuecomment-1129814820)
+
 Create a `wdyr.js` file and import it as **the first import** in your application.
 
 `wdyr.js`:
