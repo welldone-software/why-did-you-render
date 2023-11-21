@@ -128,6 +128,7 @@ export const hooksConfig = {
   useState: { path: '0' },
   useReducer: { path: '0' },
   useContext: undefined,
+  useSyncExternalStore: undefined,
   useMemo: { dependenciesPath: '1', dontReport: true },
   useCallback: { dependenciesPath: '1', dontReport: true },
 };
