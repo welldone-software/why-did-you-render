@@ -306,7 +306,7 @@ You can provide a function that harvests additional data from the original react
 * If you are in production, WDYR is probably disabled.
 * Maybe no component is tracked
     * Check out [Tracking Components](#tracking-components) once again.
-    * If you only track all pure components, so only either ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)), maybe none of your components are pure so none of them get tracked.
+* If you only track pure components using `trackAllPureComponents: true` then you would only track either ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)), maybe none of your components are pure so none of them will get tracked.
 * Maybe you have no issues
     * Try causing an issue by temporary rendering the whole app twice in it's entry point:
     
