@@ -114,7 +114,7 @@ if (process.env.NODE_ENV === 'development') {
 
 ## Read More
 * [Why Did You Render Mr. Big Pure React Component???](http://bit.ly/wdyr1)
-* [**Common fixing scenarios** this library can helps with](http://bit.ly/wdyr02)
+* [**Common fixing scenarios** this library can help with](http://bit.ly/wdyr02)
 * [**React Hooks** - Understand and fix hooks issues](http://bit.ly/wdyr3)
 * [Why Did You Render v4 Released!](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c) - TypeScript support, Custom hooks tracking (like React-Redux’s useSelector), Tracking of all pure components.
 
@@ -306,7 +306,7 @@ You can provide a function that harvests additional data from the original react
 * If you are in production, WDYR is probably disabled.
 * Maybe no component is tracked
     * Check out [Tracking Components](#tracking-components) once again.
-    * If you track all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)), maybe your none of your components are not pure.
+    * If you track all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)), maybe none of your components are pure.
 * Maybe you have no issues
     * Try causing an issue by temporary rendering the whole app twice in it's entry point:
     
