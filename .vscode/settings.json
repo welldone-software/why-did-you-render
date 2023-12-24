@@ -19,4 +19,13 @@
 
   "jestrunner.debugOptions": {"args": ["--watch"]},
   "jestrunner.configPath": "jest.config.js",
+  "cSpell.words": [
+    "astring",
+    "lcov",
+    "nollup",
+    "postversion",
+    "Vitali",
+    "welldone",
+    "Zaidman"
+  ],
 }
