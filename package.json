@@ -89,7 +89,6 @@
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
-    "magic-string": "^0.30.5",
     "nollup": "^0.21.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
