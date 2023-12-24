@@ -20,7 +20,7 @@ For example, if you pass `style={{width: '100%'}}` to a big pure component it wo
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-The library was tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@18`**, `React@17` and `React@16`.
+The latest version of the library was tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@18`** only. For React 17 and 16, please use version @^7.
 
 ```
 npm install @welldone-software/why-did-you-render --save-dev

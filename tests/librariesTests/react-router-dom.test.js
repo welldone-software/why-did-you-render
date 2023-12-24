@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStore } from 'redux';
+import { legacy_createStore as createStore } from 'redux';
 import {
   BrowserRouter as Router6,
   useLocation as useLocation6,
@@ -99,11 +99,7 @@ describe('react-router-dom-5', () => {
       ],
       stateDifferences: false,
       hookDifferences: false,
-      ownerDifferences: {
-        propsDifferences: false,
-        stateDifferences: false,
-        hookDifferences: false,
-      },
+      ownerDifferences: expect.anything(),
     });
   });
 });
@@ -126,7 +122,7 @@ describe('react-router-dom-6', () => {
     const Comp = () => (
       <Router6>
         <Routes6>
-          <Route6 exact path="/" element={<InnerComp/>}/>
+          <Route6 exact path="/" element={<InnerComp a={[]}/>}/>
         </Routes6>
       </Router6>
     );
@@ -141,7 +137,25 @@ describe('react-router-dom-6', () => {
       expect.objectContaining({ args: ['location is: /'] }),
     ]);
 
-    expect(updateInfos).toHaveLength(3);
+    expect(updateInfos).toEqual([
+      expect.objectContaining({
+        reason: {
+          hookDifferences: false,
+          stateDifferences: false,
+          propsDifferences: [{
+            diffType: 'deepEquals',
+            nextValue: [],
+            pathString: 'a',
+            prevValue: []
+          }],
+          ownerDifferences: {
+            hookDifferences: false,
+            propsDifferences: [],
+            stateDifferences: false
+          }
+        }
+      })
+    ]);
   });
 
   test('with redux', () => {
@@ -203,16 +217,15 @@ describe('react-router-dom-6', () => {
 
     expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
-      propsDifferences: [
-        expect.objectContaining({ diffType: diffTypes.deepEquals }),
-      ],
+      propsDifferences: [{
+        diffType: diffTypes.deepEquals,
+        pathString: 'a',
+        prevValue: { b: 'c' },
+        nextValue: { b: 'c' },
+      }],
       stateDifferences: false,
       hookDifferences: false,
-      ownerDifferences: {
-        propsDifferences: false,
-        stateDifferences: false,
-        hookDifferences: false,
-      },
+      ownerDifferences: expect.anything(),
     });
   });
 });

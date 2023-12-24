@@ -64,7 +64,6 @@ test('forward ref', () => {
 });
 
 test('forward ref a memo component', () => {
-  // This is not supported by React 16.9
   expect(() => {
     const content = 'My component!!!';
 

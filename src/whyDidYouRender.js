@@ -188,7 +188,7 @@ function trackHooksIfNeeded() {
       const originalHook = hookParent[hookName];
       const newHookName = hookName[0].toUpperCase() + hookName.slice(1);
 
-      const newHook = function(...args) {
+      const newHook = function WhyDidYouRenderReWrittenHook(...args) {
         const hookResult = originalHook.call(this, ...args);
         const { dependenciesPath, dontReport } = hookTrackingConfig;
         if (dependenciesPath && isFunction(hookResult)) {

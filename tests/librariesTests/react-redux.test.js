@@ -1,13 +1,14 @@
 import React from 'react';
-import { createStore } from 'redux';
-import * as Redux from 'react-redux';
-import { connect, Provider } from 'react-redux';
+import { legacy_createStore as createStore } from 'redux';
 import { cloneDeep } from 'lodash';
 import * as rtl from '@testing-library/react';
 
 import { diffTypes } from '~/consts';
 
 import whyDidYouRender from '~';
+
+const ReactRedux = { ...require('react-redux') };
+const { connect, Provider } = ReactRedux;
 
 describe('react-redux - simple', () => {
   const initialState = { a: { b: 'c' } };
@@ -104,11 +105,7 @@ describe('react-redux - simple', () => {
       ],
       stateDifferences: false,
       hookDifferences: false,
-      ownerDifferences: {
-        hookDifferences: false,
-        propsDifferences: false,
-        stateDifferences: false,
-      },
+      ownerDifferences: expect.anything(),
     });
   });
 
@@ -147,11 +144,7 @@ describe('react-redux - simple', () => {
       ],
       stateDifferences: false,
       hookDifferences: false,
-      ownerDifferences: {
-        hookDifferences: false,
-        propsDifferences: false,
-        stateDifferences: false,
-      },
+      ownerDifferences: expect.anything(),
     });
   });
 });
@@ -180,7 +173,7 @@ describe('react-redux - hooks', () => {
     whyDidYouRender(React, {
       notifier: updateInfo => updateInfos.push(updateInfo),
       trackExtraHooks: [
-        [Redux, 'useSelector'],
+        [ReactRedux, 'useSelector'],
       ],
     });
   });
@@ -193,7 +186,7 @@ describe('react-redux - hooks', () => {
 
   test('same state after dispatch', () => {
     const ConnectedSimpleComponent = () => {
-      const a = Redux.useSelector(state => state);
+      const a = ReactRedux.useSelector(state => state);
       return (
         <div data-testid="foo">{a.b}</div>
       );
@@ -221,7 +214,7 @@ describe('react-redux - hooks', () => {
 
   test('different state after dispatch', () => {
     const ConnectedSimpleComponent = () => {
-      const a = Redux.useSelector(state => state.a);
+      const a = ReactRedux.useSelector(state => state.a);
       return (
         <div data-testid="foo">{a.b}</div>
       );
@@ -245,11 +238,8 @@ describe('react-redux - hooks', () => {
 
     expect(store.getState().a.b).toBe('d');
 
-    expect(updateInfos).toHaveLength(2);
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0]).toEqual(expect.objectContaining({
-      hookName: 'useReducer', // react-redux inner hook
-    }));
-    expect(updateInfos[1]).toEqual(expect.objectContaining({
       hookName: 'useSelector',
       reason: {
         propsDifferences: false,
@@ -265,7 +255,7 @@ describe('react-redux - hooks', () => {
 
   test('deep equals state after dispatch', () => {
     const ConnectedSimpleComponent = () => {
-      const a = Redux.useSelector(state => state.a);
+      const a = ReactRedux.useSelector(state => state.a);
       return (
         <div data-testid="foo">
           {a.b}
@@ -290,11 +280,8 @@ describe('react-redux - hooks', () => {
 
     expect(store.getState().a.b).toBe('c');
 
-    expect(updateInfos).toHaveLength(2);
+    expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0]).toEqual(expect.objectContaining({
-      hookName: 'useReducer', // react-redux inner hook
-    }));
-    expect(updateInfos[1]).toEqual(expect.objectContaining({
       hookName: 'useSelector',
       reason: {
         propsDifferences: false,

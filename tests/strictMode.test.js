@@ -365,9 +365,18 @@ test('Strict mode- strict parent and child', () => {
 
   const { getByText } = rtl.render(<StrictApp/>);
   const buttonReference = getByText('test');
-  buttonReference.click();
-  buttonReference.click();
-  buttonReference.click();
+
+  rtl.act(() => {
+    buttonReference.click();
+  });
+
+  rtl.act(() => {
+    buttonReference.click();
+  });
+
+  rtl.act(() => {
+    buttonReference.click();
+  });
 
   const ownerDifferences = {
     hookDifferences: [

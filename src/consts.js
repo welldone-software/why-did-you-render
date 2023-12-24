@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const diffTypes = {
   'different': 'different',
   'deepEquals': 'deepEquals',
@@ -24,5 +22,4 @@ export const diffTypesDescriptions = {
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
 export const REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
 export const REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-export const REACT_VERSION = Number(React.version.split('.')[0]) || 0;
-export const REACT_STRICT_MODE = REACT_VERSION >= 18 ? 0b1000 : 0b0001;
+export const REACT_STRICT_MODE = 0b1000;

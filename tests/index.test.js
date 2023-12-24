@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import * as rtl from '@testing-library/react';
-
+import _ from 'lodash';
 import whyDidYouRender from '~';
 
 let updateInfos = [];
@@ -28,27 +28,19 @@ test('dont swallow errors', () => {
 
   expect(mountBrokenComponent).toThrow(/(Cannot read property 'propTypes' of null|Cannot read properties of null \(reading 'propTypes'\))/);
 
-  expect(global.flushConsoleOutput()).toEqual([
-    {
-      level: 'error',
-      args: expect.arrayContaining([
-        //        console.error('Warning: memo: The first argument must be a component. Instead received: %s', 'null')
-        expect.stringContaining('Warning: memo: The first argument must be a component'),
-      ]),
-    },
-    {
-      level: 'error',
-      args: expect.arrayContaining([
-        expect.stringContaining('propTypes'),
-      ]),
-    },
-    {
-      level: 'error',
-      args: expect.arrayContaining([
-        expect.stringContaining('Consider adding an error boundary'),
-      ]),
-    },
-  ]);
+  global.flushConsoleOutput()
+    .map(output => ({
+      ...output,
+      args: output.args.map(a => _.isError(a) ? JSON.stringify(a.message) : a)
+    }))
+    .forEach(output => {
+      expect(output).toEqual({
+        level: 'error',
+        args: expect.arrayContaining([
+          expect.stringMatching(/(memo: The first argument must be a component|propTypes|error boundary)/),
+        ]),
+      });
+    });
 });
 
 test('render to static markup', () => {

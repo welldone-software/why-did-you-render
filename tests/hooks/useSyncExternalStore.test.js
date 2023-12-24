@@ -4,11 +4,7 @@ import * as rtl from '@testing-library/react';
 import whyDidYouRender from '~';
 import { diffTypes } from '~/consts';
 
-const describeButSkipWithReact17AndBelow = process.env.USE_REACT_18
-  ? describe
-  : describe.skip;
-
-describeButSkipWithReact17AndBelow('hooks - useSyncExternalStore', () => {
+describe('hooks - useSyncExternalStore', () => {
   let updateInfos = [];
 
   function createSimpleStore(initialState) {
