@@ -1,14 +1,14 @@
-import React from "react";
-import * as rtl from "@testing-library/react";
+import React from 'react';
+import * as rtl from '@testing-library/react';
 
-import whyDidYouRender from "~";
-import { diffTypes } from "~/consts";
+import whyDidYouRender from '~';
+import { diffTypes } from '~/consts';
 
 const describeButSkipWithReact17AndBelow = process.env.USE_REACT_18
   ? describe
   : describe.skip;
 
-describeButSkipWithReact17AndBelow("hooks - useSyncExternalStore", () => {
+describeButSkipWithReact17AndBelow('hooks - useSyncExternalStore', () => {
   let updateInfos = [];
 
   function createSimpleStore(initialState) {
@@ -40,8 +40,8 @@ describeButSkipWithReact17AndBelow("hooks - useSyncExternalStore", () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  test("same value", () => {
-    const store = createSimpleStore("c");
+  test('same value', () => {
+    const store = createSimpleStore('c');
 
     const ComponentWithSyncExternalStore = ({ a, b }) => {
       const valueFromStore = React.useSyncExternalStore(
@@ -59,7 +59,7 @@ describeButSkipWithReact17AndBelow("hooks - useSyncExternalStore", () => {
 
     const OuterComponent = () => {
       React.useLayoutEffect(() => {
-        store.setState("c");
+        store.setState('c');
       }, []);
 
       return (
@@ -74,8 +74,8 @@ describeButSkipWithReact17AndBelow("hooks - useSyncExternalStore", () => {
     expect(updateInfos).toHaveLength(0);
   });
 
-  test("deep equals", () => {
-    const store = createSimpleStore({ c: "c" });
+  test('deep equals', () => {
+    const store = createSimpleStore({ c: 'c' });
 
     const ComponentWithSyncExternalStore = ({ a, b }) => {
       const valueFromStore = React.useSyncExternalStore(
@@ -93,7 +93,7 @@ describeButSkipWithReact17AndBelow("hooks - useSyncExternalStore", () => {
 
     const OuterComponent = () => {
       React.useLayoutEffect(() => {
-        store.setState({ c: "c" });
+        store.setState({ c: 'c' });
       }, []);
 
       return (
@@ -110,9 +110,9 @@ describeButSkipWithReact17AndBelow("hooks - useSyncExternalStore", () => {
       hookDifferences: [
         {
           diffType: diffTypes.deepEquals,
-          pathString: "",
-          nextValue: { c: "c" },
-          prevValue: { c: "c" },
+          pathString: '',
+          nextValue: { c: 'c' },
+          prevValue: { c: 'c' },
         },
       ],
       propsDifferences: false,
