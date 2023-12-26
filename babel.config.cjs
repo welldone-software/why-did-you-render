@@ -20,7 +20,7 @@ module.exports = function(api) {
 
   const plugins = compact([
     (!isProd && !isTest) && 'react-hot-loader/babel',
-    !isProd && '@babel/plugin-proposal-class-properties',
+    !isProd && '@babel/plugin-transform-class-properties',
   ]);
 
   return { presets, plugins };

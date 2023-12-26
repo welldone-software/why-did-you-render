@@ -51,6 +51,9 @@
   },
   "comments": {
     "resolutions": {
+      "coveralls": [
+        "removed while it's not passing the audit and travis doesn't work"
+      ],
       "source-map@^0.7.4": [
         "fixes https://github.com/mozilla/source-map/issues/432 or we get:",
         "You must provide the URL of lib/mappings.wasm by calling SourceMapConsumer.initialize({ 'lib/mappings.wasm': ... })",
@@ -73,7 +76,7 @@
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.23.6",
     "@babel/eslint-parser": "^7.23.3",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-transform-class-properties": "^7.23.3",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.23.3",
     "@rollup/plugin-alias": "^5.1.0",
@@ -91,7 +94,6 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^29.7.0",
     "concurrently": "^8.2.2",
-    "coveralls": "^3.1.1",
     "create-react-class": "^15.7.0",
     "cross-env": "^7.0.3",
     "cypress": "^13.6.1",
