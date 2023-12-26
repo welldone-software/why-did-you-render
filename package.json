@@ -29,7 +29,7 @@
   "scripts": {
     "start": "cross-env PORT=3003 NODE_ENV=development node demo/serve",
     "start:classic": "cross-env USE_CLASSIC_JSX=true yarn start",
-    "build": "cross-env NODE_ENV=production rollup --config",
+    "build": "cross-env NODE_ENV=production rollup --config --bundleConfigAsCjs",
     "test": "yarn test:automatic && yarn test:classic",
     "test:automatic": "cross-env yarn _test",
     "test:classic": "cross-env USE_CLASSIC_JSX=true yarn _test",
@@ -64,7 +64,6 @@
       ]
     }
   },
-  "type": "module",
   "dependencies": {
     "lodash": "^4"
   },

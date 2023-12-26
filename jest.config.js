@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   cacheDirectory: '.cache/jest-cache',
   setupFiles: ['./jest.polyfills.js'],
   setupFilesAfterEnv: [
