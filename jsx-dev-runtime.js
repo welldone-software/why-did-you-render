@@ -9,7 +9,7 @@ module.exports = jsxDevRuntime
 module.exports.jsxDEV = function jsxDEV(){
   var args = Array.prototype.slice.call(arguments)
 
-  if(wdyrStore.React && wdyrStore.React.isWDYR){
+  if(wdyrStore.React && wdyrStore.React.__IS_WDYR__){
     var origType = args[0]
     var rest = args.slice(1)
 

@@ -232,9 +232,10 @@ export function getWDYRType(origType) {
 }
 
 export default function whyDidYouRender(React, userOptions) {
-  if (React.isWDYR) {
+  if (React.__IS_WDYR__) {
     return;
   }
+  React.__IS_WDYR__ = true;
 
   Object.assign(wdyrStore, {
     React,
@@ -292,8 +293,6 @@ export default function whyDidYouRender(React, userOptions) {
 
   trackHooksIfNeeded();
 
-  React.isWDYR = true;
-
   React.__REVERT_WHY_DID_YOU_RENDER__ = () => {
     Object.assign(React, {
       createElement: wdyrStore.origCreateElement,
@@ -314,7 +313,7 @@ export default function whyDidYouRender(React, userOptions) {
     });
 
     delete React.__REVERT_WHY_DID_YOU_RENDER__;
-    delete React.isWDYR;
+    delete React.__IS_WDYR__;
   };
 
   return React;
