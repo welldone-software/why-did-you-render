@@ -2,7 +2,7 @@
   "name": "@welldone-software/why-did-you-render",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
   "version": "8.0.0",
-  "repository": "https://github.com/welldone-software/why-did-you-render",
+  "repository": "git+https://github.com/welldone-software/why-did-you-render.git",
   "license": "MIT",
   "authors": [
     "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"
