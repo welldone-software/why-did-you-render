@@ -50,6 +50,9 @@
     "cypress:ci:classic": "start-server-and-test start:classic http://localhost:3003 _cypress:run:ci:classic"
   },
   "comments": {
+    "how to": {
+      "bump version": "npm version major/minor/patch"
+    },
     "resolutions": {
       "coveralls": [
         "removed while it's not passing the audit and travis doesn't work"
