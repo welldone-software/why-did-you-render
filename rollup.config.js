@@ -1,9 +1,12 @@
-import resolve from 'rollup-plugin-node-resolve';
+import fs from 'fs';
+import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import license from 'rollup-plugin-license';
 
-import pkg from './package.json';
+const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
+
+const pkg = loadJSON('./package.json');
 
 const banner = `
 <%= pkg.name %> <%= pkg.version %>

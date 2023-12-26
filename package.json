@@ -1,7 +1,12 @@
 {
   "name": "@welldone-software/why-did-you-render",
-  "version": "7.0.1",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
+  "version": "7.0.1",
+  "repository": "https://github.com/welldone-software/why-did-you-render",
+  "license": "MIT",
+  "authors": [
+    "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"
+  ],
   "types": "types.d.ts",
   "main": "dist/whyDidYouRender.js",
   "files": [
@@ -12,11 +17,6 @@
     "jsx-dev-runtime.js",
     "jsx-dev-runtime.d.ts"
   ],
-  "authors": [
-    "Vitali Zaidman <vzaidman@gmail.com> (https://github.com/vzaidman)"
-  ],
-  "license": "MIT",
-  "repository": "https://github.com/welldone-software/why-did-you-render",
   "keywords": [
     "react",
     "component",
@@ -54,10 +54,11 @@
       "source-map@^0.7.4": [
         "fixes https://github.com/mozilla/source-map/issues/432 or we get:",
         "You must provide the URL of lib/mappings.wasm by calling SourceMapConsumer.initialize({ 'lib/mappings.wasm': ... })",
-        "Will most likely be fixed when nollup updates source-map to 0.7.4"
+        "Will most likely be fixed when nollup updates source-map to 0.8.0-beta.0 or higher"
       ]
     }
   },
+  "type": "module",
   "dependencies": {
     "lodash": "^4"
   },
@@ -75,8 +76,10 @@
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/preset-env": "^7.23.6",
     "@babel/preset-react": "^7.23.3",
+    "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.5",
     "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
@@ -117,7 +120,7 @@
     "rollup-plugin-commonjs-alternate": "^0.8.0",
     "rollup-plugin-license": "^3.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "source-map": "^0.8.0-beta.0",
+    "source-map": "npm:source-map@^0.8.0-beta.0",
     "start-server-and-test": "^2.0.3",
     "styled-components": "^6.1.3",
     "typescript": "^5.3.3"
