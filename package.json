@@ -65,8 +65,8 @@
     "react": "^18"
   },
   "resolutions": {
-    "source-map-fast": "npm:source-map@^0.7.4",
-    "source-map": "^0.7.4"
+    "source-map-fast": "npm:source-map@^0.8.0-beta.0",
+    "source-map": "^0.8.0-beta.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",
@@ -117,6 +117,7 @@
     "rollup-plugin-commonjs-alternate": "^0.8.0",
     "rollup-plugin-license": "^3.2.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "source-map": "^0.8.0-beta.0",
     "start-server-and-test": "^2.0.3",
     "styled-components": "^6.1.3",
     "typescript": "^5.3.3"
