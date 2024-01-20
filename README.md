@@ -39,6 +39,20 @@ If you use the `automatic` JSX transformation, set the library to be the import 
 }]
 ```
 
+Unfortunately, the `metro-react-native-babel-preset` that comes with react-native out of the box does not allow you to change the options of the `babel/plugin-transform-react-jsx` plugin. Just add the plugin with options as listed below and start react-native packager as usual. Default env for babel is "development". If you do not use expo when working with react-native, the following method will help you.
+
+```js
+module.exports = {
+  presets: ['module:metro-react-native-babel-preset'],
+
+  env: {
+    development: {
+      plugins: [['@babel/plugin-transform-react-jsx', { runtime: 'classic' }]],
+    },
+  },
+}
+```
+
 > Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
 > [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-773905769)
 
