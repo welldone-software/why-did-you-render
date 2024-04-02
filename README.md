@@ -357,9 +357,8 @@ To see the library's sourcemaps use the [source-map-loader](https://webpack.js.o
 
 Inspired by the following previous work:
 
-https://github.com/maicki/why-did-you-update which I had the chance to maintain for some time.
-
-https://github.com/garbles/why-did-you-update where [A deep dive into React perf debugging](http://benchling.engineering/deep-dive-react-perf-debugging/) is credited for the idea.
+* github.com/maicki/why-did-you-update (no longer public) which I had the chance to maintain for some time.
+* https://github.com/garbles/why-did-you-update where [A deep dive into React perf debugging](https://benchling.engineering/a-deep-dive-into-react-perf-debugging-fd2063f5a667/) is credited for the idea.
 
 ## License
 
