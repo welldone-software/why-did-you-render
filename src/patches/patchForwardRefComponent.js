@@ -33,7 +33,9 @@ export default function patchForwardRefComponent(ForwardRefComponent, { displayN
     // not crucial if displayName couldn't be set
   }
 
-  WDYRForwardRefFunctionalComponent.defaultProps = defaultProps;
+  if (defaultProps != null) {
+    WDYRForwardRefFunctionalComponent.defaultProps = defaultProps;
+  }
 
   defaults(WDYRForwardRefFunctionalComponent, ForwardRefComponent);
 

@@ -61,7 +61,9 @@ export default function patchClassComponent(ClassComponent, { displayName, defau
     // not crucial if displayName couldn't be set
   }
 
-  WDYRPatchedClassComponent.defaultProps = defaultProps;
+  if (defaultProps != null) {
+    WDYRPatchedClassComponent.defaultProps = defaultProps;
+  }
 
   defaults(WDYRPatchedClassComponent, ClassComponent);
 

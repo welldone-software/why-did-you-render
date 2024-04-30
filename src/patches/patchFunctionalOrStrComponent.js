@@ -48,7 +48,9 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
     // not crucial if displayName couldn't be set
   }
 
-  WDYRFunctionalComponent.defaultProps = defaultProps;
+  if (defaultProps != null) {
+    WDYRFunctionalComponent.defaultProps = defaultProps;
+  }
 
   WDYRFunctionalComponent.ComponentForHooksTracking = FunctionalComponent;
   defaults(WDYRFunctionalComponent, FunctionalComponent);

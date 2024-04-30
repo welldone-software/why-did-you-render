@@ -45,7 +45,9 @@ export default function patchMemoComponent(MemoComponent, { displayName, default
     // not crucial if displayName couldn't be set
   }
 
-  WDYRMemoizedFunctionalComponent.defaultProps = defaultProps;
+  if (defaultProps != null) {
+    WDYRMemoizedFunctionalComponent.defaultProps = defaultProps;
+  }
 
   defaults(WDYRMemoizedFunctionalComponent, MemoComponent);
 
