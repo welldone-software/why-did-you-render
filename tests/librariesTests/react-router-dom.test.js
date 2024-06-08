@@ -1,10 +1,10 @@
 import React from 'react';
 import { legacy_createStore as createStore } from 'redux';
 import {
-  BrowserRouter as Router6,
-  useLocation as useLocation6,
-  Routes as Routes6,
-  Route as Route6,
+  BrowserRouter,
+  useLocation,
+  Routes,
+  Route,
 } from 'react-router-dom';
 import { connect, Provider } from 'react-redux';
 import { cloneDeep } from 'lodash';
@@ -29,7 +29,7 @@ afterEach(() => {
 describe('react-router-dom', () => {
   test('simple', () => {
     const InnerComp = () => {
-      const location = useLocation6();
+      const location = useLocation();
 
       // eslint-disable-next-line no-console
       console.log(`location is: ${location.pathname}`);
@@ -42,11 +42,11 @@ describe('react-router-dom', () => {
     InnerComp.whyDidYouRender = true;
 
     const Comp = () => (
-      <Router6>
-        <Routes6>
-          <Route6 exact path="/" element={<InnerComp a={[]}/>}/>
-        </Routes6>
-      </Router6>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<InnerComp a={[]}/>}/>
+        </Routes>
+      </BrowserRouter>
     );
 
     const { rerender } = rtl.render(<Comp/>);
@@ -98,7 +98,7 @@ describe('react-router-dom', () => {
     const store = createStore(rootReducer, initialState);
 
     const InnerFn = ({ a, setDeepEqlState }) => {
-      const location = useLocation6();
+      const location = useLocation();
 
       // eslint-disable-next-line no-console
       console.log(`location is: ${location.pathname}`);
@@ -121,11 +121,11 @@ describe('react-router-dom', () => {
 
     const Comp = () => (
       <Provider store={store}>
-        <Router6>
-          <Routes6>
-            <Route6 exact path="/" element={<InnerComp/>}/>
-          </Routes6>
-        </Router6>
+        <BrowserRouter>
+          <Routes>
+            <Route exact path="/" element={<InnerComp/>}/>
+          </Routes>
+        </BrowserRouter>
       </Provider>
     );
 
