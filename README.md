@@ -2,8 +2,32 @@
   <img src="images/WDYR-logo.jpg" width="300px" />
 </p>
 
-# Why Did You Render
+# [DEPRECATED] Why Did You Render
 
+> [!WARNING]  
+> ## `why-did-you-render` is deprecated. Use React DevTools instead.
+> The library is **NO LONGER MAINTAINED**.
+> * `why-did-you-render` is **NOT SUPPORTED** on React 19.
+> * For React 18, use the latest version 8 of the library: `why-did-you-render@^8`.
+> * For React 17 and 16, use the latest version 7 of the library: `why-did-you-render@^7`.
+> ## Discuss
+> For discussions and comments I've created [#302](https://github.com/welldone-software/why-did-you-render/issues/302).
+>
+> ## Why deprecate `why-did-you-render`?
+> I've [attempted to make the library to work with React 19](https://github.com/welldone-software/why-did-you-render/pull/301). But unfortuntaly I don't see a way to support key features due to changes in unexposed unstable internals of React 19 (details in [#302](https://github.com/welldone-software/why-did-you-render/issues/302)).
+>
+> Additionally, since the [React Compiler](https://react.dev/learn/react-compiler) automatically optimizes components to prevent redundant rendering, in the future it will be more common to debug why components bailed out of optimization instead of why they rendered.
+>
+> [React DevTools](https://react.dev/learn/react-developer-tools) is in a much better position to support performance optimizations taking these changes into account, providing an official, integrated into React, way of doing that. I've recently joined the team in Meta that works on React DevTools and will be exploring this avenue.
+>
+> ## Thanks
+> I'd like to thank all the contributors of the library throughout the years of which the top one is @Hypnosphi.
+>
+> I'd like to thank the [people who conceived this idea and implemented the first iterations](https://github.com/welldone-software/why-did-you-render/tree/deprecation?tab=readme-ov-file#credit)— @maicki, @garbles, @saifelse.
+> 
+> I'd like to thank the rest of the community for using the library, for starring it, for reporting bugs, and most of all for making the internet a faster and more pleasant place :)
+
+![No Maintenance Intended](https://img.shields.io/maintenance/no/2024.svg)
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 [![Build Status](https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)](https://travis-ci.com/welldone-software/why-did-you-render)
 ![NPM](https://img.shields.io/npm/l/@welldone-software/why-did-you-render?style=flat)
