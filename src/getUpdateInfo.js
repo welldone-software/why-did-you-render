@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 import findObjectsDifferences from './findObjectsDifferences';
 import wdyrStore from './wdyrStore';
 
@@ -27,9 +29,12 @@ function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, n
   const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps);
   const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps);
 
+  const stateDifferences = findObjectsDifferences(prevState, nextState);
+  const propsDifferences = findObjectsDifferences(prevProps, nextProps);
+  
   return {
-    propsDifferences: findObjectsDifferences(prevProps, nextProps),
-    stateDifferences: findObjectsDifferences(prevState, nextState),
+    propsDifferences: stateDifferences && isEmpty(propsDifferences) ? false : propsDifferences,
+    stateDifferences,
     hookDifferences: findObjectsDifferences(prevHook, nextHook, { shallow: false }),
     ownerDifferences: getOwnerDifferences({ prevOwnerData, nextOwnerData }),
   };

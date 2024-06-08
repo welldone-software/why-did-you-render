@@ -68,7 +68,7 @@ describe('getUpdateInfo', () => {
     });
   });
 
-  test('Same state', () => {
+  test('Same eq by value state', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
@@ -84,7 +84,7 @@ describe('getUpdateInfo', () => {
       ...input,
       displayName: 'TestComponent',
       reason: {
-        propsDifferences: [],
+        propsDifferences: false,
         stateDifferences: [],
         hookDifferences: false,
         ownerDifferences: false,
@@ -108,7 +108,7 @@ describe('getUpdateInfo', () => {
       ...input,
       displayName: 'TestComponent',
       reason: {
-        propsDifferences: [],
+        propsDifferences: false,
         stateDifferences: [],
         hookDifferences: false,
         ownerDifferences: false,
@@ -163,7 +163,7 @@ describe('getUpdateInfo', () => {
       ...input,
       displayName: 'TestComponent',
       reason: {
-        propsDifferences: [],
+        propsDifferences: false,
         stateDifferences: [
           {
             pathString: 'a',
@@ -265,7 +265,7 @@ describe('getUpdateInfo', () => {
       ...input,
       displayName: 'TestComponent',
       reason: {
-        propsDifferences: [],
+        propsDifferences: false,
         stateDifferences: [
           {
             pathString: 'a',
@@ -367,7 +367,7 @@ describe('getUpdateInfo', () => {
       ...input,
       displayName: 'TestComponent',
       reason: {
-        propsDifferences: [],
+        propsDifferences: false,
         stateDifferences: [
           {
             pathString: 'a',
