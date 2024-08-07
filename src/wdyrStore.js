@@ -1,3 +1,7 @@
+/**
+ * @typedef {import('../types').OwnerData} OwnerData
+ */
+
 const wdyrStore = {
   /* The React object we patch */
   React: undefined,
@@ -17,7 +21,10 @@ const wdyrStore = {
   /* A weak map of all React elements to their WDYR patched react elements */
   componentsMap: new WeakMap(),
 
-  /* A weak map of props to the owner element that passed them */
+  /**
+   * A weak map of props to the owner element that passed them.
+   * @type {WeakMap<object, OwnerData>}
+   */
   ownerDataMap: new WeakMap(),
 
   /* An array of hooks tracked during one render */

@@ -1,5 +1,8 @@
 import { isString } from 'lodash';
 
+/**
+ * @returns {string}
+ */
 export default function getDisplayName(type) {
   return (
     type.displayName ||

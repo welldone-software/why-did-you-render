@@ -1,7 +1,16 @@
+/**
+ * @typedef {import('../types').ObjectDifference} ObjectDifference
+ */
 import calculateDeepEqualDiffs from './calculateDeepEqualDiffs';
 
 const emptyObject = {};
 
+/**
+ * @param {object} userPrevObj 
+ * @param {object} userNextObj 
+ * @param {{ shallow?: boolean }} options
+ * @returns {ObjectDifference[] | false}
+ */
 export default function findObjectsDifferences(userPrevObj, userNextObj, { shallow = true } = {}) {
   if (userPrevObj === userNextObj) {
     return false;
