@@ -5,7 +5,7 @@
 # Why Did You Render
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
-[![Build Status](https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)](https://travis-ci.com/welldone-software/why-did-you-render)
+[![Build Status](https://github.com/welldone-software/why-did-you-render/actions/workflows/main.yml/badge.svg)](https://github.com/welldone-software/why-did-you-render/actions/workflows/main.yml)
 ![NPM](https://img.shields.io/npm/l/@welldone-software/why-did-you-render?style=flat)
 ![Snyk Vulnerabilities for npm package](https://img.shields.io/snyk/vulnerabilities/npm/@welldone-software/why-did-you-render)
 [![Coverage Status](https://coveralls.io/repos/github/welldone-software/why-did-you-render/badge.svg?branch=add-e2e-tests-using-cypress)](https://coveralls.io/github/welldone-software/why-did-you-render?branch=add-e2e-tests-using-cypress)
@@ -198,7 +198,7 @@ EnhancedMenu.whyDidYouRender = {
   ```js
   withPropsOnChange(withPropsOnChange(withStateHandlers(withPropsOnChange(withState(withPropsOnChange(lifecycle(withPropsOnChange(withPropsOnChange(onlyUpdateForKeys(LoadNamespace(Connect(withState(withState(withPropsOnChange(lifecycle(withPropsOnChange(withHandlers(withHandlers(withHandlers(withHandlers(Connect(lifecycle(Menu)))))))))))))))))))))))
   ```
-  
+
 ## Options
 Optionally you can pass in `options` as the second parameter. The following options are available:
 - `include: [RegExp, ...]` (`null` by default)
@@ -323,7 +323,7 @@ You can provide a function that harvests additional data from the original react
 * If you only track pure components using `trackAllPureComponents: true` then you would only track either ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)), maybe none of your components are pure so none of them will get tracked.
 * Maybe you have no issues
     * Try causing an issue by temporary rendering the whole app twice in it's entry point:
-    
+
         `index.js`:
         ```jsx
         const HotApp = hot(App);

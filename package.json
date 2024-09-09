@@ -54,7 +54,7 @@
       "bump version": "npm version major/minor/patch"
     },
     "resolutions": {
-			"eslint@^8": [
+      "eslint@^8": [
         "react eslint plugins doesn't play nicely with eslint 9 so we force using eslint 8 for now"
       ],
       "source-map@^0.7.4": [
@@ -76,7 +76,7 @@
   "resolutions": {
     "source-map-fast": "npm:source-map@^0.8.0-beta.0",
     "source-map": "^0.8.0-beta.0",
-		"string-width": "4.2.3"
+    "string-width": "4.2.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.7",
