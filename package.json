@@ -44,8 +44,8 @@
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
-    "_cypress:run:ci": "yarn cypress:run --record --parallel --group main",
-    "_cypress:run:ci:classic": "yarn cypress:run --record --parallel --group classic",
+    "_cypress:run:ci": "yarn cypress:run --record --group main",
+    "_cypress:run:ci:classic": "yarn cypress:run --record --group classic",
     "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:run:ci",
     "cypress:ci:classic": "start-server-and-test start:classic http://localhost:3003 _cypress:run:ci:classic"
   },
@@ -106,7 +106,6 @@
     "create-react-class": "^15.7.0",
     "cross-env": "^7.0.3",
     "cypress": "^13.11.0",
-    "cypress-split": "^1.24.0",
     "eslint": "^8.57.0",
     "eslint-plugin-cypress": "^3.3.0",
     "eslint-plugin-jest": "^28.6.0",

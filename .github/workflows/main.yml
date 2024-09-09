@@ -11,31 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        containers: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - name: Run Cypress tests
         run: yarn cypress:ci
-        env:
-          SPLIT: ${{ strategy.job-total }}
-          SPLIT_INDEX: ${{ strategy.job-index }}
 
   cypress-tests-classic:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        containers: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - name: Run Cypress tests
         run: yarn cypress:ci:classic
-        env:
-          SPLIT: ${{ strategy.job-total }}
-          SPLIT_INDEX: ${{ strategy.job-index }}
 
   unit-tests:
     runs-on: ubuntu-latest
