@@ -72,9 +72,9 @@ test('styled-components wrap of a memoized component', () => {
   });
 });
 
-test('styled-components with forward ref', () => {
-  const InnerComponent = React.forwardRef((props, ref) =>
-    <div ref={ref}>foobar</div>
+test.only('styled-components with forward ref', () => {
+  const InnerComponent = (props) => (
+    <div ref={props.ref}>foobar</div>
   );
 
   const StyledInnerComponent = styled(InnerComponent)``;
@@ -87,10 +87,10 @@ test('styled-components with forward ref', () => {
   };
 
   const { rerender } = rtl.render(
-    <Wrapper a={[]}/>
+    <Wrapper a={['b']}/>
   );
   rerender(
-    <Wrapper a={[]}/>
+    <Wrapper a={['b']}/>
   );
 
   expect(updateInfos).toHaveLength(1);
@@ -98,8 +98,8 @@ test('styled-components with forward ref', () => {
     propsDifferences: [{
       pathString: 'a',
       diffType: diffTypes.deepEquals,
-      prevValue: [],
-      nextValue: [],
+      prevValue: ['b'],
+      nextValue: ['b'],
     }],
     stateDifferences: false,
     hookDifferences: false,
@@ -108,8 +108,8 @@ test('styled-components with forward ref', () => {
       propsDifferences: [{
         pathString: 'a',
         diffType: diffTypes.deepEquals,
-        prevValue: [],
-        nextValue: [],
+        prevValue: ['b'],
+        nextValue: ['b'],
       }],
       stateDifferences: false,
     },

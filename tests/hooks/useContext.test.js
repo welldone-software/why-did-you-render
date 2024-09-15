@@ -144,7 +144,7 @@ describe('hooks - useContext', () => {
             nextValue: { c: 'c' },
             prevValue: { c: 'c' },
           }],
-          hookName: 'useState',
+          hookName: 'useContext',
         }],
         propsDifferences: false,
         stateDifferences: false,

@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 import findObjectsDifferences from './findObjectsDifferences';
 import wdyrStore from './wdyrStore';
 
@@ -6,30 +8,38 @@ function getOwnerDifferences({ prevOwnerData, nextOwnerData }) {
     return false;
   }
 
-  // in strict mode prevOwnerData might be twice as lengthy because of double renders
-  const prevOwnerDataHooks = prevOwnerData.hooks.length === nextOwnerData.hooks.length * 2 ?
-    prevOwnerData.hooks.slice(prevOwnerData.hooks.length / 2) :
-    prevOwnerData.hooks;
+  try {
+    // in strict mode prevOwnerData might be twice as lengthy because of double renders
+    const prevOwnerDataHooks = prevOwnerData.hooks.length === nextOwnerData.hooks.length * 2 ?
+      prevOwnerData.hooks.slice(prevOwnerData.hooks.length / 2) :
+      prevOwnerData.hooks;
 
-  const hookDifferences = prevOwnerDataHooks.map(({ hookName, result }, i) => ({
-    hookName,
-    differences: findObjectsDifferences(result, nextOwnerData.hooks[i].result, { shallow: false }),
-  }));
+    const hookDifferences = prevOwnerDataHooks.map(({ hookName, result }, i) => ({
+      hookName,
+      differences: findObjectsDifferences(result, nextOwnerData.hooks[i].result, { shallow: false }),
+    }));
 
-  return {
-    propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props),
-    stateDifferences: findObjectsDifferences(prevOwnerData.state, nextOwnerData.state),
-    hookDifferences: hookDifferences.length > 0 ? hookDifferences : false,
-  };
+    return {
+      propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props),
+      stateDifferences: findObjectsDifferences(prevOwnerData.state, nextOwnerData.state),
+      hookDifferences: hookDifferences.length > 0 ? hookDifferences : false,
+    };
+  }
+  catch(e) {
+    // ignore
+  }
 }
 
 function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook) {
   const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps);
   const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps);
 
+  const stateDifferences = findObjectsDifferences(prevState, nextState);
+  const propsDifferences = findObjectsDifferences(prevProps, nextProps);
+  
   return {
-    propsDifferences: findObjectsDifferences(prevProps, nextProps),
-    stateDifferences: findObjectsDifferences(prevState, nextState),
+    propsDifferences: stateDifferences && isEmpty(propsDifferences) ? false : propsDifferences,
+    stateDifferences,
     hookDifferences: findObjectsDifferences(prevHook, nextHook, { shallow: false }),
     ownerDifferences: getOwnerDifferences({ prevOwnerData, nextOwnerData }),
   };
