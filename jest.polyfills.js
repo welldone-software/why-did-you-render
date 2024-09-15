@@ -22,3 +22,5 @@ Object.defineProperties(globalThis, {
   Blob: { value: Blob },
   File: { value: File },
 });
+
+window.MessageChannel = require('worker_threads').MessageChannel;
