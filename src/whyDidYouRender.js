@@ -39,18 +39,15 @@ function trackHookChanges(hookName, { path: hookPath }, hookResult) {
 
   renderNumberForTheHook.current++;
 
-  const ComponentHookDispatchedFromInstance = (
-    wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED &&
-    wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current
-  );
+  const OwnerInstance = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.A?.getOwner();
 
   const prevHookRef = wdyrStore.React.useRef(initialHookValue);
 
-  if (!ComponentHookDispatchedFromInstance) {
+  if (!OwnerInstance) {
     return hookResult;
   }
 
-  const Component = ComponentHookDispatchedFromInstance.type.ComponentForHooksTracking || ComponentHookDispatchedFromInstance.type;
+  const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type;
   const displayName = getDisplayName(Component);
 
   const isShouldTrack = shouldTrack(Component, { isHookChange: true });
@@ -134,7 +131,7 @@ export const hooksConfig = {
 };
 
 export function storeOwnerData(element) {
-  const OwnerInstance = wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner.current;
+  const OwnerInstance = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.A?.getOwner();
   if (OwnerInstance) {
     const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type;
     const displayName = getDisplayName(Component);
@@ -157,14 +154,14 @@ export function storeOwnerData(element) {
 
 function resetHooksPerRenderIfNeeded() {
   // Intercept assignments to ReactCurrentOwner.current to reset hooksPerRender
-  let currentOwner = null;
-  if (wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED) {
-    Object.defineProperty(wdyrStore.React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner, 'current', {
+  let currentA = null;
+  if (wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE) {
+    Object.defineProperty(wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, 'A', {
       get() {
-        return currentOwner;
+        return currentA;
       },
       set(value) {
-        currentOwner = value;
+        currentA = value;
         wdyrStore.hooksPerRender = [];
       },
     });
