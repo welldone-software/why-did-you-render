@@ -6,21 +6,26 @@ function getOwnerDifferences({ prevOwnerData, nextOwnerData }) {
     return false;
   }
 
-  // in strict mode prevOwnerData might be twice as lengthy because of double renders
-  const prevOwnerDataHooks = prevOwnerData.hooks.length === nextOwnerData.hooks.length * 2 ?
-    prevOwnerData.hooks.slice(prevOwnerData.hooks.length / 2) :
-    prevOwnerData.hooks;
+  try {
+    // in strict mode prevOwnerData might be twice as lengthy because of double renders
+    const prevOwnerDataHooks = prevOwnerData.hooks.length === nextOwnerData.hooks.length * 2 ?
+      prevOwnerData.hooks.slice(prevOwnerData.hooks.length / 2) :
+      prevOwnerData.hooks;
 
-  const hookDifferences = prevOwnerDataHooks.map(({ hookName, result }, i) => ({
-    hookName,
-    differences: findObjectsDifferences(result, nextOwnerData.hooks[i].result, { shallow: false }),
-  }));
+    const hookDifferences = prevOwnerDataHooks.map(({ hookName, result }, i) => ({
+      hookName,
+      differences: findObjectsDifferences(result, nextOwnerData.hooks[i].result, { shallow: false }),
+    }));
 
-  return {
-    propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props),
-    stateDifferences: findObjectsDifferences(prevOwnerData.state, nextOwnerData.state),
-    hookDifferences: hookDifferences.length > 0 ? hookDifferences : false,
-  };
+    return {
+      propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props),
+      stateDifferences: findObjectsDifferences(prevOwnerData.state, nextOwnerData.state),
+      hookDifferences: hookDifferences.length > 0 ? hookDifferences : false,
+    };
+  }
+  catch(e) {
+    console.error('WDYR failed getOwnerDifferences');
+  }
 }
 
 function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook) {
