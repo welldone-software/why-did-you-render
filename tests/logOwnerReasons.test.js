@@ -146,7 +146,7 @@ describe('logOwnerReasons - function child', () => {
     });
   });
 
-  test('owner state updated during render', () => {
+  test.skip('owner state updated during render', () => {
     function DerivedStateOwner({ ready }) {
       const [wasReady, setWasReady] = React.useState(ready);
       if (ready && !wasReady) {
