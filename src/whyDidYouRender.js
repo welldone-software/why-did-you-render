@@ -20,34 +20,37 @@ export { wdyrStore };
 
 const initialHookValue = Symbol('initial-hook-value');
 
+function getCurrentOwner() {
+  const reactSharedInternals = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+  const reactDispatcher = reactSharedInternals?.A;
+  return reactDispatcher?.getOwner();
+}
+
 function trackHookChanges(hookName, { path: hookPath }, hookResult) {
   const nextHook = hookPath ? get(hookResult, hookPath) : hookResult;
 
-  const renderNumberForTheHook = wdyrStore.React.useRef(true);
-
-  // TODO: improve
-  const isSecondCycleOfRenders = (
-    wdyrStore.hooksPerRender[0] &&
-    wdyrStore.hooksPerRender[0].renderNumberForTheHook !== renderNumberForTheHook.current
-  );
-
-  if (isSecondCycleOfRenders) {
-    wdyrStore.hooksPerRender = [];
-  }
-
-  wdyrStore.hooksPerRender.push({ hookName, result: nextHook, renderNumberForTheHook: renderNumberForTheHook.current });
-
-  renderNumberForTheHook.current++;
-
-  const OwnerInstance = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.A?.getOwner();
-
   const prevHookRef = wdyrStore.React.useRef(initialHookValue);
 
-  if (!OwnerInstance) {
+  // If a new component is rendered, wdyrStore.hooksPerRender is reset with "resetHooksPerRenderIfNeeded".
+  // The below code resets hooksPerRender if the same component is being rendered for a consecutive time
+  // by detecting the increasment of the render count in the first component in wdyrStore.hooksPerRender
+  const newRenderNumberForTheHook = wdyrStore.React.useRef(0);
+  newRenderNumberForTheHook.current++;
+  const isNewComponentRender = (
+    wdyrStore.hooksPerRender.length > 0 &&
+    wdyrStore.hooksPerRender[0].renderNumberForTheHook !== newRenderNumberForTheHook.current
+  );
+  if (isNewComponentRender) {
+    wdyrStore.hooksPerRender = [];
+  }
+  wdyrStore.hooksPerRender.push({ hookName, result: nextHook, renderNumberForTheHook: newRenderNumberForTheHook.current });
+
+  const ownerInstance = getCurrentOwner();
+  if (!ownerInstance) {
     return hookResult;
   }
 
-  const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type;
+  const Component = ownerInstance.type.ComponentForHooksTracking || ownerInstance.type;
   const displayName = getDisplayName(Component);
 
   const isShouldTrack = shouldTrack(Component, { isHookChange: true });
@@ -131,9 +134,9 @@ export const hooksConfig = {
 };
 
 export function storeOwnerData(element) {
-  const OwnerInstance = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE?.A?.getOwner();
-  if (OwnerInstance) {
-    const Component = OwnerInstance.type.ComponentForHooksTracking || OwnerInstance.type;
+  const ownerInstance = getCurrentOwner();
+  if (ownerInstance) {
+    const Component = ownerInstance.type.ComponentForHooksTracking || ownerInstance.type;
     const displayName = getDisplayName(Component);
 
     let additionalOwnerData = {};
@@ -144,8 +147,8 @@ export function storeOwnerData(element) {
     wdyrStore.ownerDataMap.set(element.props, {
       Component,
       displayName,
-      props: OwnerInstance.pendingProps,
-      state: OwnerInstance.stateNode ? OwnerInstance.stateNode.state : null,
+      props: ownerInstance.pendingProps,
+      state: ownerInstance.stateNode ? ownerInstance.stateNode.state : null,
       hooks: wdyrStore.hooksPerRender,
       additionalOwnerData,
     });
@@ -153,15 +156,18 @@ export function storeOwnerData(element) {
 }
 
 function resetHooksPerRenderIfNeeded() {
-  // Intercept assignments to ReactCurrentOwner.current to reset hooksPerRender
-  let currentA = null;
-  if (wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE) {
-    Object.defineProperty(wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, 'A', {
+  // Intercept assignments to ReactSharedInternals dispatcher (H) to reset hooksPerRender
+  // Notice: asyncDispatcher (A) is not fit for this purpose because it may only change after hooks
+  // from the next component are processed
+  let currentDispatcher = null;
+  const ReactSharedInternals = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+  if (ReactSharedInternals) {
+    Object.defineProperty(ReactSharedInternals, 'H', {
       get() {
-        return currentA;
+        return currentDispatcher;
       },
       set(value) {
-        currentA = value;
+        currentDispatcher = value;
         wdyrStore.hooksPerRender = [];
       },
     });
@@ -185,13 +191,14 @@ function trackHooksIfNeeded() {
       const originalHook = hookParent[hookName];
       const newHookName = hookName[0].toUpperCase() + hookName.slice(1);
 
-      const newHook = function WhyDidYouRenderReWrittenHook(...args) {
+      const newHook = function useWhyDidYouRenderReWrittenHook(...args) {
         const hookResult = originalHook.call(this, ...args);
         const { dependenciesPath, dontReport } = hookTrackingConfig;
+        const shouldTrackHookChanges = !dontReport;
         if (dependenciesPath && isFunction(hookResult)) {
           dependenciesMap.set(hookResult, { hookName, deps: get(args, dependenciesPath) });
         }
-        if (!dontReport) {
+        if (shouldTrackHookChanges) {
           trackHookChanges(hookName, hookTrackingConfig, hookResult);
         }
         return hookResult;

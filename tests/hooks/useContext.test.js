@@ -33,7 +33,7 @@ describe('hooks - useContext', () => {
     const OuterComponent = () => {
       const [currentState, setCurrentState] = React.useState('c');
 
-      React.useLayoutEffect(() => {
+      React.useEffect(() => {
         setCurrentState('c');
       }, []);
 
@@ -68,7 +68,7 @@ describe('hooks - useContext', () => {
     const OuterComponent = () => {
       const [currentState, setCurrentState] = React.useState({ c: 'c' });
 
-      React.useLayoutEffect(() => {
+      React.useEffect(() => {
         setCurrentState({ c: 'c' });
       }, []);
 
@@ -114,7 +114,7 @@ describe('hooks - useContext', () => {
     const OuterComponent = () => {
       const [currentState, setCurrentState] = React.useState({ c: 'c' });
 
-      React.useLayoutEffect(() => {
+      React.useEffect(() => {
         setCurrentState({ c: 'c' });
       }, []);
 
@@ -131,7 +131,11 @@ describe('hooks - useContext', () => {
       <OuterComponent/>
     );
 
-    expect(updateInfos).toHaveLength(2);
+    rtl.render(
+      <OuterComponent/>
+    );
+
+    expect(updateInfos).toHaveLength(4);
     expect(updateInfos[0].reason).toEqual({
       hookDifferences: false,
       propsDifferences: [],
@@ -150,16 +154,51 @@ describe('hooks - useContext', () => {
         stateDifferences: false,
       },
     });
-    expect(updateInfos[1].reason).toEqual({
-      hookDifferences: [{
-        diffType: diffTypes.deepEquals,
-        pathString: '',
-        nextValue: { c: 'c' },
-        prevValue: { c: 'c' },
-      }],
-      propsDifferences: false,
+    expect(updateInfos[1]).toEqual(expect.objectContaining({
+      hookName: 'useContext',
+      reason: {
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: { c: 'c' },
+          prevValue: { c: 'c' },
+        }],
+        propsDifferences: false,
+        stateDifferences: false,
+        ownerDifferences: false,
+      }
+    }));
+    expect(updateInfos[2].reason).toEqual({
+      hookDifferences: false,
+      propsDifferences: [],
       stateDifferences: false,
-      ownerDifferences: false,
+      ownerDifferences: {
+        hookDifferences: [{
+          differences: [{
+            diffType: diffTypes.deepEquals,
+            pathString: '',
+            nextValue: { c: 'c' },
+            prevValue: { c: 'c' },
+          }],
+          hookName: 'useState',
+        }],
+        propsDifferences: false,
+        stateDifferences: false,
+      },
     });
+    expect(updateInfos[3]).toEqual(expect.objectContaining({
+      hookName: 'useContext',
+      reason: {
+        hookDifferences: [{
+          diffType: diffTypes.deepEquals,
+          pathString: '',
+          nextValue: { c: 'c' },
+          prevValue: { c: 'c' },
+        }],
+        propsDifferences: false,
+        stateDifferences: false,
+        ownerDifferences: false,
+      }
+    }));
   });
 });
