@@ -14,10 +14,16 @@ import { diffTypes } from './consts';
 
 const hasElementType = typeof Element !== 'undefined';
 
-// copied from https://github.com/facebook/react/packages/shared/ReactSymbols.js
+// copied from https://github.com/facebook/react/blob/fc5ef50da8e975a569622d477f1fed54cb8b193d/packages/react-devtools-shared/src/backend/shared/ReactSymbols.js#L26
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
-const REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
-const isReactElement = object => object.$$typeof === REACT_ELEMENT_TYPE;
+
+const LEGACY_ELEMENT_NUMBER = 0xeac7;
+const LEGACY_ELEMENT_SYMBOL_STRING = hasSymbol && Symbol.for('react.element');
+const ELEMENT_SYMBOL_STRING = hasSymbol && Symbol.for('react.transitional.element');
+const isReactElement = object => [
+  ...(hasSymbol ? [ELEMENT_SYMBOL_STRING, LEGACY_ELEMENT_SYMBOL_STRING] : []),
+  LEGACY_ELEMENT_NUMBER,
+].includes(object.$$typeof);
 // end
 
 function trackDiff(a, b, diffsAccumulator, pathString, diffType) {
