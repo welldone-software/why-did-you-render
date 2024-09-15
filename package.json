@@ -35,7 +35,7 @@
     "test:classic": "cross-env USE_CLASSIC_JSX=true yarn _test",
     "_test": "jest --config=jest.config.js",
     "test:watch": "yarn test:automatic --watch",
-    "test:ci": "yarn test --coverage && coveralls < coverage/lcov.info",
+    "test:ci": "yarn test --coverage",
     "lint": "eslint . --ext=js --max-warnings 0 --cache --cache-location .cache/eslint-cache",
     "clear": "rimraf .cache dist demo/dist",
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
@@ -44,8 +44,8 @@
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
-    "_cypress:run:ci": "yarn cypress:run --record --parallel --group main",
-    "_cypress:run:ci:classic": "yarn cypress:run --record --parallel --group classic",
+    "_cypress:run:ci": "yarn cypress:run --record --group main",
+    "_cypress:run:ci:classic": "yarn cypress:run --record --group classic",
     "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:run:ci",
     "cypress:ci:classic": "start-server-and-test start:classic http://localhost:3003 _cypress:run:ci:classic"
   },
@@ -54,16 +54,16 @@
       "bump version": "npm version major/minor/patch"
     },
     "resolutions": {
-      "coveralls": [
-        "removed while it's not passing the audit and travis doesn't work"
+      "eslint@^8": [
+        "react eslint plugins doesn't play nicely with eslint 9 so we force using eslint 8 for now"
       ],
       "source-map@^0.7.4": [
         "fixes https://github.com/mozilla/source-map/issues/432 or we get:",
         "forces nollup to use source-map 0.8.0-beta.0 or higher.",
         "will be resolved when nollup is updated to use it"
       ],
-      "eslint@^8": [
-        "react eslint plugins doesn't play nicely with eslint 9 so we force using eslint 8 for now"
+      "string-width": [
+        "fixes require() of ES Module issue"
       ]
     }
   },
@@ -75,7 +75,8 @@
   },
   "resolutions": {
     "source-map-fast": "npm:source-map@^0.8.0-beta.0",
-    "source-map": "^0.8.0-beta.0"
+    "source-map": "^0.8.0-beta.0",
+    "string-width": "4.2.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.24.7",
