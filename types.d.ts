@@ -1,16 +1,44 @@
 import * as React from 'react';
 
-export interface HookDifference {
+export type UpdateDiffType =
+  | 'different'
+  | 'deepEquals'
+  | 'date'
+  | 'regex'
+  | 'reactElement'
+  | 'function'
+  | 'same';
+
+export interface ObjectDifference {
   pathString: string;
-  diffType: string;
+  diffType: UpdateDiffType;
   prevValue: any;
   nextValue: any;
 }
 
+export interface HookDifference {
+  pathString: string;
+  diffType: UpdateDiffType;
+  prevValue: any;
+  nextValue: any;
+}
+
+export interface OwnerHookDifference {
+  hookName: string;
+  differences: ObjectDifference[] | false;
+}
+
+export interface OwnerDifferences {
+  propsDifferences: ObjectDifference[] | false;
+  stateDifferences: ObjectDifference[] | false;
+  hookDifferences: OwnerHookDifference;
+}
+
 export interface ReasonForUpdate {
-  hookDifferences: HookDifference[];
-  propsDifferences: boolean;
-  stateDifferences: boolean;
+  hookDifferences: ObjectDifference[] | false;
+  propsDifferences: ObjectDifference[] | false;
+  stateDifferences: ObjectDifference[] | false;
+  ownerDifferences: OwnerDifferences | false;
 }
 
 export interface UpdateInfo {
@@ -47,14 +75,40 @@ export interface WhyDidYouRenderOptions {
   customName?: string;
 }
 
-export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
+export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions | boolean;
 
-export type Notifier = (options: UpdateInfo) => void
+export type Notifier = (options: UpdateInfo) => void;
 
-declare function whyDidYouRender(react: typeof React, options?: WhyDidYouRenderOptions): typeof React;
+export interface OwnerData {
+  Component: React.ComponentType;
+  displayName: string;
+  props: object;
+  state: object | null;
+  hooks: unknown[];
+  additionalOwnerData?: unknown;
+}
+
+export interface WdyrStore {
+  React: typeof import('react');
+  componentsMap: WeakMap<React.ComponentType, unknown>;
+  hooksPerRender: unknown[];
+  options: WhyDidYouRenderOptions;
+  origCloneElement: typeof React.cloneElement;
+  origCreateElement: typeof React.createElement;
+  origCreateFactory: typeof React.createFactory;
+  ownerDataMap: WeakMap<object, OwnerData>;
+}
+
+declare function whyDidYouRender(
+  react: typeof React,
+  options?: WhyDidYouRenderOptions
+): typeof React;
 
 declare namespace whyDidYouRender {
   export const defaultNotifier: Notifier;
+  export const wdyrStore: WdyrStore;
+  export const storeOwnerData: unknown;
+  export const getWDYRType: unknown;
 }
 
 export default whyDidYouRender;

@@ -1,8 +1,16 @@
-import { reduce } from 'lodash';
+/**
+ * @typedef {import('../types').ObjectDifference} ObjectDifference
+ */
 import calculateDeepEqualDiffs from './calculateDeepEqualDiffs';
 
 const emptyObject = {};
 
+/**
+ * @param {object} userPrevObj 
+ * @param {object} userNextObj 
+ * @param {{ shallow?: boolean }} options
+ * @returns {ObjectDifference[] | false}
+ */
 export default function findObjectsDifferences(userPrevObj, userNextObj, { shallow = true } = {}) {
   if (userPrevObj === userNextObj) {
     return false;
@@ -17,14 +25,10 @@ export default function findObjectsDifferences(userPrevObj, userNextObj, { shall
 
   const keysOfBothObjects = Object.keys({ ...prevObj, ...nextObj });
 
-  return reduce(keysOfBothObjects, (result, key) => {
+  const result = [];
+  for (const key of keysOfBothObjects) {
     const deepEqualDiffs = calculateDeepEqualDiffs(prevObj[key], nextObj[key], key);
-    if (deepEqualDiffs) {
-      result = [
-        ...result,
-        ...deepEqualDiffs,
-      ];
-    }
-    return result;
-  }, []);
+    deepEqualDiffs && result.push(...deepEqualDiffs);
+  }
+  return result;
 }

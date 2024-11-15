@@ -1,6 +1,16 @@
+/**
+ * @typedef {import('../types').ObjectDifference} ObjectDifference
+ * @typedef {import('../types').OwnerData} OwnerData
+ * @typedef {import('../types').OwnerDifferences} OwnerDifferences
+ */
 import findObjectsDifferences from './findObjectsDifferences';
 import wdyrStore from './wdyrStore';
 
+/**
+ * 
+ * @param {{ prevOwnerData: OwnerData; nextOwnerData: OwnerData }} param
+ * @returns {OwnerDifferences}
+ */
 function getOwnerDifferences({ prevOwnerData, nextOwnerData }) {
   if (!prevOwnerData || !nextOwnerData) {
     return false;

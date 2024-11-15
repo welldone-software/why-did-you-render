@@ -1,3 +1,6 @@
+/**
+ * @typedef {import('../types').ObjectDifference} ObjectDifference
+ */
 import {
   isArray,
   isPlainObject,
@@ -20,6 +23,15 @@ const REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
 const isReactElement = object => object.$$typeof === REACT_ELEMENT_TYPE;
 // end
 
+/**
+ * 
+ * @param {object} a 
+ * @param {object} b 
+ * @param {ObjectDifference[]} diffsAccumulator 
+ * @param {string} pathString 
+ * @param {ObjectDifference[]} diffType 
+ * @returns {boolean}
+ */
 function trackDiff(a, b, diffsAccumulator, pathString, diffType) {
   diffsAccumulator.push({
     diffType,
@@ -36,6 +48,15 @@ function isGetter(obj, prop) {
 
 export const dependenciesMap = new WeakMap();
 
+/**
+ * 
+ * @param {object} a 
+ * @param {object} b 
+ * @param {ObjectDifference[]} diffsAccumulator 
+ * @param {string} pathString 
+ * @param {{ detailed?: boolean }} options 
+ * @returns {boolean}
+ */
 function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { detailed }) {
   if (a === b) {
     if (detailed) {
@@ -197,6 +218,14 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
   return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
 }
 
+/**
+ * 
+ * @param {object} a 
+ * @param {object} b 
+ * @param {string} initialPathString 
+ * @param {{ detailed?: boolean }} options
+ * @returns {ObjectDifference[]}
+ */
 export default function calculateDeepEqualDiffs(a, b, initialPathString, { detailed = false } = {}) {
   try {
     const diffs = [];
