@@ -39,6 +39,10 @@ If you use the `automatic` JSX transformation, set the library to be the import 
 }]
 ```
 
+### React Native
+
+#### Bare workflow
+
 Unfortunately, the `metro-react-native-babel-preset` that comes with react-native out of the box does not allow you to change the options of the `babel/plugin-transform-react-jsx` plugin. Just add the plugin with options as listed below and start react-native packager as usual. Default env for babel is "development". If you do not use expo when working with react-native, the following method will help you.
 
 ```js
@@ -51,6 +55,27 @@ module.exports = {
     },
   },
 }
+```
+
+#### Expo managed
+
+You can pass params to `@babel/preset-react` through `babel-preset-expo`
+
+```js
+// babel.config.js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: [
+      [
+        "babel-preset-expo",
+        {
+          jsxImportSource: "@welldone-software/why-did-you-render",
+        },
+      ],
+    ],
+  };
+};
 ```
 
 > Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
@@ -112,6 +137,8 @@ Also, tracking custom hooks is possible by using `trackExtraHooks`. For example 
 ```jsx
 import React from 'react';
 
+// For react-native you might want to use 
+// the __DEV__ flag instead of process.env.NODE_ENV === 'development'
 if (process.env.NODE_ENV === 'development') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render');
   const ReactRedux = require('react-redux');
