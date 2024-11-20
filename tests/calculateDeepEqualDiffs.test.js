@@ -423,20 +423,104 @@ test('sets', () => {
     a: new Set(['a']),
     b: new Set(['a', 1]),
     c: new Set(['a', 1]),
+    d: new Set([{ foo: 'bar' }]),
   };
 
   const nextValue = {
     a: new Set(['a']),
     b: new Set(['a', 2]),
     c: new Set(['a', 1, 'c']),
+    d: new Set([{ foo: 'bar' }]),
   };
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
   expect(diffs).toEqual([
     {
+      pathString: '.d',
+      prevValue: prevValue.d,
+      nextValue: nextValue.d,
+      diffType: diffTypes.deepEquals,
+    },
+    {
       pathString: '.c',
       prevValue: prevValue.c,
       nextValue: nextValue.c,
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '.b.values()[1]',
+      prevValue: [...prevValue.b.values()][1],
+      nextValue: [...nextValue.b.values()][1],
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '.b',
+      prevValue: prevValue.b,
+      nextValue: nextValue.b,
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '.a',
+      prevValue: prevValue.a,
+      nextValue: nextValue.a,
+      diffType: diffTypes.deepEquals,
+    },
+    {
+      pathString: '',
+      prevValue: prevValue,
+      nextValue: nextValue,
+      diffType: diffTypes.different,
+    },
+  ]);
+});
+
+test('maps', () => {
+  const prevValue = {
+    a: new Map([['a', 'b']]),
+    b: new Map([['a', 'b'], [1, 2]]),
+    c: new Map([['a', 'b'], [1, 2]]),
+    d: new Map([[{ foo: 'bar' }, { bar: 'foo' }]]),
+    e: new Map([['a', 'b']]),
+  };
+
+  const nextValue = {
+    a: new Map([['a', 'b']]),
+    b: new Map([['a', 'b'], [2, 2]]),
+    c: new Map([['a', 'b'], [1, 2], ['c', 3]]),
+    d: new Map([[{ foo: 'bar' }, { bar: 'foo' }]]),
+    e: new Map([['a', 'e']]),
+  };
+
+  const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
+  expect(diffs).toEqual([
+    {
+      pathString: '.e.values()[0]',
+      prevValue: [...prevValue.e.values()][0],
+      nextValue: [...nextValue.e.values()][0],
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '.e',
+      prevValue: prevValue.e,
+      nextValue: nextValue.e,
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '.d',
+      prevValue: prevValue.d,
+      nextValue: nextValue.d,
+      diffType: diffTypes.deepEquals,
+    },
+    {
+      pathString: '.c',
+      prevValue: prevValue.c,
+      nextValue: nextValue.c,
+      diffType: diffTypes.different,
+    },
+    {
+      pathString: '.b.keys()[1]',
+      prevValue: [...prevValue.b.keys()][1],
+      nextValue: [...nextValue.b.keys()][1],
       diffType: diffTypes.different,
     },
     {
@@ -489,7 +573,7 @@ describe('calculateDeepEqualDiffs - Errors', () => {
       },
     ]);
   });
-  
+
   test('Different Native Errors', () => {
     const prevValue = new Error('message');
     const nextValue = new Error('Second message');
@@ -568,7 +652,7 @@ test('Equal class instances', () => {
       this.name = name;
     }
   }
-  
+
   const prevValue = new Person('Jon Snow');
   const nextValue = new Person('Jon Snow');
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
@@ -588,7 +672,7 @@ test('Different class instances', () => {
       this.name = name;
     }
   }
-  
+
   const prevValue = new Person('Jon Snow');
   const nextValue = new Person('Aria Stark');
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);

@@ -6,6 +6,7 @@ import {
   isError,
   isFunction,
   isSet,
+  isMap,
   has,
   uniq,
 } from 'lodash';
@@ -75,17 +76,78 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
   }
 
   if (isSet(a) && isSet(b)) {
-    if (a.size !== b.size) {
+    const setLength = a.size;
+    if (setLength !== b.size) {
       return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different);
     }
 
-    for (const valA of a) {
-      if (!b.has(valA)) {
-        return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different);
+    const setItemDiffs = [];
+    let numberOfDeepEqualsValues = 0;
+    const aValues = [...a.values()];
+    const bValues = [...b.values()];
+    for (let i = setLength; i--; i > 0) {
+      const diffEquals = accumulateDeepEqualDiffs(aValues[i], bValues[i], setItemDiffs, `${pathString}.values()[${i}]`, { detailed });
+      if (diffEquals) {
+        numberOfDeepEqualsValues++;
       }
     }
 
-    return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.deepEquals);
+    if (detailed || numberOfDeepEqualsValues !== setLength) {
+      diffsAccumulator.push(...setItemDiffs);
+    }
+
+    if (numberOfDeepEqualsValues === setLength) {
+      return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.deepEquals);
+    }
+
+    return trackDiff(new Set(a), new Set(b), diffsAccumulator, pathString, diffTypes.different);
+  }
+
+  if (isMap(a) && isMap(b)) {
+    const mapLength = a.size;
+    if (mapLength !== b.size) {
+      return trackDiff(new Map(a), new Map(b), diffsAccumulator, pathString, diffTypes.different);
+    }
+
+    const mapKeysDiffs = [];
+    let numberOfDeepEqualsKeys = 0;
+    const aKeys = [...a.keys()];
+    const bKeys = [...b.keys()];
+    for (let i = mapLength; i--; i > 0) {
+      const diffEquals = accumulateDeepEqualDiffs(aKeys[i], bKeys[i], mapKeysDiffs, `${pathString}.keys()[${i}]`, { detailed });
+      if (diffEquals) {
+        numberOfDeepEqualsKeys++;
+      }
+    }
+
+    if (detailed || numberOfDeepEqualsKeys !== mapLength) {
+      diffsAccumulator.push(...mapKeysDiffs);
+    }
+
+    if (numberOfDeepEqualsKeys !== mapLength) {
+      return trackDiff(new Map(a), new Map(b), diffsAccumulator, pathString, diffTypes.different);
+    }
+
+    const mapValuesDiffs = [];
+    let numberOfDeepEqualsValues = 0;
+    const aValues = [...a.values()];
+    const bValues = [...b.values()];
+    for (let i = mapLength; i--; i > 0) {
+      const diffEquals = accumulateDeepEqualDiffs(aValues[i], bValues[i], mapValuesDiffs, `${pathString}.values()[${i}]`, { detailed });
+      if (diffEquals) {
+        numberOfDeepEqualsValues++;
+      }
+    }
+
+    if (detailed || numberOfDeepEqualsValues !== mapLength) {
+      diffsAccumulator.push(...mapValuesDiffs);
+    }
+
+    if (numberOfDeepEqualsValues === mapLength) {
+      return trackDiff(new Map(a), new Map(b), diffsAccumulator, pathString, diffTypes.deepEquals);
+    }
+
+    return trackDiff(new Map(a), new Map(b), diffsAccumulator, pathString, diffTypes.different);
   }
 
   if (isDate(a) && isDate(b)) {
@@ -140,7 +202,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
   if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
     const aKeys = Object.getOwnPropertyNames(a);
     const bKeys = Object.getOwnPropertyNames(b);
-    
+
     const allKeys = uniq([...aKeys, ...bKeys]);
 
     const clonedA = isPlainObject(a) ? { ...a } : a;
