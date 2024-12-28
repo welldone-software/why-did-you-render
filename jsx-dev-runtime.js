@@ -6,22 +6,20 @@ var origJsxDev = jsxDevRuntime.jsxDEV
 var wdyrStore = WDYR.wdyrStore
 
 module.exports = jsxDevRuntime
-module.exports.jsxDEV = function jsxDEV(){
-  var args = Array.prototype.slice.call(arguments)
-
-  if(wdyrStore.React && wdyrStore.React.__IS_WDYR__){
+module.exports.jsxDEV = function jsxDEV(...args){
+  if (wdyrStore.React && wdyrStore.React.__IS_WDYR__) {
     var origType = args[0]
     var rest = args.slice(1)
 
     var WDYRType = WDYR.getWDYRType(origType)
-    if(WDYRType){
-      try{
+    if (WDYRType) {
+      try {
         var element = origJsxDev.apply(null, [WDYRType].concat(rest))
-        if(wdyrStore.options.logOwnerReasons){
+        if (wdyrStore.options.logOwnerReasons) {
           WDYR.storeOwnerData(element)
         }
         return element
-      }catch(e){
+      } catch(e) {
         wdyrStore.options.consoleLog('whyDidYouRender JSX transform error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
           errorInfo: {
             error: e,
@@ -33,6 +31,6 @@ module.exports.jsxDEV = function jsxDEV(){
       }
     }
   }
-
+  
   return origJsxDev.apply(null, args)
 }

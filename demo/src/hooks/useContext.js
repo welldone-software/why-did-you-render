@@ -68,7 +68,7 @@ export default {
       }, []);
 
       return (
-        <MyContext.Provider value={currentState}>
+        <MyContext value={currentState}>
           <h3>
             {`While somehow weird, we have two notifications for "ComponentWithContextHook"
             since it is re-rendered regardless of context changes because "Main" is
@@ -82,7 +82,7 @@ export default {
             MemoizedParent
             <MemoizedParent />
           </div>
-        </MyContext.Provider>
+        </MyContext>
       );
     }
 

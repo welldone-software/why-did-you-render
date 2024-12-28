@@ -32,29 +32,29 @@ function getCurrentOwner() {
 }
 
 function trackHookChanges(hookName, { path: pathToGetTrackedHookResult }, rawHookResult) {
-  const prevResultRef = wdyrStore.React.useRef(initialHookValue);
-  const prevResult = prevResultRef.current;
-
   const nextResult = pathToGetTrackedHookResult ? get(rawHookResult, pathToGetTrackedHookResult) : rawHookResult;
 
-  wdyrStore.hooksInfoForCurrentRender.push({ hookName, result: nextResult });
+  const prevResultRef = wdyrStore.React.useRef(initialHookValue);
+  const prevResult = prevResultRef.current;
+  prevResultRef.current = nextResult;
 
   const ownerInstance = getCurrentOwner();
   if (!ownerInstance) {
     return rawHookResult;
   }
 
+  if (!wdyrStore.hooksInfoForCurrentRender.has(ownerInstance)) {
+    wdyrStore.hooksInfoForCurrentRender.set(ownerInstance, []);
+  }
+  const hooksInfoForCurrentRender = wdyrStore.hooksInfoForCurrentRender.get(ownerInstance);
+
+  hooksInfoForCurrentRender.push({ hookName, result: nextResult });
+
   const Component = ownerInstance.type.ComponentForHooksTracking || ownerInstance.type;
   const displayName = getDisplayName(Component);
 
   const isShouldTrack = shouldTrack(Component, { isHookChange: true });
-  if (!isShouldTrack) {
-    return rawHookResult;
-  }
-
-  prevResultRef.current = nextResult;
-
-  if (prevResult !== initialHookValue) {
+  if (isShouldTrack && prevResult !== initialHookValue) {
     const notification = getUpdateInfo({
       Component: Component,
       displayName,
@@ -142,11 +142,11 @@ export function storeOwnerData(element) {
       displayName,
       props: ownerInstance.pendingProps,
       state: ownerInstance.stateNode ? ownerInstance.stateNode.state : null,
-      hooksInfo: wdyrStore.hooksInfoForCurrentRender,
+      hooksInfo: wdyrStore.hooksInfoForCurrentRender.get(ownerInstance) || [],
       additionalOwnerData,
     });
 
-    wdyrStore.hooksInfoForCurrentRender = [];
+    wdyrStore.hooksInfoForCurrentRender.delete(ownerInstance);
   }
 }
 

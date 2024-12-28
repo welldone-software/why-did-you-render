@@ -21,7 +21,7 @@ const wdyrStore = {
   ownerDataMap: new WeakMap(),
 
   /* An array of infos for hooks tracked during current render */
-  hooksInfoForCurrentRender: [],
+  hooksInfoForCurrentRender: new WeakMap(),
 };
 
 export default wdyrStore;
