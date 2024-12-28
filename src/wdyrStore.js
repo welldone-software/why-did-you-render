@@ -22,6 +22,9 @@ const wdyrStore = {
 
   /* An array of infos for hooks tracked during current render */
   hooksInfoForCurrentRender: new WeakMap(),
+
+  /* Owner before element creation started */
+  ownerBeforeElementCreation: null,
 };
 
 export default wdyrStore;

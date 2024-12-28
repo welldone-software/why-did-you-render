@@ -21,15 +21,11 @@ import {
 
 import { dependenciesMap } from './calculateDeepEqualDiffs';
 
-export { wdyrStore };
+import { getCurrentOwner } from './helpers';
+
+export { wdyrStore, getCurrentOwner };
 
 const initialHookValue = Symbol('initial-hook-value');
-
-function getCurrentOwner() {
-  const reactSharedInternals = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
-  const reactDispatcher = reactSharedInternals?.A;
-  return reactDispatcher?.getOwner();
-}
 
 function trackHookChanges(hookName, { path: pathToGetTrackedHookResult }, rawHookResult) {
   const nextResult = pathToGetTrackedHookResult ? get(rawHookResult, pathToGetTrackedHookResult) : rawHookResult;
@@ -127,9 +123,9 @@ export const hooksConfig = {
 };
 
 export function storeOwnerData(element) {
-  const ownerInstance = getCurrentOwner();
-  if (ownerInstance) {
-    const Component = ownerInstance.type.ComponentForHooksTracking || ownerInstance.type;
+  const owner = getCurrentOwner();
+  if (owner) {
+    const Component = owner.type.ComponentForHooksTracking || owner.type;
     const displayName = getDisplayName(Component);
 
     let additionalOwnerData = {};
@@ -137,16 +133,16 @@ export function storeOwnerData(element) {
       additionalOwnerData = wdyrStore.options.getAdditionalOwnerData(element);
     }
 
-    wdyrStore.ownerDataMap.set(element.props, {
+    wdyrStore.ownerDataMap.set(owner, {
       Component,
       displayName,
-      props: ownerInstance.pendingProps,
-      state: ownerInstance.stateNode ? ownerInstance.stateNode.state : null,
-      hooksInfo: wdyrStore.hooksInfoForCurrentRender.get(ownerInstance) || [],
+      props: owner.pendingProps,
+      state: owner.stateNode ? owner.stateNode.state : null,
+      hooksInfo: wdyrStore.hooksInfoForCurrentRender.get(owner) || [],
       additionalOwnerData,
     });
 
-    wdyrStore.hooksInfoForCurrentRender.delete(ownerInstance);
+    wdyrStore.hooksInfoForCurrentRender.delete(owner);
   }
 }
 
@@ -232,6 +228,7 @@ export default function whyDidYouRender(React, userOptions) {
     const WDYRType = getWDYRType(origType);
     if (WDYRType) {
       try {
+        wdyrStore.ownerBeforeElementCreation = getCurrentOwner();
         const element = wdyrStore.origCreateElement.apply(React, [WDYRType, ...rest]);
         if (wdyrStore.options.logOwnerReasons) {
           storeOwnerData(element);
@@ -262,6 +259,7 @@ export default function whyDidYouRender(React, userOptions) {
   Object.assign(React.createFactory, wdyrStore.origCreateFactory);
 
   React.cloneElement = (...args) => {
+    wdyrStore.ownerBeforeElementCreation = getCurrentOwner();
     const element = wdyrStore.origCloneElement.apply(React, args);
     if (wdyrStore.options.logOwnerReasons) {
       storeOwnerData(element);

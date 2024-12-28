@@ -83,7 +83,7 @@ describe('react-router-dom', () => {
           }],
           ownerDifferences: {
             hookDifferences: false,
-            propsDifferences: [],
+            propsDifferences: false,
             stateDifferences: false
           }
         }

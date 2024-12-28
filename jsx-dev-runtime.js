@@ -14,6 +14,7 @@ module.exports.jsxDEV = function jsxDEV(...args){
     var WDYRType = WDYR.getWDYRType(origType)
     if (WDYRType) {
       try {
+        wdyrStore.ownerBeforeElementCreation = WDYR.getCurrentOwner();
         var element = origJsxDev.apply(null, [WDYRType].concat(rest))
         if (wdyrStore.options.logOwnerReasons) {
           WDYR.storeOwnerData(element)

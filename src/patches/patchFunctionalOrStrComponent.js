@@ -14,15 +14,21 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
     FunctionalOrStringComponent;
 
   function WDYRFunctionalComponent(nextProps, ...args) {
-    const ref = wdyrStore.React.useRef();
+    const prevPropsRef = wdyrStore.React.useRef();
+    const prevProps = prevPropsRef.current;
+    prevPropsRef.current = nextProps;
 
-    const prevProps = ref.current;
-    ref.current = nextProps;
+    const prevOwnerRef = wdyrStore.React.useRef();
+    const prevOwner = prevOwnerRef.current;
+    const nextOwner = wdyrStore.ownerBeforeElementCreation;
+    prevOwnerRef.current = nextOwner;
 
     if (prevProps) {
       const updateInfo = getUpdateInfo({
         Component: FunctionalComponent,
         displayName,
+        prevOwner,
+        nextOwner,
         prevProps,
         nextProps,
       });

@@ -70,7 +70,7 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
 }
 
 export default function defaultNotifier(updateInfo) {
-  const { Component, displayName, hookName, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason } = updateInfo;
+  const { Component, displayName, hookName, prevOwner, nextOwner, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason } = updateInfo;
 
   if (!shouldLog(reason, Component, wdyrStore.options)) {
     return;
@@ -116,8 +116,8 @@ export default function defaultNotifier(updateInfo) {
   }
 
   if (reason.propsDifferences && reason.ownerDifferences) {
-    const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps);
-    const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps);
+    const prevOwnerData = wdyrStore.ownerDataMap.get(prevOwner);
+    const nextOwnerData = wdyrStore.ownerDataMap.get(nextOwner);
 
     wdyrStore.options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`);
     let prefixMessage = 'Re-rendered because';

@@ -4,6 +4,7 @@ import wdyrStore from '../wdyrStore';
 
 import { checkIfInsideAStrictModeTree } from '../utils';
 import getUpdateInfo from '../getUpdateInfo';
+import { getCurrentOwner } from '../helpers';
 
 export default function patchClassComponent(ClassComponent, { displayName, defaultProps }) {
   class WDYRPatchedClassComponent extends ClassComponent {
@@ -38,8 +39,10 @@ export default function patchClassComponent(ClassComponent, { displayName, defau
           const updateInfo = getUpdateInfo({
             Component: ClassComponent,
             displayName,
+            prevOwner: this._WDYR.prevOwner,
             prevProps: this._WDYR.prevProps,
             prevState: this._WDYR.prevState,
+            nextOwner: wdyrStore.ownerBeforeElementCreation,
             nextProps: this.props,
             nextState: this.state,
           });
@@ -47,6 +50,7 @@ export default function patchClassComponent(ClassComponent, { displayName, defau
           wdyrStore.options.notifier(updateInfo);
         }
 
+        this._WDYR.prevOwner = wdyrStore.ownerBeforeElementCreation;
         this._WDYR.prevProps = this.props;
         this._WDYR.prevState = this.state;
       }

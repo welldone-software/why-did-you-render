@@ -50,11 +50,9 @@ function createOwners(Child) {
 }
 
 function CloneOwner({ children }) {
-  /* eslint-disable no-unused-vars */
-  const [a, setA] = React.useState(1);
-  const [b, setB] = React.useState(1);
-  /* eslint-enable */
-  React.useEffect(() => {
+  const [, setA] = React.useState(1);
+  const [, setB] = React.useState(1);
+  React.useLayoutEffect(() => {
     setA(2);
     setB(2);
   }, []);
