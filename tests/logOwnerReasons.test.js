@@ -20,7 +20,7 @@ afterEach(() => {
 });
 
 function createOwners(Child) {
-  const Owner = () => <Child />;
+  const FunctionalOwner = () => <Child />;
 
   class ClassOwner extends React.Component {
     state = { a: 1 };
@@ -46,7 +46,7 @@ function createOwners(Child) {
     return <Child />;
   }
 
-  return { Owner, ClassOwner, HooksOwner };
+  return { FunctionalOwner, ClassOwner, HooksOwner };
 }
 
 function CloneOwner({ children }) {
@@ -66,11 +66,11 @@ describe('logOwnerReasons - function child', () => {
   const Child = () => null;
   Child.whyDidYouRender = true;
 
-  const { Owner, ClassOwner, HooksOwner } = createOwners(Child);
+  const { FunctionalOwner, ClassOwner, HooksOwner } = createOwners(Child);
 
   test('owner props changed', () => {
-    const { rerender } = rtl.render(<Owner a={1}/>);
-    rerender(<Owner a={2} />);
+    const { rerender } = rtl.render(<FunctionalOwner a={1}/>);
+    rerender(<FunctionalOwner a={2} />);
 
     expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
@@ -247,11 +247,11 @@ describe('logOwnerReasons - class child', () => {
     }
   }
 
-  const { Owner, ClassOwner, HooksOwner } = createOwners(Child);
+  const { FunctionalOwner, ClassOwner, HooksOwner } = createOwners(Child);
 
   test('owner props changed', () => {
-    const { rerender } = rtl.render(<Owner a={1}/>);
-    rerender(<Owner a={2} />);
+    const { rerender } = rtl.render(<FunctionalOwner a={1}/>);
+    rerender(<FunctionalOwner a={2} />);
 
     expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({

@@ -241,7 +241,7 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `titleColor`
 - `diffNameColor`
 - `diffPathColor`
-- `notifier: ({Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason, options, ownerDataMap}) => void`
+- `notifier: ({Component, displayName, hookName, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason, options, ownerDataMap}) => void`
 - `getAdditionalOwnerData: (element) => {...}`
 
 #### include / exclude
@@ -283,7 +283,7 @@ whyDidYouRender(React, {
 });
 ```
 
-> There is currently a problem with rewriting exports of imported files in webpack. A workaround is available here: [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
+> This feature is rewriting exports of imported files. There is currently a problem with that approach in webpack. A workaround is available here: [#85 - trackExtraHooks cannot set property](https://github.com/welldone-software/why-did-you-render/issues/85)
 
 #### logOwnerReasons
 ##### (default: `true`)

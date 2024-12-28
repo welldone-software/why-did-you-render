@@ -24,12 +24,12 @@ afterEach(() => {
 
 describe('children using hook results', () => {
   test('without dependencies', () => {
-    const Child = () => <div>hi!</div>;
-    Child.whyDidYouRender = true;
+    const AChild = () => <div>hi!</div>;
+    AChild.whyDidYouRender = true;
 
     const ComponentWithMemoHook = () => {
       const [currentState, setCurrentState] = React.useState({ c: 'c' });
-
+      
       React.useLayoutEffect(() => {
         setCurrentState({ c: 'c' });
       }, []);
@@ -39,7 +39,7 @@ describe('children using hook results', () => {
       const fnRegular = () => someFn(currentState.c);
 
       return (
-        <Child type="button" fnRegular={fnRegular} fnUseMemo={fnUseMemo} fnUseCallback={fnUseCallback}/>
+        <AChild type="button" fnRegular={fnRegular} fnUseMemo={fnUseMemo} fnUseCallback={fnUseCallback}/>
       );
     };
 

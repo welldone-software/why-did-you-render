@@ -13,7 +13,12 @@ import patchFunctionalOrStrComponent from './patches/patchFunctionalOrStrCompone
 import patchMemoComponent from './patches/patchMemoComponent';
 import patchForwardRefComponent from './patches/patchForwardRefComponent';
 
-import { isForwardRefComponent, isMemoComponent, isReactClassComponent } from './utils';
+import {
+  isForwardRefComponent,
+  isMemoComponent,
+  isReactClassComponent,
+} from './utils';
+
 import { dependenciesMap } from './calculateDeepEqualDiffs';
 
 export { wdyrStore };
@@ -26,28 +31,17 @@ function getCurrentOwner() {
   return reactDispatcher?.getOwner();
 }
 
-function trackHookChanges(hookName, { path: hookPath }, hookResult) {
-  const nextHook = hookPath ? get(hookResult, hookPath) : hookResult;
+function trackHookChanges(hookName, { path: pathToGetTrackedHookResult }, rawHookResult) {
+  const prevResultRef = wdyrStore.React.useRef(initialHookValue);
+  const prevResult = prevResultRef.current;
 
-  const prevHookRef = wdyrStore.React.useRef(initialHookValue);
+  const nextResult = pathToGetTrackedHookResult ? get(rawHookResult, pathToGetTrackedHookResult) : rawHookResult;
 
-  // If a new component is rendered, wdyrStore.hooksPerRender is reset with "resetHooksPerRenderIfNeeded".
-  // The below code resets hooksPerRender if the same component is being rendered for a consecutive time
-  // by detecting the increasment of the render count in the first component in wdyrStore.hooksPerRender
-  const newRenderNumberForTheHook = wdyrStore.React.useRef(0);
-  newRenderNumberForTheHook.current++;
-  const isNewComponentRender = (
-    wdyrStore.hooksPerRender.length > 0 &&
-    wdyrStore.hooksPerRender[0].renderNumberForTheHook !== newRenderNumberForTheHook.current
-  );
-  if (isNewComponentRender) {
-    wdyrStore.hooksPerRender = [];
-  }
-  wdyrStore.hooksPerRender.push({ hookName, result: nextHook, renderNumberForTheHook: newRenderNumberForTheHook.current });
+  wdyrStore.hooksInfoForCurrentRender.push({ hookName, result: nextResult });
 
   const ownerInstance = getCurrentOwner();
   if (!ownerInstance) {
-    return hookResult;
+    return rawHookResult;
   }
 
   const Component = ownerInstance.type.ComponentForHooksTracking || ownerInstance.type;
@@ -55,19 +49,18 @@ function trackHookChanges(hookName, { path: hookPath }, hookResult) {
 
   const isShouldTrack = shouldTrack(Component, { isHookChange: true });
   if (!isShouldTrack) {
-    return hookResult;
+    return rawHookResult;
   }
 
-  const newPrevHookRef = prevHookRef.current;
-  prevHookRef.current = hookResult;
+  prevResultRef.current = nextResult;
 
-  if (newPrevHookRef !== initialHookValue) {
+  if (prevResult !== initialHookValue) {
     const notification = getUpdateInfo({
       Component: Component,
       displayName,
       hookName,
-      prevHook: hookPath ? get(newPrevHookRef, hookPath) : newPrevHookRef,
-      nextHook,
+      prevHookResult: prevResult,
+      nextHookResult: nextResult,
     });
 
     if (notification.reason.hookDifferences) {
@@ -75,7 +68,7 @@ function trackHookChanges(hookName, { path: hookPath }, hookResult) {
     }
   }
 
-  return hookResult;
+  return rawHookResult;
 }
 
 function createPatchedComponent(Component, { displayName, defaultProps }) {
@@ -149,28 +142,11 @@ export function storeOwnerData(element) {
       displayName,
       props: ownerInstance.pendingProps,
       state: ownerInstance.stateNode ? ownerInstance.stateNode.state : null,
-      hooks: wdyrStore.hooksPerRender,
+      hooksInfo: wdyrStore.hooksInfoForCurrentRender,
       additionalOwnerData,
     });
-  }
-}
 
-function resetHooksPerRenderIfNeeded() {
-  // Intercept assignments to ReactSharedInternals dispatcher (H) to reset hooksPerRender
-  // Notice: asyncDispatcher (A) is not fit for this purpose because it may only change after hooks
-  // from the next component are processed
-  let currentDispatcher = null;
-  const ReactSharedInternals = wdyrStore.React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
-  if (ReactSharedInternals) {
-    Object.defineProperty(ReactSharedInternals, 'H', {
-      get() {
-        return currentDispatcher;
-      },
-      set(value) {
-        currentDispatcher = value;
-        wdyrStore.hooksPerRender = [];
-      },
-    });
+    wdyrStore.hooksInfoForCurrentRender = [];
   }
 }
 
@@ -189,7 +165,6 @@ function trackHooksIfNeeded() {
 
     hooksToTrack.forEach(([hookParent, hookName, hookTrackingConfig = {}]) => {
       const originalHook = hookParent[hookName];
-      const newHookName = hookName[0].toUpperCase() + hookName.slice(1);
 
       const newHook = function useWhyDidYouRenderReWrittenHook(...args) {
         const hookResult = originalHook.call(this, ...args);
@@ -204,7 +179,10 @@ function trackHooksIfNeeded() {
         return hookResult;
       };
 
-      Object.defineProperty(newHook, 'name', { value: newHookName, writable: false });
+      Object.defineProperty(newHook, 'name', {
+        value: hookName + 'WDYR',
+        writable: false
+      });
       Object.assign(newHook, { originalHook });
       hookParent[hookName] = newHook;
     });
@@ -249,8 +227,6 @@ export default function whyDidYouRender(React, userOptions) {
     origCloneElement: React.cloneElement,
     componentsMap: new WeakMap(),
   });
-
-  resetHooksPerRenderIfNeeded();
 
   React.createElement = function(origType, ...rest) {
     const WDYRType = getWDYRType(origType);

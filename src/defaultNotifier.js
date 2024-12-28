@@ -70,7 +70,7 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
 }
 
 export default function defaultNotifier(updateInfo) {
-  const { Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason } = updateInfo;
+  const { Component, displayName, hookName, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason } = updateInfo;
 
   if (!shouldLog(reason, Component, wdyrStore.options)) {
     return;
@@ -110,7 +110,7 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'hook',
       differences: reason.hookDifferences,
-      values: { prev: prevHook, next: nextHook },
+      values: { prev: prevHookResult, next: nextHookResult },
       hookName,
     });
   }
@@ -153,7 +153,7 @@ export default function defaultNotifier(updateInfo) {
           prefixMessage,
           diffObjType: 'hook',
           differences,
-          values: { prev: prevOwnerData.hooks[i].result, next: nextOwnerData.hooks[i].result },
+          values: { prev: prevOwnerData.hooksInfo[i].result, next: nextOwnerData.hooksInfo[i].result },
           hookName,
         })
       );

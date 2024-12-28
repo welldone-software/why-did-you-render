@@ -219,8 +219,8 @@ describe('For different hook', () => {
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevHook: { a: 'aa' },
-        nextHook: { a: 'aa' },
+        prevHookResult: { a: 'aa' },
+        nextHookResult: { a: 'aa' },
       });
 
       defaultNotifier(updateInfo);

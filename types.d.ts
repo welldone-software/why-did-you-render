@@ -20,8 +20,8 @@ export interface UpdateInfo {
   prevState: any;
   nextProps: any;
   nextState: any;
-  prevHook: any;
-  nextHook: any;
+  prevHookResult: any;
+  nextHookResult: any;
   reason: ReasonForUpdate;
   options: WhyDidYouRenderOptions;
   hookName?: string;

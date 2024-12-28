@@ -6,14 +6,14 @@ function getOwnerDifferences({ prevOwnerData, nextOwnerData }) {
     return false;
   }
 
-  // in strict mode prevOwnerData might be twice as lengthy because of double renders
-  const prevOwnerDataHooks = prevOwnerData.hooks.length === nextOwnerData.hooks.length * 2 ?
-    prevOwnerData.hooks.slice(prevOwnerData.hooks.length / 2) :
-    prevOwnerData.hooks;
+  // in strict mode a re-render happens twice as opposed to the initial render that happens once.
+  const prevOwnerDataHooks = prevOwnerData.hooksInfo.length === nextOwnerData.hooksInfo.length * 2 ?
+    prevOwnerData.hooksInfo.slice(prevOwnerData.hooksInfo.length / 2) :
+    prevOwnerData.hooksInfo;
 
   const hookDifferences = prevOwnerDataHooks.map(({ hookName, result }, i) => ({
     hookName,
-    differences: findObjectsDifferences(result, nextOwnerData.hooks[i].result, { shallow: false }),
+    differences: findObjectsDifferences(result, nextOwnerData.hooksInfo[i].result, { shallow: false }),
   }));
 
   return {
@@ -23,29 +23,29 @@ function getOwnerDifferences({ prevOwnerData, nextOwnerData }) {
   };
 }
 
-function getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook) {
+function getUpdateReason(prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult) {
   const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps);
   const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps);
 
   return {
     propsDifferences: findObjectsDifferences(prevProps, nextProps),
     stateDifferences: findObjectsDifferences(prevState, nextState),
-    hookDifferences: findObjectsDifferences(prevHook, nextHook, { shallow: false }),
+    hookDifferences: findObjectsDifferences(prevHookResult, nextHookResult, { shallow: false }),
     ownerDifferences: getOwnerDifferences({ prevOwnerData, nextOwnerData }),
   };
 }
 
-export default function getUpdateInfo({ Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook }) {
+export default function getUpdateInfo({ Component, displayName, hookName, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult }) {
   return {
     Component,
     displayName,
     hookName,
     prevProps,
     prevState,
-    prevHook,
+    prevHookResult,
     nextProps,
     nextState,
-    nextHook,
-    reason: getUpdateReason(prevProps, prevState, prevHook, nextProps, nextState, nextHook),
+    nextHookResult,
+    reason: getUpdateReason(prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult),
   };
 }
