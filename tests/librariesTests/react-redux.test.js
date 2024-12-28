@@ -115,6 +115,7 @@ describe('react-redux - simple', () => {
         {a.b}
       </div>
     );
+    
     const ConnectedSimpleComponent = connect(
       state => ({ a: state.a })
     )(SimpleComponent);

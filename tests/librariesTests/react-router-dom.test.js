@@ -18,7 +18,6 @@ beforeEach(() => {
   updateInfos = [];
   whyDidYouRender(React, {
     notifier: updateInfo => updateInfos.push(updateInfo),
-    trackAllPureComponents: true,
   });
 });
 
@@ -28,14 +27,19 @@ afterEach(() => {
 
 describe('react-router-dom', () => {
   test('simple', () => {
-    const InnerComp = () => {
+    const InnerComp = ({ a }) => {
       const location = useLocation();
+
+      const [state, setState] = React.useState(0);
+      React.useLayoutEffect(() => {
+        setState(a => a + 1);
+      }, []);
 
       // eslint-disable-next-line no-console
       console.log(`location is: ${location.pathname}`);
 
       return (
-        <div>hi!</div>
+        <div>hi! {JSON.stringify(a)} {state}</div>
       );
     };
 
@@ -44,7 +48,7 @@ describe('react-router-dom', () => {
     const Comp = () => (
       <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<InnerComp a={[]}/>}/>
+          <Route exact path="/" element={<InnerComp a={{ b: 'c' }}/>}/>
         </Routes>
       </BrowserRouter>
     );
@@ -57,18 +61,25 @@ describe('react-router-dom', () => {
     expect(consoleOutputs).toEqual([
       expect.objectContaining({ args: ['location is: /'] }),
       expect.objectContaining({ args: ['location is: /'] }),
+      expect.objectContaining({ args: ['location is: /'] }),
     ]);
 
+    expect(updateInfos).toHaveLength(2);
     expect(updateInfos).toEqual([
       expect.objectContaining({
+        displayName: 'InnerComp',
+        hookName: 'useState',
+      }),
+      expect.objectContaining({
+        displayName: 'InnerComp',
         reason: {
           hookDifferences: false,
           stateDifferences: false,
           propsDifferences: [{
             diffType: 'deepEquals',
-            nextValue: [],
+            nextValue: { b: 'c' },
             pathString: 'a',
-            prevValue: []
+            prevValue: { b: 'c' },
           }],
           ownerDifferences: {
             hookDifferences: false,
@@ -100,24 +111,22 @@ describe('react-router-dom', () => {
     const InnerFn = ({ a, setDeepEqlState }) => {
       const location = useLocation();
 
-      // eslint-disable-next-line no-console
-      console.log(`location is: ${location.pathname}`);
-
       React.useLayoutEffect(() => {
         setDeepEqlState();
       }, []);
 
+      // eslint-disable-next-line no-console
+      console.log(`location is: ${location.pathname}`);
+
       return <div>hi! {a.b}</div>;
     };
 
-    InnerFn.whyDidYouRender = true;
+    const InnerComp = connect(
+      state => ({ a: state.a }),
+      { setDeepEqlState: () => ({ type: 'deepEqlState' }) }
+    )(InnerFn);
 
-    const InnerComp = (
-      connect(
-        state => ({ a: state.a }),
-        { setDeepEqlState: () => ({ type: 'deepEqlState' }) }
-      )(InnerFn)
-    );
+    InnerFn.whyDidYouRender = true;
 
     const Comp = () => (
       <Provider store={store}>
