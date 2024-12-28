@@ -57,6 +57,10 @@
       ],
       "string-width": [
         "fixes require() of ES Module issue"
+      ],
+      "rollup-plugin-react-refresh": [
+        "Uses my forked github https://github.com/vzaidman/rollup-plugin-react-refresh",
+        "Until the PR from that is merged to the official library https://github.com/PepsRyuu/rollup-plugin-react-refresh/pull/10"
       ]
     }
   },
@@ -112,9 +116,9 @@
     "nollup": "^0.21.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hot-loader": "^4.13.1",
     "react-is": "^19.0.0",
     "react-redux": "^9.2.0",
+    "react-refresh": "^0.16.0",
     "react-router-dom": "^7.1.1",
     "redux": "^5.0.1",
     "rimraf": "^6.0.1",
@@ -123,6 +127,7 @@
     "rollup-plugin-commonjs-alternate": "^0.8.0",
     "rollup-plugin-license": "^3.5.3",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-react-refresh": "https://github.com/vzaidman/rollup-plugin-react-refresh.git#5c2f09bc28dbb8ab711b7d095f61fbc8d295fcd6",
     "source-map": "npm:source-map@^0.8.0-beta.0",
     "start-server-and-test": "^2.0.9",
     "styled-components": "^6.1.13",

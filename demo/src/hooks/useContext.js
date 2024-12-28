@@ -1,11 +1,10 @@
 /* eslint-disable no-console */
 import React from 'react';
-import ReactDom from 'react-dom';
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Hooks - useContext',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React);
 
     const stepLogger = createStepLogger();
@@ -87,6 +86,6 @@ export default {
     }
 
     stepLogger('initial render');
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

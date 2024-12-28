@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 export default {
   description: 'Child of Pure Component',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React, {
       trackAllPureComponents: true,
     });
@@ -38,6 +37,6 @@ export default {
       }
     }
 
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

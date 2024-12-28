@@ -105,7 +105,7 @@ In [Typescript](https://github.com/welldone-software/why-did-you-render/issues/1
 /// <reference types="@welldone-software/why-did-you-render" />
 ```
 
-Import `wdyr` as the first import (even before `react-hot-loader`):
+Import `wdyr` as the first import (even before `react-hot-loader` if you use it):
 
 `index.js`:
 ```jsx

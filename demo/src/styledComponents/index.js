@@ -1,10 +1,9 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import styled from 'styled-components';
 
 export default {
   description: 'styled-components',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React);
 
     const SimpleComponent = (props) => {
@@ -26,7 +25,7 @@ export default {
       <StyledSimpleComponent a={[]}/>
     );
 
-    ReactDom.render(<Main/>, domElement);
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
+    reactDomRoot.render(<Main/>);
   },
 };

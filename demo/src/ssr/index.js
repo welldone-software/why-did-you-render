@@ -7,7 +7,7 @@ import DemoComponent from './DemoComponent';
 
 export default {
   description: 'Server Side (hydrate)',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     const stepLogger = createStepLogger();
 
     fetch('/ssrComponent')
@@ -21,7 +21,7 @@ export default {
         ReactDom.hydrate(<DemoComponent text="hydrated hi"/>, domElement);
 
         stepLogger('render with same props', true);
-        ReactDom.render(<DemoComponent text="hydrated hi"/>, domElement);
+        reactDomRoot.render(<DemoComponent text="hydrated hi"/>);
       });
   },
 };

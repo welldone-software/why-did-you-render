@@ -1,10 +1,9 @@
 /* eslint-disable no-console */
 import React from 'react';
-import ReactDom from 'react-dom';
 
 export default {
   description: 'Hooks - useState',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React);
 
     function BrokenHooksComponent() {
@@ -86,6 +85,6 @@ export default {
       );
     }
 
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

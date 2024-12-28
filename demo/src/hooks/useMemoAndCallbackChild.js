@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Hooks - useMemo and useCallback Child',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -64,6 +63,6 @@ export default {
 
     Main.displayName = 'Main';
 
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

@@ -31,7 +31,14 @@ function getOwnerDifferences(prevOwner, nextOwner) {
     };
   }
   catch(e) {
-    console.error('WDYR failed getOwnerDifferences');
+    wdyrStore.options.consoleLog('whyDidYouRender error in getOwnerDifferences. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
+      errorInfo: {
+        error: e,
+        prevOwner,
+        nextOwner,
+        options: wdyrStore.options,
+      },
+    });
     return false;
   }
 }

@@ -236,7 +236,7 @@ export default function whyDidYouRender(React, userOptions) {
         return element;
       }
       catch (e) {
-        wdyrStore.options.consoleLog('whyDidYouRender error. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
+        wdyrStore.options.consoleLog('whyDidYouRender error in createElement. Please file a bug at https://github.com/welldone-software/why-did-you-render/issues.', {
           errorInfo: {
             error: e,
             componentNameOrComponent: origType,

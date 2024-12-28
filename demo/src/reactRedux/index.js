@@ -1,12 +1,11 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import _ from 'lodash';
 import { createStore } from 'redux';
 import * as Redux from 'react-redux';
 
 export default {
   description: 'React Redux',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React, { trackExtraHooks: [
       [Redux, 'useSelector'],
     ] });
@@ -49,6 +48,6 @@ export default {
       </Provider>
     );
 
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

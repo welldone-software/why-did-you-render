@@ -1,7 +1,6 @@
-import ReactHotLoader from 'react-hot-loader';
-
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDom from 'react-dom/client';
+
 import whyDidYouRender from '@welldone-software/why-did-you-render';
 
 import Menu from './Menu';
@@ -52,14 +51,16 @@ const demosList = {
 
 const defaultDemoName = 'bigList';
 
-const domDemoElement = document.getElementById('demo');
+const domElement = document.getElementById('demo');
+let reactDomRoot;
 
 function changeDemo(demoFn) {
   console.clear && console.clear(); // eslint-disable-line no-console
   React.__REVERT_WHY_DID_YOU_RENDER__ && React.__REVERT_WHY_DID_YOU_RENDER__();
-  ReactDom.unmountComponentAtNode(domDemoElement);
+  reactDomRoot?.unmount();
+  reactDomRoot = ReactDom.createRoot(domElement);
   setTimeout(() => {
-    demoFn({ whyDidYouRender, domElement: domDemoElement });
+    demoFn({ whyDidYouRender, reactDomRoot });
   }, 1);
 }
 
@@ -85,6 +86,6 @@ const App = () => (
   </Menu>
 );
 
-export default ReactHotLoader.hot(module)(App);
+export default App;
 
 

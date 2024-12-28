@@ -1,10 +1,9 @@
 /* eslint-disable no-console */
 import React from 'react';
-import ReactDom from 'react-dom';
 
 export default {
   description: 'Hooks - useReducer',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React);
 
     function reducer(state, action) {
@@ -54,6 +53,6 @@ export default {
     }
     Main.whyDidYouRender = true;
 
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

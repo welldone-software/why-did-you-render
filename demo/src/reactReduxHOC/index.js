@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import { createStore } from 'redux';
 import * as Redux from 'react-redux';
 import _ from 'lodash';
@@ -9,7 +8,7 @@ const Provider = Redux.Provider;
 
 export default {
   description: 'React Redux HOC',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     whyDidYouRender(React);
 
     const initialState = { a: { b: 'c' } };
@@ -56,6 +55,6 @@ export default {
       </Provider>
     );
 
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

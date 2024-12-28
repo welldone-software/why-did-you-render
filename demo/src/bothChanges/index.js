@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Props And State Changes',
-  fn({ domElement, whyDidYouRender }) {
+  fn({ reactDomRoot, whyDidYouRender }) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -29,9 +28,9 @@ export default {
     }
 
     stepLogger('First Render');
-    ReactDom.render(<ClassDemo a={{ b: 'b' }}/>, domElement);
+    reactDomRoot.render(<ClassDemo a={{ b: 'b' }}/>);
 
     stepLogger('Second Render', true);
-    ReactDom.render(<ClassDemo a={{ b: 'b' }}/>, domElement);
+    reactDomRoot.render(<ClassDemo a={{ b: 'b' }}/>);
   },
 };
