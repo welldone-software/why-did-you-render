@@ -43,11 +43,12 @@ export interface WhyDidYouRenderOptions {
   titleColor?: string;
   diffNameColor?: string;
   diffPathColor?: string;
+  textBackgroundColor?: string;
   notifier?: Notifier;
   customName?: string;
 }
 
-export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
+export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions | boolean
 
 export type Notifier = (options: UpdateInfo) => void
 

@@ -244,6 +244,7 @@ Optionally you can pass in `options` as the second parameter. The following opti
 - `titleColor`
 - `diffNameColor`
 - `diffPathColor`
+- `textBackgroundColor`
 - `notifier: ({Component, displayName, hookName, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason, options, ownerDataMap}) => void`
 - `getAdditionalOwnerData: (element) => {...}`
 
@@ -328,10 +329,11 @@ If you don't want to use `console.group` to group logs you can print them as sim
 
 Grouped logs can be collapsed.
 
-#### titleColor / diffNameColor / diffPathColor
+#### titleColor / diffNameColor / diffPathColor / textBackgroundColor
 ##### (default titleColor: `'#058'`)
 ##### (default diffNameColor: `'blue'`)
 ##### (default diffPathColor: `'red'`)
+##### (default textBackgroundColor: `'white`)
 
 Controls the colors used in the console notifications
 

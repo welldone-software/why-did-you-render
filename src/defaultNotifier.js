@@ -44,7 +44,9 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
       }
       wdyrStore.options.consoleGroup(
         `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
-        `color:${wdyrStore.options.diffNameColor};`, `color:${wdyrStore.options.diffPathColor};`, 'color:default;'
+        `background-color: ${wdyrStore.options.textBackgroundColor};color:${wdyrStore.options.diffNameColor};`,
+        `background-color: ${wdyrStore.options.textBackgroundColor};color:${wdyrStore.options.diffPathColor};`,
+        'background-color: ${wdyrStore.options.textBackgroundColor};color:default;'
       );
       wdyrStore.options.consoleLog(
         `${diffTypesDescriptions[diffType]}. (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
@@ -76,7 +78,7 @@ export default function defaultNotifier(updateInfo) {
     return;
   }
 
-  wdyrStore.options.consoleGroup(`%c${displayName}`, `color: ${wdyrStore.options.titleColor};`);
+  wdyrStore.options.consoleGroup(`%c${displayName}`, `background-color: ${wdyrStore.options.textBackgroundColor};color: ${wdyrStore.options.titleColor};`);
 
   let prefixMessage = 'Re-rendered because';
 
