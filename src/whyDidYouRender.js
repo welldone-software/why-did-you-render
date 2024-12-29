@@ -51,16 +51,16 @@ function trackHookChanges(hookName, {path: pathToGetTrackedHookResult}, rawHookR
 
   const isShouldTrack = shouldTrack(Component, {isHookChange: true});
   if (isShouldTrack && prevResult !== initialHookValue) {
-    const notification = getUpdateInfo({
+    const updateInfo = getUpdateInfo({
       Component: Component,
       displayName,
       hookName,
       prevHookResult: prevResult,
       nextHookResult: nextResult,
     });
-
-    if (notification.reason.hookDifferences) {
-      wdyrStore.options.notifier(notification);
+ 
+    if (updateInfo.reason.hookDifferences) {
+      wdyrStore.options.notifier(updateInfo);
     }
   }
 

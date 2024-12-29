@@ -119,46 +119,48 @@ export default function defaultNotifier(updateInfo) {
     const prevOwnerData = wdyrStore.ownerDataMap.get(prevOwner);
     const nextOwnerData = wdyrStore.ownerDataMap.get(nextOwner);
 
-    wdyrStore.options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`);
-    let prefixMessage = 'Re-rendered because';
-
-    if (reason.ownerDifferences.propsDifferences) {
-      logDifference({
-        Component: nextOwnerData.Component,
-        displayName: nextOwnerData.displayName,
-        prefixMessage,
-        diffObjType: 'props',
-        differences: reason.ownerDifferences.propsDifferences,
-        values: {prev: prevOwnerData.props, next: nextOwnerData.props},
-      });
-      prefixMessage = 'And because';
-    }
-
-    if (reason.ownerDifferences.stateDifferences) {
-      logDifference({
-        Component: nextOwnerData.Component,
-        displayName: nextOwnerData.displayName,
-        prefixMessage,
-        diffObjType: 'state',
-        differences: reason.ownerDifferences.stateDifferences,
-        values: {prev: prevOwnerData.state, next: nextOwnerData.state},
-      });
-    }
-
-    if (reason.ownerDifferences.hookDifferences) {
-      reason.ownerDifferences.hookDifferences.forEach(({hookName, differences}, i) =>
+    if (prevOwnerData && nextOwnerData) {
+      wdyrStore.options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`);
+      let prefixMessage = 'Re-rendered because';
+  
+      if (reason.ownerDifferences.propsDifferences) {
         logDifference({
           Component: nextOwnerData.Component,
           displayName: nextOwnerData.displayName,
           prefixMessage,
-          diffObjType: 'hook',
-          differences,
-          values: {prev: prevOwnerData.hooksInfo[i].result, next: nextOwnerData.hooksInfo[i].result},
-          hookName,
-        })
-      );
+          diffObjType: 'props',
+          differences: reason.ownerDifferences.propsDifferences,
+          values: {prev: prevOwnerData.props, next: nextOwnerData.props},
+        });
+        prefixMessage = 'And because';
+      }
+  
+      if (reason.ownerDifferences.stateDifferences) {
+        logDifference({
+          Component: nextOwnerData.Component,
+          displayName: nextOwnerData.displayName,
+          prefixMessage,
+          diffObjType: 'state',
+          differences: reason.ownerDifferences.stateDifferences,
+          values: {prev: prevOwnerData.state, next: nextOwnerData.state},
+        });
+      }
+  
+      if (reason.ownerDifferences.hookDifferences) {
+        reason.ownerDifferences.hookDifferences.forEach(({hookName, differences}, i) =>
+          logDifference({
+            Component: nextOwnerData.Component,
+            displayName: nextOwnerData.displayName,
+            prefixMessage,
+            diffObjType: 'hook',
+            differences,
+            values: {prev: prevOwnerData.hooksInfo[i].result, next: nextOwnerData.hooksInfo[i].result},
+            hookName,
+          })
+        );
+      }
+      wdyrStore.options.consoleGroupEnd();
     }
-    wdyrStore.options.consoleGroupEnd();
   }
 
   if (!reason.propsDifferences && !reason.stateDifferences && !reason.hookDifferences) {
