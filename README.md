@@ -21,15 +21,15 @@ It can also help you to simply track when and why a certain component re-renders
 
 ## Setup
 The latest version of the library was tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@19`** only.
-* For React 18, please use version @^8.
-* For React 17 and 16, please use version @^7.
+* [For `React 18`, please see the readme for version @^8](https://github.com/welldone-software/why-did-you-render/tree/version-8).
+* [For `React 17` and `React 16`, please see the readme for version @^7](https://github.com/welldone-software/why-did-you-render/tree/version-7).
 
 ```
 npm install @welldone-software/why-did-you-render --save-dev
 ```
 or
 ```
-yarn add --dev @welldone-software/why-did-you-render
+yarn add @welldone-software/why-did-you-render -D
 ```
 Set the library to be the React's importSource and make sure `preset-react` is in `development` mode.
 
@@ -84,7 +84,7 @@ module.exports = function (api) {
 > Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
 > [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-773905769)
 
-Create a `wdyr.js` file and import it as **the first import** in your application.
+Create a `wdyr.js` file and import it as **the very first import** in your application.
 
 `wdyr.js`:
 ```jsx
@@ -98,7 +98,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-> **Notice: The library should *NEVER* be used in production because it slows down React**
+> **Notice: The library should *NEVER* be used in production because it significantly slows down React**
 
 In [Typescript](https://github.com/welldone-software/why-did-you-render/issues/161), call the file wdyr.ts and add the following line to the top of the file to import the package's types:
 ```tsx
@@ -108,6 +108,7 @@ In [Typescript](https://github.com/welldone-software/why-did-you-render/issues/1
 Import `wdyr` as the first import (even before `react-hot-loader` if you use it):
 
 `index.js`:
+
 ```jsx
 import './wdyr'; // <--- first import
 
