@@ -13,7 +13,7 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
     getFunctionalComponentFromStringComponent(FunctionalOrStringComponent) :
     FunctionalOrStringComponent;
 
-  function WDYRFunctionalComponent(nextProps, ...args) {
+  function WDYRFunctionalComponent(nextProps, refMaybe, ...args) {
     const prevPropsRef = wdyrStore.React.useRef();
     const prevProps = prevPropsRef.current;
     prevPropsRef.current = nextProps;
@@ -44,7 +44,7 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
       }
     }
 
-    return FunctionalComponent(nextProps, ...args);
+    return FunctionalComponent(nextProps, refMaybe, ...args);
   }
 
   try {

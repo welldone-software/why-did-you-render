@@ -4,7 +4,6 @@ const substringsToIgnore = [
   'Selectors that return the entire state are almost certainly a mistake',
   'Warning: ReactDOM.render is no longer supported in React 19',
   'Support for defaultProps will be removed from',
-  'forwardRef render functions accept exactly two parameters'
 ];
 const regexToIgnore = new RegExp(`(${substringsToIgnore.join('|')})`);
 

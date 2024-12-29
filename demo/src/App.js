@@ -25,6 +25,7 @@ import strict from './strict';
 import reactRedux from './reactRedux';
 import styledComponents from './styledComponents';
 import logOwnerReasons from './logOwnerReasons';
+import forwardRef from './forwardRef';
 
 const demosList = {
   bigList,
@@ -47,6 +48,7 @@ const demosList = {
   reactReduxHOC,
   styledComponents,
   logOwnerReasons,
+  forwardRef,
 };
 
 const defaultDemoName = 'bigList';
