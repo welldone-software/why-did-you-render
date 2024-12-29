@@ -20,14 +20,17 @@ For example, if you pass `style={{width: '100%'}}` to a big pure component it wo
 It can also help you to simply track when and why a certain component re-renders.
 
 ## Setup
-The latest version of the library was tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@18`** only. For React 17 and 16, please use version @^7.
+The latest version of the library was tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@18`** only.
+
+[For React 17 and 16, please see the readme for WDYR version @^7](https://github.com/welldone-software/why-did-you-render/tree/version-7).
+For the latest version of the library, supporting the latest version of React see: https://github.com/welldone-software/why-did-you-render
 
 ```
-npm install @welldone-software/why-did-you-render --save-dev
+npm install @welldone-software/why-did-you-render@^8 --save-dev
 ```
 or
 ```
-yarn add --dev @welldone-software/why-did-you-render
+yarn add @welldone-software/why-did-you-render@^8 -D
 ```
 
 If you use the `automatic` JSX transformation, set the library to be the import source, and make sure `preset-react` is in `development` mode.
