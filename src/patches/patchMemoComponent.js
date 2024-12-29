@@ -27,7 +27,7 @@ export default function patchMemoComponent(MemoComponent, { displayName, default
 
   try {
     PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent);
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 
@@ -41,7 +41,7 @@ export default function patchMemoComponent(MemoComponent, { displayName, default
 
   try {
     WDYRMemoizedFunctionalComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 

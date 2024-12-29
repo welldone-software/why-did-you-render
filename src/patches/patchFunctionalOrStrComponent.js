@@ -49,7 +49,7 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
 
   try {
     WDYRFunctionalComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 

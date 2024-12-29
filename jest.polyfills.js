@@ -10,14 +10,14 @@
  */
  
 const { TextDecoder, TextEncoder } = require('node:util');
-// eslint-disable-next-line no-undef
+ 
 Object.defineProperties(globalThis, {
   TextDecoder: { value: TextDecoder },
   TextEncoder: { value: TextEncoder },
 });
  
 const { Blob, File } = require('node:buffer'); 
-// eslint-disable-next-line no-undef
+ 
 Object.defineProperties(globalThis, {
   Blob: { value: Blob },
   File: { value: File },

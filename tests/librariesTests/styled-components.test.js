@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 import React from 'react';
 import styled from 'styled-components/dist/styled-components.js';
 import * as rtl from '@testing-library/react';

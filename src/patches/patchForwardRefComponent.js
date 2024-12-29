@@ -29,7 +29,7 @@ export default function patchForwardRefComponent(ForwardRefComponent, { displayN
 
   try {
     WDYRForwardRefFunctionalComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 
