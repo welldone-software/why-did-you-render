@@ -1,17 +1,17 @@
 import React from 'react';
-import { legacy_createStore as createStore } from 'redux';
+import {legacy_createStore as createStore} from 'redux';
 import {
   BrowserRouter,
   useLocation,
   Routes,
   Route,
 } from 'react-router-dom';
-import { connect, Provider } from 'react-redux';
-import { cloneDeep } from 'lodash';
+import {connect, Provider} from 'react-redux';
+import {cloneDeep} from 'lodash';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 let updateInfos = [];
 beforeEach(() => {
@@ -27,7 +27,7 @@ afterEach(() => {
 
 describe('react-router-dom', () => {
   test('simple', () => {
-    const InnerComp = ({ a }) => {
+    const InnerComp = ({a}) => {
       const location = useLocation();
 
       const [state, setState] = React.useState(0);
@@ -48,20 +48,20 @@ describe('react-router-dom', () => {
     const Comp = () => (
       <BrowserRouter>
         <Routes>
-          <Route exact path="/" element={<InnerComp a={{ b: 'c' }}/>}/>
+          <Route exact path="/" element={<InnerComp a={{b: 'c'}}/>}/>
         </Routes>
       </BrowserRouter>
     );
 
-    const { rerender } = rtl.render(<Comp/>);
+    const {rerender} = rtl.render(<Comp/>);
 
     rerender(<Comp/>);
 
     const consoleOutputs = flushConsoleOutput();
     expect(consoleOutputs).toEqual([
-      expect.objectContaining({ args: ['location is: /'] }),
-      expect.objectContaining({ args: ['location is: /'] }),
-      expect.objectContaining({ args: ['location is: /'] }),
+      expect.objectContaining({args: ['location is: /']}),
+      expect.objectContaining({args: ['location is: /']}),
+      expect.objectContaining({args: ['location is: /']}),
     ]);
 
     expect(updateInfos).toHaveLength(2);
@@ -77,9 +77,9 @@ describe('react-router-dom', () => {
           stateDifferences: false,
           propsDifferences: [{
             diffType: 'deepEquals',
-            nextValue: { b: 'c' },
+            nextValue: {b: 'c'},
             pathString: 'a',
-            prevValue: { b: 'c' },
+            prevValue: {b: 'c'},
           }],
           ownerDifferences: {
             hookDifferences: false,
@@ -92,11 +92,11 @@ describe('react-router-dom', () => {
   });
 
   test('with redux', () => {
-    const initialState = { a: { b: 'c' } };
+    const initialState = {a: {b: 'c'}};
 
     const rootReducer = (state, action) => {
       if (action.type === 'differentState') {
-        return { a: { b: 'd' } };
+        return {a: {b: 'd'}};
       }
 
       if (action.type === 'deepEqlState') {
@@ -108,7 +108,7 @@ describe('react-router-dom', () => {
 
     const store = createStore(rootReducer, initialState);
 
-    const InnerFn = ({ a, setDeepEqlState }) => {
+    const InnerFn = ({a, setDeepEqlState}) => {
       const location = useLocation();
 
       React.useLayoutEffect(() => {
@@ -122,8 +122,8 @@ describe('react-router-dom', () => {
     };
 
     const InnerComp = connect(
-      state => ({ a: state.a }),
-      { setDeepEqlState: () => ({ type: 'deepEqlState' }) }
+      state => ({a: state.a}),
+      {setDeepEqlState: () => ({type: 'deepEqlState'})}
     )(InnerFn);
 
     InnerFn.whyDidYouRender = true;
@@ -142,8 +142,8 @@ describe('react-router-dom', () => {
 
     const consoleOutputs = flushConsoleOutput();
     expect(consoleOutputs).toEqual([
-      expect.objectContaining({ args: ['location is: /'] }),
-      expect.objectContaining({ args: ['location is: /'] }),
+      expect.objectContaining({args: ['location is: /']}),
+      expect.objectContaining({args: ['location is: /']}),
     ]);
 
     expect(updateInfos).toHaveLength(1);
@@ -151,8 +151,8 @@ describe('react-router-dom', () => {
       propsDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: 'a',
-        prevValue: { b: 'c' },
-        nextValue: { b: 'c' },
+        prevValue: {b: 'c'},
+        nextValue: {b: 'c'},
       }],
       stateDifferences: false,
       hookDifferences: false,

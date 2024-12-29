@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 let updateInfos = [];
 beforeEach(() => {
@@ -36,7 +36,7 @@ test('forward ref', () => {
     componentContentFromRef = ref.innerHTML;
   };
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <MyComponent a={[]} ref={handleRef}/>
   );
 
@@ -84,7 +84,7 @@ test('forward ref a memo component', () => {
       componentContentFromRef = ref.innerHTML;
     };
 
-    const { rerender } = rtl.render(
+    const {rerender} = rtl.render(
       <MyComponent a={[]} ref={handleRef}/>
     );
 

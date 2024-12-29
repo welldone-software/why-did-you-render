@@ -1,5 +1,5 @@
 // copied from https://github.com/facebook/react/blob/master/packages/react-reconciler/src/ReactTypeOfMode.js
-import { REACT_FORWARD_REF_TYPE, REACT_MEMO_TYPE, REACT_STRICT_MODE } from './consts';
+import {REACT_FORWARD_REF_TYPE, REACT_MEMO_TYPE, REACT_STRICT_MODE} from './consts';
 
 // based on "findStrictRoot" from https://github.com/facebook/react/blob/master/packages/react-reconciler/src/ReactStrictModeWarnings.js
 // notice: this is only used for class components. functional components doesn't render twice inside strict mode

@@ -1,11 +1,11 @@
-import { defaults } from 'lodash';
+import {defaults} from 'lodash';
 
 import wdyrStore from '../wdyrStore';
 
-import { checkIfInsideAStrictModeTree } from '../utils';
+import {checkIfInsideAStrictModeTree} from '../utils';
 import getUpdateInfo from '../getUpdateInfo';
 
-export default function patchClassComponent(ClassComponent, { displayName, defaultProps }) {
+export default function patchClassComponent(ClassComponent, {displayName, defaultProps}) {
   class WDYRPatchedClassComponent extends ClassComponent {
     constructor(props, context) {
       super(props, context);

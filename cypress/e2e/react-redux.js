@@ -2,12 +2,12 @@ describe('react-redux', () => {
   it('React Redux', () => {
     const checkConsole = (console, times) => {
       expect(console.group).to.be.calledWithMatches([
-        { match: 'ConnectedSimpleComponent', times },
-        { match: '[hook useSelector result]', times },
+        {match: 'ConnectedSimpleComponent', times},
+        {match: '[hook useSelector result]', times},
       ]);
 
       expect(console.log).to.be.calledWithMatches([
-        { match: [() => true, 'Re-rendered because of hook changes'], times },
+        {match: [() => true, 'Re-rendered because of hook changes'], times},
       ]);
     };
 
@@ -33,13 +33,13 @@ describe('react-redux', () => {
   it('React Redux HOC', () => {
     const checkConsole = (console, times) => {
       expect(console.group).to.be.calledWithMatches([
-        { match: 'SimpleComponent', times: times * 2 },
-        { match: /props.*a\W/, times },
+        {match: 'SimpleComponent', times: times * 2},
+        {match: /props.*a\W/, times},
       ]);
 
       expect(console.log).to.be.calledWithMatches([
-        { match: [() => true, 'Re-rendered because of props changes'], times },
-        { match: 'different objects that are equal by value', times },
+        {match: [() => true, 'Re-rendered because of props changes'], times},
+        {match: 'different objects that are equal by value', times},
       ]);
     };
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export default {
   description: 'styled-components',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     whyDidYouRender(React);
 
     const SimpleComponent = (props) => {

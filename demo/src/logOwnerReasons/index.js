@@ -4,7 +4,7 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Log Owner Reasons',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -15,9 +15,9 @@ export default {
     const Owner = () => <Child />;
 
     class ClassOwner extends React.Component {
-      state = { a: 1 };
+      state = {a: 1};
       componentDidMount() {
-        this.setState({ a: 2 });
+        this.setState({a: 2});
       }
 
       render() {

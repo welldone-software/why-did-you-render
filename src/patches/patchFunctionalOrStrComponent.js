@@ -1,4 +1,4 @@
-import { defaults } from 'lodash';
+import {defaults} from 'lodash';
 
 import wdyrStore from '../wdyrStore';
 
@@ -8,7 +8,7 @@ const getFunctionalComponentFromStringComponent = (componentTypeStr) => props =>
   wdyrStore.React.createElement(componentTypeStr, props)
 );
 
-export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, { isPure, displayName, defaultProps }) {
+export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, {isPure, displayName, defaultProps}) {
   const FunctionalComponent = typeof(FunctionalOrStringComponent) === 'string' ?
     getFunctionalComponentFromStringComponent(FunctionalOrStringComponent) :
     FunctionalOrStringComponent;

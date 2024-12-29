@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 describe('hooks - simple', () => {
   describe('hooks - track', () => {
@@ -22,15 +22,15 @@ describe('hooks - simple', () => {
     });
 
     test('no whyDidYouRender=true', () => {
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState] = React.useState({b: 'b'});
 
         return (
           <div>hi! {a} {currentState.b}</div>
         );
       };
 
-      const { rerender } = rtl.render(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       );
       rerender(
@@ -41,10 +41,10 @@ describe('hooks - simple', () => {
     });
 
     test('simple hooks tracking', () => {
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState, setCurrentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState, setCurrentState] = React.useState({b: 'b'});
         React.useLayoutEffect(() => {
-          setCurrentState({ b: 'b' });
+          setCurrentState({b: 'b'});
         }, []);
         return (
           <div>hi! {a} {currentState.b}</div>
@@ -62,10 +62,10 @@ describe('hooks - simple', () => {
     test('after removing WDYR', () => {
       React.__REVERT_WHY_DID_YOU_RENDER__();
 
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState, setCurrentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState, setCurrentState] = React.useState({b: 'b'});
         React.useLayoutEffect(() => {
-          setCurrentState({ b: 'b' });
+          setCurrentState({b: 'b'});
         }, []);
         return (
           <div>hi! {a} {currentState.b}</div>
@@ -81,8 +81,8 @@ describe('hooks - simple', () => {
     });
 
     test('track component', () => {
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState] = React.useState({b: 'b'});
 
         return (
           <div>hi! {a} {currentState.b}</div>
@@ -91,7 +91,7 @@ describe('hooks - simple', () => {
 
       ComponentWithHooks.whyDidYouRender = true;
 
-      const { rerender } = rtl.render(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       );
       rerender(
@@ -113,8 +113,8 @@ describe('hooks - simple', () => {
     });
 
     test('track memoized component', () => {
-      const ComponentWithHooks = React.memo(({ a }) => {
-        const [currentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = React.memo(({a}) => {
+        const [currentState] = React.useState({b: 'b'});
 
         return (
           <div>hi! {a} {currentState.b}</div>
@@ -123,7 +123,7 @@ describe('hooks - simple', () => {
 
       ComponentWithHooks.whyDidYouRender = true;
 
-      const { rerender } = rtl.render(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       );
       rerender(
@@ -163,15 +163,15 @@ describe('hooks - simple', () => {
     });
 
     test('no whyDidYouRender=true', () => {
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState] = React.useState({b: 'b'});
 
         return (
           <div>hi! {a} {currentState.b}</div>
         );
       };
 
-      const { rerender } = rtl.render(
+      const {rerender} = rtl.render(
         <ComponentWithHooks a={1}/>
       );
       rerender(
@@ -182,10 +182,10 @@ describe('hooks - simple', () => {
     });
 
     test('with whyDidYouRender=true', () => {
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState, setCurrentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState, setCurrentState] = React.useState({b: 'b'});
         React.useLayoutEffect(() => {
-          setCurrentState({ b: 'b' });
+          setCurrentState({b: 'b'});
         }, []);
         return (
           <div>hi! {a} {currentState.b}</div>
@@ -203,10 +203,10 @@ describe('hooks - simple', () => {
     test('after removing WDYR', () => {
       React.__REVERT_WHY_DID_YOU_RENDER__();
 
-      const ComponentWithHooks = ({ a }) => {
-        const [currentState, setCurrentState] = React.useState({ b: 'b' });
+      const ComponentWithHooks = ({a}) => {
+        const [currentState, setCurrentState] = React.useState({b: 'b'});
         React.useLayoutEffect(() => {
-          setCurrentState({ b: 'b' });
+          setCurrentState({b: 'b'});
         }, []);
         return (
           <div>hi! {a} {currentState.b}</div>

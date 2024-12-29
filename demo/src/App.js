@@ -60,7 +60,7 @@ function changeDemo(demoFn) {
   reactDomRoot?.unmount();
   reactDomRoot = ReactDom.createRoot(domElement);
   setTimeout(() => {
-    demoFn({ whyDidYouRender, reactDomRoot });
+    demoFn({whyDidYouRender, reactDomRoot});
   }, 1);
 }
 
@@ -72,7 +72,7 @@ if (!demoFromHash) {
 
 changeDemo(initialDemo.fn);
 
-const DemoLink = ({ name, description, fn }) => (
+const DemoLink = ({name, description, fn}) => (
   <li><a href={`#${name}`} onClick={() => changeDemo(fn)}>{description}</a></li>
 );
 

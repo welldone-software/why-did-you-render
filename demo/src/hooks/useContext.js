@@ -3,12 +3,12 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Hooks - useContext',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     whyDidYouRender(React);
 
     const stepLogger = createStepLogger();
 
-    const MyContext = React.createContext({ c: 'c' });
+    const MyContext = React.createContext({c: 'c'});
 
     let alreadyMountedComponentWithContextHook = false;
     function ComponentWithContextHook() {
@@ -53,7 +53,7 @@ export default {
 
     let alreadyMountedMain = false;
     function Main() {
-      const [currentState, setCurrentState] = React.useState({ c: 'context value' });
+      const [currentState, setCurrentState] = React.useState({c: 'context value'});
 
       if (alreadyMountedMain) {
         stepLogger('renders Main and it would trigger the render of ComponentWithContextHook because it\'s not pure', true);
@@ -62,7 +62,7 @@ export default {
       }
 
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'context value' });
+        setCurrentState({c: 'context value'});
       }, []);
 
       return (

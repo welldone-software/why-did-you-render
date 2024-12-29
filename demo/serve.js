@@ -17,9 +17,9 @@ const app = express();
 
 app.get('/ssrComponent', (req, res) => {
   const stream = ReactDomServer.renderToNodeStream(
-    React.createElement(DemoComponent, { text: 'hydrated hi' })
+    React.createElement(DemoComponent, {text: 'hydrated hi'})
   );
-  stream.pipe(res, { end: false });
+  stream.pipe(res, {end: false});
   stream.on('end', () => res.end());
 });
 
@@ -32,7 +32,7 @@ app.use(nollupDevServer(app, config, {
 
 app.use(express.static('demo/public'));
 
-app.use(fallback('index.html', { root: 'demo/public' }));
+app.use(fallback('index.html', {root: 'demo/public'}));
 
 server.listen(port, () => {
   // eslint-disable-next-line no-console

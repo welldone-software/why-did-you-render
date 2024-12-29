@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import wdyrStore from './wdyrStore';
 
-import whyDidYouRender, { storeOwnerData, getWDYRType } from './whyDidYouRender';
+import whyDidYouRender, {storeOwnerData, getWDYRType} from './whyDidYouRender';
 import defaultNotifier from './defaultNotifier';
-import { getCurrentOwner } from './helpers';
+import {getCurrentOwner} from './helpers';
 
 whyDidYouRender.defaultNotifier = defaultNotifier;
 whyDidYouRender.wdyrStore = wdyrStore;

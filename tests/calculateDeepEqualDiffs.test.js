@@ -1,10 +1,10 @@
 import React from 'react';
 
 import calculateDeepEqualDiffs from '~/calculateDeepEqualDiffs';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 test('same', () => {
-  const prevValue = { a: 'b' };
+  const prevValue = {a: 'b'};
   const nextValue = prevValue;
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
@@ -13,8 +13,8 @@ test('same', () => {
 });
 
 test('not deep equal', () => {
-  const prevValue = { a: 'b' };
-  const nextValue = { a: 'c' };
+  const prevValue = {a: 'b'};
+  const nextValue = {a: 'c'};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -35,8 +35,8 @@ test('not deep equal', () => {
 });
 
 test('simple deep', () => {
-  const prevValue = { a: 'b' };
-  const nextValue = { a: 'b' };
+  const prevValue = {a: 'b'};
+  const nextValue = {a: 'b'};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -51,8 +51,8 @@ test('simple deep', () => {
 });
 
 test('nested object deep equals', () => {
-  const prevValue = { a: { b: 'c' } };
-  const nextValue = { a: { b: 'c' } };
+  const prevValue = {a: {b: 'c'}};
+  const nextValue = {a: {b: 'c'}};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -67,8 +67,8 @@ test('nested object deep equals', () => {
 });
 
 test('nested array deep equals', () => {
-  const prevValue = { a: { b: ['c'] } };
-  const nextValue = { a: { b: ['c'] } };
+  const prevValue = {a: {b: ['c']}};
+  const nextValue = {a: {b: ['c']}};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -102,8 +102,8 @@ test('nested date', () => {
   const now = new Date();
   const now2 = new Date(now);
 
-  const prevValue = { a: { b: [now] } };
-  const nextValue = { a: { b: [now2] } };
+  const prevValue = {a: {b: [now]}};
+  const nextValue = {a: {b: [now2]}};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -137,8 +137,8 @@ test('nested regular expression', () => {
   const regEx = /c/i;
   const regEx2 = /c/i;
 
-  const prevValue = { a: { b: [regEx] } };
-  const nextValue = { a: { b: [regEx2] } };
+  const prevValue = {a: {b: [regEx]}};
+  const nextValue = {a: {b: [regEx2]}};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -156,8 +156,8 @@ test('dom elements', () => {
   const element = document.createElement('div');
   const element2 = document.createElement('div');
 
-  const prevValue = { a: element };
-  const nextValue = { a: element2 };
+  const prevValue = {a: element};
+  const nextValue = {a: element2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -180,8 +180,8 @@ test('dom elements', () => {
 test('equal react elements', () => {
   const tooltip = <div>hi!</div>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -215,8 +215,8 @@ test('nested react elements', () => {
   const tooltip = <div>hi!</div>;
   const tooltip2 = <div>hi!</div>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip2 };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -234,8 +234,8 @@ test('nested different react elements', () => {
   const tooltip = <div>hi!</div>;
   const tooltip2 = <div>hi 2 !</div>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip2 };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -297,8 +297,8 @@ test('react class component instance', () => {
   const tooltip = <MyComponent/>;
   const tooltip2 = <MyComponent/>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip2 };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -322,8 +322,8 @@ test('react class pure component instance', () => {
   const tooltip = <MyComponent/>;
   const tooltip2 = <MyComponent/>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip2 };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -345,8 +345,8 @@ test('react functional component instance', () => {
   const tooltip = <MyFunctionalComponent/>;
   const tooltip2 = <MyFunctionalComponent/>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip2 };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -368,8 +368,8 @@ test('react memoized functional component instance', () => {
   const tooltip = <MyFunctionalComponent a={1}/>;
   const tooltip2 = <MyFunctionalComponent a={1}/>;
 
-  const prevValue = { a: tooltip };
-  const nextValue = { a: tooltip2 };
+  const prevValue = {a: tooltip};
+  const nextValue = {a: tooltip2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -387,8 +387,8 @@ test('functions', () => {
   const fn = function something() {};
   const fn2 = function something() {};
 
-  const prevValue = { fn };
-  const nextValue = { fn: fn2 };
+  const prevValue = {fn};
+  const nextValue = {fn: fn2};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -403,8 +403,8 @@ test('functions', () => {
 });
 
 test('inline functions', () => {
-  const prevValue = { a: { fn: () => {} } };
-  const nextValue = { a: { fn: () => {} } };
+  const prevValue = {a: {fn: () => {}}};
+  const nextValue = {a: {fn: () => {}}};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 
@@ -461,8 +461,8 @@ test('sets', () => {
 });
 
 test('mix', () => {
-  const prevValue = { a: { fn: () => {} }, b: [{ tooltip: <div>hi</div> }] };
-  const nextValue = { a: { fn: () => {} }, b: [{ tooltip: <div>hi</div> }] };
+  const prevValue = {a: {fn: () => {}}, b: [{tooltip: <div>hi</div>}]};
+  const nextValue = {a: {fn: () => {}}, b: [{tooltip: <div>hi</div>}]};
 
   const diffs = calculateDeepEqualDiffs(prevValue, nextValue);
 

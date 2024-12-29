@@ -1,4 +1,4 @@
-import { get, isFunction } from 'lodash';
+import {get, isFunction} from 'lodash';
 
 import wdyrStore from './wdyrStore';
 
@@ -19,15 +19,15 @@ import {
   isReactClassComponent,
 } from './utils';
 
-import { dependenciesMap } from './calculateDeepEqualDiffs';
+import {dependenciesMap} from './calculateDeepEqualDiffs';
 
-import { getCurrentOwner } from './helpers';
+import {getCurrentOwner} from './helpers';
 
-export { wdyrStore, getCurrentOwner };
+export {wdyrStore, getCurrentOwner};
 
 const initialHookValue = Symbol('initial-hook-value');
 
-function trackHookChanges(hookName, { path: pathToGetTrackedHookResult }, rawHookResult) {
+function trackHookChanges(hookName, {path: pathToGetTrackedHookResult}, rawHookResult) {
   const nextResult = pathToGetTrackedHookResult ? get(rawHookResult, pathToGetTrackedHookResult) : rawHookResult;
 
   const prevResultRef = wdyrStore.React.useRef(initialHookValue);
@@ -44,12 +44,12 @@ function trackHookChanges(hookName, { path: pathToGetTrackedHookResult }, rawHoo
   }
   const hooksInfoForCurrentRender = wdyrStore.hooksInfoForCurrentRender.get(ownerInstance);
 
-  hooksInfoForCurrentRender.push({ hookName, result: nextResult });
+  hooksInfoForCurrentRender.push({hookName, result: nextResult});
 
   const Component = ownerInstance.type.ComponentForHooksTracking || ownerInstance.type;
   const displayName = getDisplayName(Component);
 
-  const isShouldTrack = shouldTrack(Component, { isHookChange: true });
+  const isShouldTrack = shouldTrack(Component, {isHookChange: true});
   if (isShouldTrack && prevResult !== initialHookValue) {
     const notification = getUpdateInfo({
       Component: Component,
@@ -67,28 +67,28 @@ function trackHookChanges(hookName, { path: pathToGetTrackedHookResult }, rawHoo
   return rawHookResult;
 }
 
-function createPatchedComponent(Component, { displayName, defaultProps }) {
+function createPatchedComponent(Component, {displayName, defaultProps}) {
   if (isMemoComponent(Component)) {
-    return patchMemoComponent(Component, { displayName, defaultProps });
+    return patchMemoComponent(Component, {displayName, defaultProps});
   }
 
   if (isForwardRefComponent(Component)) {
-    return patchForwardRefComponent(Component, { displayName, defaultProps });
+    return patchForwardRefComponent(Component, {displayName, defaultProps});
   }
 
   if (isReactClassComponent(Component)) {
-    return patchClassComponent(Component, { displayName, defaultProps });
+    return patchClassComponent(Component, {displayName, defaultProps});
   }
 
-  return patchFunctionalOrStrComponent(Component, { displayName, defaultProps, isPure: false });
+  return patchFunctionalOrStrComponent(Component, {displayName, defaultProps, isPure: false});
 }
 
-function getPatchedComponent(Component, { displayName, defaultProps }) {
+function getPatchedComponent(Component, {displayName, defaultProps}) {
   if (wdyrStore.componentsMap.has(Component)) {
     return wdyrStore.componentsMap.get(Component);
   }
 
-  const WDYRPatchedComponent = createPatchedComponent(Component, { displayName, defaultProps });
+  const WDYRPatchedComponent = createPatchedComponent(Component, {displayName, defaultProps});
 
   wdyrStore.componentsMap.set(Component, WDYRPatchedComponent);
 
@@ -114,12 +114,12 @@ function getIsSupportedComponentType(Comp) {
 }
 
 export const hooksConfig = {
-  useState: { path: '0' },
-  useReducer: { path: '0' },
+  useState: {path: '0'},
+  useReducer: {path: '0'},
   useContext: undefined,
   useSyncExternalStore: undefined,
-  useMemo: { dependenciesPath: '1', dontReport: true },
-  useCallback: { dependenciesPath: '1', dontReport: true },
+  useMemo: {dependenciesPath: '1', dontReport: true},
+  useCallback: {dependenciesPath: '1', dontReport: true},
 };
 
 export function storeOwnerData(element) {
@@ -164,10 +164,10 @@ function trackHooksIfNeeded() {
 
       const newHook = function useWhyDidYouRenderReWrittenHook(...args) {
         const hookResult = originalHook.call(this, ...args);
-        const { dependenciesPath, dontReport } = hookTrackingConfig;
+        const {dependenciesPath, dontReport} = hookTrackingConfig;
         const shouldTrackHookChanges = !dontReport;
         if (dependenciesPath && isFunction(hookResult)) {
-          dependenciesMap.set(hookResult, { hookName, deps: get(args, dependenciesPath) });
+          dependenciesMap.set(hookResult, {hookName, deps: get(args, dependenciesPath)});
         }
         if (shouldTrackHookChanges) {
           trackHookChanges(hookName, hookTrackingConfig, hookResult);
@@ -179,7 +179,7 @@ function trackHooksIfNeeded() {
         value: hookName + 'WDYR',
         writable: false
       });
-      Object.assign(newHook, { originalHook });
+      Object.assign(newHook, {originalHook});
       hookParent[hookName] = newHook;
     });
   }
@@ -188,7 +188,7 @@ function trackHooksIfNeeded() {
 export function getWDYRType(origType) {
   const isShouldTrack = (
     getIsSupportedComponentType(origType) &&
-    shouldTrack(origType, { isHookChange: false })
+    shouldTrack(origType, {isHookChange: false})
   );
 
   if (!isShouldTrack) {
@@ -204,7 +204,7 @@ export function getWDYRType(origType) {
 
   const defaultProps = getDefaultProps(origType);
 
-  const WDYRPatchedComponent = getPatchedComponent(origType, { displayName, defaultProps });
+  const WDYRPatchedComponent = getPatchedComponent(origType, {displayName, defaultProps});
 
   return WDYRPatchedComponent;
 }

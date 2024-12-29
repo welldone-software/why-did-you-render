@@ -7,8 +7,8 @@ it('Hooks - useState', () => {
       });
 
     expect(console.group).to.be.calledWithMatches([
-      { match: 'BrokenHooksPureComponent', times: 2 },
-      { match: '[hook useState result]', times: 2 },
+      {match: 'BrokenHooksPureComponent', times: 2},
+      {match: '[hook useState result]', times: 2},
     ]);
   });
 });

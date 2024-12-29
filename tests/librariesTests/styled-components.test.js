@@ -4,7 +4,7 @@ import styled from 'styled-components/dist/styled-components.js';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 let updateInfos = [];
 beforeEach(() => {
@@ -24,7 +24,7 @@ test('simple styled-components', () => {
 
   StyledInnerComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <StyledInnerComponent a={[]}/>
   );
   rerender(
@@ -51,7 +51,7 @@ test('styled-components wrap of a memoized component', () => {
 
   StyledInnerComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <StyledInnerComponent a={[]}/>
   );
   rerender(
@@ -86,7 +86,7 @@ test('styled-components with forward ref', () => {
     return <Styled {...props} ref={ref} />;
   };
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <Wrapper a={[]}/>
   );
   rerender(
@@ -132,7 +132,7 @@ test('styled-components with memoized forward ref', () => {
     return <StyledInnerComponent {...props} ref={ref} />;
   };
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <Wrapper a={[]}/>
   );
   rerender(

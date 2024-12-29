@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 let updateInfos = [];
 
@@ -28,10 +28,10 @@ describe('children using hook results', () => {
     AChild.whyDidYouRender = true;
 
     const ComponentWithMemoHook = () => {
-      const [currentState, setCurrentState] = React.useState({ c: 'c' });
+      const [currentState, setCurrentState] = React.useState({c: 'c'});
       
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'c' });
+        setCurrentState({c: 'c'});
       }, []);
 
       const fnUseCallback = React.useCallback(() => someFn(currentState.c));
@@ -71,9 +71,9 @@ describe('children using hook results', () => {
             differences: [
               {
                 diffType: 'deepEquals',
-                nextValue: { c: 'c' },
+                nextValue: {c: 'c'},
                 pathString: '',
-                prevValue: { c: 'c' },
+                prevValue: {c: 'c'},
               },
             ],
             hookName: 'useState',
@@ -90,10 +90,10 @@ describe('children using hook results', () => {
     Child.whyDidYouRender = true;
 
     const ComponentWithMemoHook = () => {
-      const [currentState, setCurrentState] = React.useState({ c: 'c' });
+      const [currentState, setCurrentState] = React.useState({c: 'c'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'd' });
+        setCurrentState({c: 'd'});
       }, []);
 
       const fnUseCallback = React.useCallback(() => someFn(currentState.c), [currentState]);
@@ -148,8 +148,8 @@ describe('children using hook results', () => {
               {
                 diffType: diffTypes.different,
                 pathString: '',
-                prevValue: { c: 'c' },
-                nextValue: { c: 'd' },
+                prevValue: {c: 'c'},
+                nextValue: {c: 'd'},
               },
             ],
             hookName: 'useState',
@@ -166,10 +166,10 @@ describe('children using hook results', () => {
     Child.whyDidYouRender = true;
 
     const ComponentWithMemoHook = () => {
-      const [currentState, setCurrentState] = React.useState({ c: 'c' });
+      const [currentState, setCurrentState] = React.useState({c: 'c'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'c' });
+        setCurrentState({c: 'c'});
       }, []);
 
       const fnUseCallback = React.useCallback(() => someFn(currentState.c), [currentState]);
@@ -218,8 +218,8 @@ describe('children using hook results', () => {
               {
                 diffType: diffTypes.deepEquals,
                 pathString: '',
-                prevValue: { c: 'c' },
-                nextValue: { c: 'c' },
+                prevValue: {c: 'c'},
+                nextValue: {c: 'c'},
               },
             ],
             hookName: 'useState',

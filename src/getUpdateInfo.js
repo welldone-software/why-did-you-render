@@ -19,9 +19,9 @@ function getOwnerDifferences(prevOwner, nextOwner) {
       prevOwnerData.hooksInfo.slice(prevOwnerData.hooksInfo.length / 2) :
       prevOwnerData.hooksInfo;
 
-    const hookDifferences = prevOwnerDataHooks.map(({ hookName, result }, i) => ({
+    const hookDifferences = prevOwnerDataHooks.map(({hookName, result}, i) => ({
       hookName,
-      differences: findObjectsDifferences(result, nextOwnerData.hooksInfo[i].result, { shallow: false }),
+      differences: findObjectsDifferences(result, nextOwnerData.hooksInfo[i].result, {shallow: false}),
     }));
 
     return {
@@ -47,12 +47,12 @@ function getUpdateReason(prevOwner, prevProps, prevState, prevHookResult, nextOw
   return {
     propsDifferences: findObjectsDifferences(prevProps, nextProps),
     stateDifferences: findObjectsDifferences(prevState, nextState),
-    hookDifferences: findObjectsDifferences(prevHookResult, nextHookResult, { shallow: false }),
+    hookDifferences: findObjectsDifferences(prevHookResult, nextHookResult, {shallow: false}),
     ownerDifferences: getOwnerDifferences(prevOwner, nextOwner),
   };
 }
 
-export default function getUpdateInfo({ Component, displayName, hookName, prevOwner, nextOwner, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult }) {
+export default function getUpdateInfo({Component, displayName, hookName, prevOwner, nextOwner, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult}) {
   return {
     Component,
     displayName,

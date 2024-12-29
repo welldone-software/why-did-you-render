@@ -1,14 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
-import { createStore } from 'redux';
+import {createStore} from 'redux';
 import * as Redux from 'react-redux';
 
 export default {
   description: 'React Redux',
-  fn({ reactDomRoot, whyDidYouRender }) {
-    whyDidYouRender(React, { trackExtraHooks: [
+  fn({reactDomRoot, whyDidYouRender}) {
+    whyDidYouRender(React, {trackExtraHooks: [
       [Redux, 'useSelector'],
-    ] });
+    ]});
 
     const useDispatch = Redux.useDispatch;
     const useSelector = Redux.useSelector;
@@ -22,19 +22,19 @@ export default {
         <div>
           {`{a.b} is: ${a.b}`}
           <br/>
-          <button onClick={() => dispatch({ type: 'sameObj' })}>Same State</button>
-          <button onClick={() => dispatch({ type: 'deepEqlObj' })}>Deep Equal State</button>
-          <button onClick={() => dispatch({ type: 'randomObj' })}>Random Object</button>
+          <button onClick={() => dispatch({type: 'sameObj'})}>Same State</button>
+          <button onClick={() => dispatch({type: 'deepEqlObj'})}>Deep Equal State</button>
+          <button onClick={() => dispatch({type: 'randomObj'})}>Random Object</button>
         </div>
       );
     };
 
     ConnectedSimpleComponent.whyDidYouRender = true;
 
-    const initialState = { a: { b: 'c' } };
+    const initialState = {a: {b: 'c'}};
     const store = createStore((state = initialState, action) => {
       if (action.type === 'randomObj') {
-        return { a: { b: `${Math.random()}` } };
+        return {a: {b: `${Math.random()}`}};
       }
       if (action.type === 'deepEqlObj') {
         return _.cloneDeep(state);

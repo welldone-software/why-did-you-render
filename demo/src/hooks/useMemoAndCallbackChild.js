@@ -4,12 +4,12 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Hooks - useMemo and useCallback Child',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
 
-    const Comp = ({ useMemoFn, useCallbackFn }) => {
+    const Comp = ({useMemoFn, useCallbackFn}) => {
       const onClick = (...args) => {
         useMemoFn(...args);
         useCallbackFn(...args);
@@ -19,7 +19,7 @@ export default {
     Comp.displayName = 'Comp';
     Comp.whyDidYouRender = true;
 
-    const ComponentWithNewResultsForNewDeps = React.memo(({ count }) => {
+    const ComponentWithNewResultsForNewDeps = React.memo(({count}) => {
       stepLogger('render component with always new results for new deps');
 
       const useMemoFn = React.useMemo(() => () => 'a', [count]);
@@ -31,15 +31,15 @@ export default {
     });
     ComponentWithNewResultsForNewDeps.displayName = 'ComponentWithNewResultsForNewDeps';
 
-    const ComponentWithNewResultsForDeepEqualsDeps = React.memo(({ count }) => {
+    const ComponentWithNewResultsForDeepEqualsDeps = React.memo(({count}) => {
       if (count === 0) {
         stepLogger('render component with always deep equals results - first render', false);
       } else {
         stepLogger('render component with always deep equals results - next render', true);
       }
 
-      const useMemoFn = React.useMemo(() => () => 'a', [{ dep1: 'dep1' }]);
-      const useCallbackFn = React.useCallback(() => 'a', [{ dep2: 'dep2' }]);
+      const useMemoFn = React.useMemo(() => () => 'a', [{dep1: 'dep1'}]);
+      const useCallbackFn = React.useCallback(() => 'a', [{dep2: 'dep2'}]);
 
       return (
         <Comp useMemoFn={useMemoFn} useCallbackFn={useCallbackFn}/>

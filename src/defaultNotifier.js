@@ -1,6 +1,6 @@
 import wdyrStore from './wdyrStore';
 
-import { diffTypes, diffTypesDescriptions } from './consts';
+import {diffTypes, diffTypesDescriptions} from './consts';
 import printDiff from './printDiff';
 
 const moreInfoUrl = 'http://bit.ly/wdyr02';
@@ -35,12 +35,12 @@ function shouldLog(reason, Component) {
   return !hasDifferentValues;
 }
 
-function logDifference({ Component, displayName, hookName, prefixMessage, diffObjType, differences, values }) {
+function logDifference({Component, displayName, hookName, prefixMessage, diffObjType, differences, values}) {
   if (differences && differences.length > 0) {
-    wdyrStore.options.consoleLog({ [displayName]: Component }, `${prefixMessage} of ${diffObjType} changes:`);
-    differences.forEach(({ pathString, diffType, prevValue, nextValue }) => {
+    wdyrStore.options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`);
+    differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
       function diffFn() {
-        printDiff(prevValue, nextValue, { pathString, consoleLog: wdyrStore.options.consoleLog });
+        printDiff(prevValue, nextValue, {pathString, consoleLog: wdyrStore.options.consoleLog});
       }
       wdyrStore.options.consoleGroup(
         `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
@@ -49,16 +49,16 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
       wdyrStore.options.consoleLog(
         `${diffTypesDescriptions[diffType]}. (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
       );
-      wdyrStore.options.consoleLog({ [`prev ${pathString}`]: prevValue }, '!==', { [`next ${pathString}`]: nextValue });
+      wdyrStore.options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue});
       if (diffType === diffTypes.deepEquals) {
-        wdyrStore.options.consoleLog({ 'For detailed diff, right click the following fn, save as global, and run: ': diffFn });
+        wdyrStore.options.consoleLog({'For detailed diff, right click the following fn, save as global, and run: ': diffFn});
       }
       wdyrStore.options.consoleGroupEnd();
     });
   }
   else if (differences) {
     wdyrStore.options.consoleLog(
-      { [displayName]: Component },
+      {[displayName]: Component},
       `${prefixMessage} the ${diffObjType} object itself changed but its values are all equal.`,
       diffObjType === 'props' ?
         'This could have been avoided by making the component pure, or by preventing its father from re-rendering.' :
@@ -70,7 +70,7 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
 }
 
 export default function defaultNotifier(updateInfo) {
-  const { Component, displayName, hookName, prevOwner, nextOwner, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason } = updateInfo;
+  const {Component, displayName, hookName, prevOwner, nextOwner, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason} = updateInfo;
 
   if (!shouldLog(reason, Component, wdyrStore.options)) {
     return;
@@ -87,7 +87,7 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'props',
       differences: reason.propsDifferences,
-      values: { prev: prevProps, next: nextProps },
+      values: {prev: prevProps, next: nextProps},
     });
     prefixMessage = 'And because';
   }
@@ -99,7 +99,7 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'state',
       differences: reason.stateDifferences,
-      values: { prev: prevState, next: nextState },
+      values: {prev: prevState, next: nextState},
     });
   }
 
@@ -110,7 +110,7 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'hook',
       differences: reason.hookDifferences,
-      values: { prev: prevHookResult, next: nextHookResult },
+      values: {prev: prevHookResult, next: nextHookResult},
       hookName,
     });
   }
@@ -129,7 +129,7 @@ export default function defaultNotifier(updateInfo) {
         prefixMessage,
         diffObjType: 'props',
         differences: reason.ownerDifferences.propsDifferences,
-        values: { prev: prevOwnerData.props, next: nextOwnerData.props },
+        values: {prev: prevOwnerData.props, next: nextOwnerData.props},
       });
       prefixMessage = 'And because';
     }
@@ -141,19 +141,19 @@ export default function defaultNotifier(updateInfo) {
         prefixMessage,
         diffObjType: 'state',
         differences: reason.ownerDifferences.stateDifferences,
-        values: { prev: prevOwnerData.state, next: nextOwnerData.state },
+        values: {prev: prevOwnerData.state, next: nextOwnerData.state},
       });
     }
 
     if (reason.ownerDifferences.hookDifferences) {
-      reason.ownerDifferences.hookDifferences.forEach(({ hookName, differences }, i) =>
+      reason.ownerDifferences.hookDifferences.forEach(({hookName, differences}, i) =>
         logDifference({
           Component: nextOwnerData.Component,
           displayName: nextOwnerData.displayName,
           prefixMessage,
           diffObjType: 'hook',
           differences,
-          values: { prev: prevOwnerData.hooksInfo[i].result, next: nextOwnerData.hooksInfo[i].result },
+          values: {prev: prevOwnerData.hooksInfo[i].result, next: nextOwnerData.hooksInfo[i].result},
           hookName,
         })
       );
@@ -163,7 +163,7 @@ export default function defaultNotifier(updateInfo) {
 
   if (!reason.propsDifferences && !reason.stateDifferences && !reason.hookDifferences) {
     wdyrStore.options.consoleLog(
-      { [displayName]: Component },
+      {[displayName]: Component},
       'Re-rendered although props and state objects are the same.',
       'This usually means there was a call to this.forceUpdate() inside the component.',
       `more info at ${moreInfoUrl}`

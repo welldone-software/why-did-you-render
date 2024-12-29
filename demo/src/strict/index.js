@@ -4,7 +4,7 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Strict mode',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -29,15 +29,15 @@ export default {
     reactDomRoot.render(<Main a={1} />);
 
     stepLogger('Other props');
-    reactDomRoot.render(<Main a={{ b: 'b' }} />);
+    reactDomRoot.render(<Main a={{b: 'b'}} />);
 
     stepLogger('Different by ref, equals by value', true);
-    reactDomRoot.render(<Main a={{ b: 'b' }} />);
+    reactDomRoot.render(<Main a={{b: 'b'}} />);
 
     stepLogger('Other nested props');
-    reactDomRoot.render(<Main a={{ b: { c: { d: 'd' } } }} />);
+    reactDomRoot.render(<Main a={{b: {c: {d: 'd'}}}} />);
 
     stepLogger('Deep equal nested props', true);
-    reactDomRoot.render(<Main a={{ b: { c: { d: 'd' } } }} />);
+    reactDomRoot.render(<Main a={{b: {c: {d: 'd'}}}} />);
   },
 };

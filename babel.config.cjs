@@ -19,8 +19,7 @@ module.exports = function(api) {
 
   const plugins = compact([
     (!isProd && !isTest) && 'react-refresh/babel',
-    !isProd && '@babel/plugin-transform-class-properties',
   ]);
 
-  return { presets, plugins };
+  return {presets, plugins};
 };

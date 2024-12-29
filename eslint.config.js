@@ -1,7 +1,7 @@
 const reactPlugin = require('eslint-plugin-react');
 const js = require('@eslint/js');
 const globals = require('globals');
-const { includeIgnoreFile } = require('@eslint/compat');
+const {includeIgnoreFile} = require('@eslint/compat');
 const pluginCypress = require('eslint-plugin-cypress/flat');
 
 // TODO: remove once all deps are using the latest version
@@ -10,7 +10,7 @@ delete globals.browser['AudioWorkletGlobalScope '];
 
 
 module.exports = [
-  includeIgnoreFile(__dirname +'/.gitignore'),
+  includeIgnoreFile(__dirname + '/.gitignore'),
   js.configs.recommended,
   pluginCypress.configs.globals,
   {
@@ -50,7 +50,7 @@ module.exports = [
         'destructuredArrayIgnorePattern': '^_'
       }],
       'eol-last': 'error',
-      'object-curly-spacing': ['error', 'always'],
+      'object-curly-spacing': ['error', 'never'],
       'react/prop-types': 'off',
       'react/display-name': 'off',
       'space-before-function-paren': ['error', 'never'],

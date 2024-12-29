@@ -41,7 +41,7 @@ const testInputAndExpects = {
   },
   onlyLogs: {
     description: 'Only logs',
-    userOptions: { onlyLogs: true },
+    userOptions: {onlyLogs: true},
     expects: {
       logsCount: {
         title: 1,
@@ -68,7 +68,7 @@ const testInputAndExpects = {
   },
   collapseGroups: {
     description: 'Group by component with collapse',
-    userOptions: { collapseGroups: true },
+    userOptions: {collapseGroups: true},
     expects: {
       logsCount: {
         title: 0,
@@ -117,7 +117,7 @@ describe('For no differences', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
@@ -141,15 +141,15 @@ describe('For different props eq by ref', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: { a: 'aa' },
+        prevProps: {a: 'aa'},
         prevState: null,
-        nextProps: { a: 'aa' },
+        nextProps: {a: 'aa'},
         nextState: null,
       });
 
@@ -165,16 +165,16 @@ describe('For equal state eq by ref', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
         prevProps: null,
-        prevState: { a: 'aa' },
+        prevState: {a: 'aa'},
         nextProps: null,
-        nextState: { a: 'aa' },
+        nextState: {a: 'aa'},
       });
 
       defaultNotifier(updateInfo);
@@ -189,16 +189,16 @@ describe('For different state and props', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: { a: 'aa' },
-        prevState: { a: 'aa' },
-        nextProps: { a: 'aa' },
-        nextState: { a: 'aa' },
+        prevProps: {a: 'aa'},
+        prevState: {a: 'aa'},
+        nextProps: {a: 'aa'},
+        nextState: {a: 'aa'},
       });
 
       defaultNotifier(updateInfo);
@@ -213,14 +213,14 @@ describe('For different hook', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevHookResult: { a: 'aa' },
-        nextHookResult: { a: 'aa' },
+        prevHookResult: {a: 'aa'},
+        nextHookResult: {a: 'aa'},
       });
 
       defaultNotifier(updateInfo);
@@ -235,15 +235,15 @@ describe('For different deep equal props', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: { a: { b: 'b' } },
+        prevProps: {a: {b: 'b'}},
         prevState: null,
-        nextProps: { a: { b: 'b' } },
+        nextProps: {a: {b: 'b'}},
         nextState: null,
       });
 
@@ -259,16 +259,16 @@ describe('For different deep equal state', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
         prevProps: null,
-        prevState: { a: { b: 'b' } },
+        prevState: {a: {b: 'b'}},
         nextProps: null,
-        nextState: { a: { b: 'b' } },
+        nextState: {a: {b: 'b'}},
       });
 
       defaultNotifier(updateInfo);
@@ -283,16 +283,16 @@ describe('For different deep equal state and props', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: { a: { b: 'b' } },
-        prevState: { a: { b: 'b' } },
-        nextProps: { a: { b: 'b' } },
-        nextState: { a: { b: 'b' } },
+        prevProps: {a: {b: 'b'}},
+        prevState: {a: {b: 'b'}},
+        nextProps: {a: {b: 'b'}},
+        nextState: {a: {b: 'b'}},
       });
 
       defaultNotifier(updateInfo);
@@ -307,15 +307,15 @@ describe('For different functions by the same name', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: { fn: function something() {} },
+        prevProps: {fn: function something() {}},
         prevState: null,
-        nextProps: { fn: function something() {} },
+        nextProps: {fn: function something() {}},
         nextState: null,
       });
 
@@ -331,16 +331,16 @@ describe('Mix of changes', () => {
     React.__REVERT_WHY_DID_YOU_RENDER__();
   });
 
-  Object.values(testInputAndExpects).forEach(({ description, userOptions, expects }) => {
+  Object.values(testInputAndExpects).forEach(({description, userOptions, expects}) => {
     test(description, () => {
       whyDidYouRender(React, userOptions);
 
       const updateInfo = getUpdateInfo({
         Component: TestComponent,
-        prevProps: { fn: function something() {} },
-        prevState: { a: { b: 'b' } },
-        nextProps: { fn: function something() {} },
-        nextState: { a: { b: 'b' } },
+        prevProps: {fn: function something() {}},
+        prevState: {a: {b: 'b'}},
+        nextProps: {fn: function something() {}},
+        nextState: {a: {b: 'b'}},
       });
 
       defaultNotifier(updateInfo);
@@ -356,13 +356,13 @@ describe('logOnDifferentProps option', () => {
   });
 
   test('For different props', () => {
-    whyDidYouRender(React, { onlyLogs: true });
+    whyDidYouRender(React, {onlyLogs: true});
 
     const updateInfo = getUpdateInfo({
       Component: TestComponent,
-      prevProps: { a: 'aaaa' },
+      prevProps: {a: 'aaaa'},
       prevState: null,
-      nextProps: { a: 'bbbb' },
+      nextProps: {a: 'bbbb'},
       nextState: null,
     });
 
@@ -373,14 +373,14 @@ describe('logOnDifferentProps option', () => {
   });
 
   test('For different state', () => {
-    whyDidYouRender(React, { onlyLogs: true });
+    whyDidYouRender(React, {onlyLogs: true});
 
     const updateInfo = getUpdateInfo({
       Component: TestComponent,
       prevProps: null,
-      prevState: { a: 'aaaa' },
+      prevState: {a: 'aaaa'},
       nextProps: null,
-      nextState: { a: 'bbbb' },
+      nextState: {a: 'bbbb'},
     });
 
     defaultNotifier(updateInfo);
@@ -390,13 +390,13 @@ describe('logOnDifferentProps option', () => {
   });
 
   test('For different props with logOnDifferentValues', () => {
-    whyDidYouRender(React, { logOnDifferentValues: true, onlyLogs: true });
+    whyDidYouRender(React, {logOnDifferentValues: true, onlyLogs: true});
 
     const updateInfo = getUpdateInfo({
       Component: TestComponent,
-      prevProps: { a: 'aaaa' },
+      prevProps: {a: 'aaaa'},
       prevState: null,
-      nextProps: { a: 'bbbb' },
+      nextProps: {a: 'bbbb'},
       nextState: null,
     });
 
@@ -412,10 +412,10 @@ describe('logOnDifferentProps option', () => {
   });
 
   test('For different props with logOnDifferentValues for a specific component', () => {
-    whyDidYouRender(React, { onlyLogs: true });
+    whyDidYouRender(React, {onlyLogs: true});
 
     class OwnTestComponent extends React.Component {
-      static whyDidYouRender = { logOnDifferentValues: true };
+      static whyDidYouRender = {logOnDifferentValues: true};
       render() {
         return <div>hi!</div>;
       }
@@ -423,9 +423,9 @@ describe('logOnDifferentProps option', () => {
 
     const updateInfo = getUpdateInfo({
       Component: OwnTestComponent,
-      prevProps: { a: 'aaaa' },
+      prevProps: {a: 'aaaa'},
       prevState: null,
-      nextProps: { a: 'bbbb' },
+      nextProps: {a: 'bbbb'},
       nextState: null,
     });
 

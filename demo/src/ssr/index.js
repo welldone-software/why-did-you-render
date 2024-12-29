@@ -7,7 +7,7 @@ import DemoComponent from './DemoComponent';
 
 export default {
   description: 'Server Side (hydrate)',
-  fn({ reactDomRoot, domElement, whyDidYouRender }) {
+  fn({reactDomRoot, domElement, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     fetch('/ssrComponent')

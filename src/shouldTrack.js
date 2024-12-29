@@ -1,6 +1,6 @@
 import wdyrStore from './wdyrStore';
 
-import { isMemoComponent } from './utils';
+import {isMemoComponent} from './utils';
 import getDisplayName from './getDisplayName';
 
 function shouldInclude(displayName) {
@@ -19,7 +19,7 @@ function shouldExclude(displayName) {
   );
 }
 
-export default function shouldTrack(Component, { isHookChange }) {
+export default function shouldTrack(Component, {isHookChange}) {
   const displayName = getDisplayName(Component);
 
   if (shouldExclude(displayName)) {

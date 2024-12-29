@@ -4,7 +4,7 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'State Changes',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -18,13 +18,13 @@ export default {
 
       componentDidMount() {
         stepLogger('Set an existing state key with the same value', true);
-        this.setState({ stateKey: 'stateValue' }, () => {
+        this.setState({stateKey: 'stateValue'}, () => {
 
           stepLogger('Add object entry');
-          this.setState({ objectKey: { a: 'a' } }, () => {
+          this.setState({objectKey: {a: 'a'}}, () => {
 
             stepLogger('Add a new object entry that equals by value', true);
-            this.setState({ objectKey: { a: 'a' } });
+            this.setState({objectKey: {a: 'a'}});
           });
         });
       }

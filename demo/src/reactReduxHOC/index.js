@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStore } from 'redux';
+import {createStore} from 'redux';
 import * as Redux from 'react-redux';
 import _ from 'lodash';
 
@@ -8,14 +8,14 @@ const Provider = Redux.Provider;
 
 export default {
   description: 'React Redux HOC',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     whyDidYouRender(React);
 
-    const initialState = { a: { b: 'c' } };
+    const initialState = {a: {b: 'c'}};
 
     const rootReducer = (state, action) => {
       if (action.type === 'randomObj') {
-        return { a: { b: `${Math.random()}` } };
+        return {a: {b: `${Math.random()}`}};
       }
 
       if (action.type === 'deepEqlObj') {
@@ -27,7 +27,7 @@ export default {
 
     const store = createStore(rootReducer, initialState);
 
-    const SimpleComponent = ({ a, randomObj, deepEqlObj, sameObj }) => {
+    const SimpleComponent = ({a, randomObj, deepEqlObj, sameObj}) => {
       return (
         <div>
           {`{a.b} is: ${a.b}`}
@@ -39,11 +39,11 @@ export default {
     };
 
     const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a }),
+      state => ({a: state.a}),
       ({
-        randomObj: () => ({ type: 'randomObj' }),
-        deepEqlObj: () => ({ type: 'deepEqlObj' }),
-        sameObj: () => ({ type: 'sameObj' }),
+        randomObj: () => ({type: 'randomObj'}),
+        deepEqlObj: () => ({type: 'deepEqlObj'}),
+        sameObj: () => ({type: 'sameObj'}),
       })
     )(SimpleComponent);
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 import getUpdateInfo from '~/getUpdateInfo';
 import getDisplayName from '~/getDisplayName';
 import whyDidYouRender from '~';
@@ -48,9 +48,9 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { a: 1 },
+      prevProps: {a: 1},
       prevState: null,
-      nextProps: { a: 1 },
+      nextProps: {a: 1},
       nextState: null,
     };
 
@@ -73,9 +73,9 @@ describe('getUpdateInfo', () => {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
       prevProps: {},
-      prevState: { a: 1 },
+      prevState: {a: 1},
       nextProps: {},
-      nextState: { a: 1 },
+      nextState: {a: 1},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -96,10 +96,10 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { b: 1 },
-      prevState: { a: 1 },
-      nextProps: { b: 1 },
-      nextState: { a: 1 },
+      prevProps: {b: 1},
+      prevState: {a: 1},
+      nextProps: {b: 1},
+      nextState: {a: 1},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -120,9 +120,9 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { a: 1 },
+      prevProps: {a: 1},
       prevState: null,
-      nextProps: { a: 2 },
+      nextProps: {a: 2},
       nextState: null,
     };
 
@@ -152,9 +152,9 @@ describe('getUpdateInfo', () => {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
       prevProps: {},
-      prevState: { a: 1 },
+      prevState: {a: 1},
       nextProps: {},
-      nextState: { a: 2 },
+      nextState: {a: 2},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -182,10 +182,10 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { b: 1 },
-      prevState: { a: 1 },
-      nextProps: { b: 2 },
-      nextState: { a: 2 },
+      prevProps: {b: 1},
+      prevState: {a: 1},
+      nextProps: {b: 2},
+      nextState: {a: 2},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -220,9 +220,9 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { a: { b: 'b' } },
+      prevProps: {a: {b: 'b'}},
       prevState: null,
-      nextProps: { a: { b: 'b' } },
+      nextProps: {a: {b: 'b'}},
       nextState: null,
     };
 
@@ -254,9 +254,9 @@ describe('getUpdateInfo', () => {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
       prevProps: {},
-      prevState: { a: { b: 'b' } },
+      prevState: {a: {b: 'b'}},
       nextProps: {},
-      nextState: { a: { b: 'b' } },
+      nextState: {a: {b: 'b'}},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -286,10 +286,10 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { b: { c: 'c' } },
-      prevState: { a: { d: 'd' } },
-      nextProps: { b: { c: 'c' } },
-      nextState: { a: { d: 'd' } },
+      prevProps: {b: {c: 'c'}},
+      prevState: {a: {d: 'd'}},
+      nextProps: {b: {c: 'c'}},
+      nextState: {a: {d: 'd'}},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -324,9 +324,9 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { a: () => {} },
+      prevProps: {a: () => {}},
       prevState: null,
-      nextProps: { a: () => {} },
+      nextProps: {a: () => {}},
       nextState: null,
     };
 
@@ -356,9 +356,9 @@ describe('getUpdateInfo', () => {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
       prevProps: {},
-      prevState: { a: () => {} },
+      prevState: {a: () => {}},
       nextProps: {},
-      nextState: { a: () => {} },
+      nextState: {a: () => {}},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -386,10 +386,10 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { a: () => {} },
-      prevState: { b: () => {} },
-      nextProps: { a: () => {} },
-      nextState: { b: () => {} },
+      prevProps: {a: () => {}},
+      prevState: {b: () => {}},
+      nextProps: {a: () => {}},
+      nextState: {b: () => {}},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -424,10 +424,10 @@ describe('getUpdateInfo', () => {
     const input = {
       Component: TestComponent,
       displayName: getDisplayName(TestComponent),
-      prevProps: { a: () => {}, b: '123', c: { d: 'e' }, f: 3 },
+      prevProps: {a: () => {}, b: '123', c: {d: 'e'}, f: 3},
       prevState: null,
-      nextProps: { a: () => {}, b: '12345', c: { d: 'e' }, f: 3 },
-      nextState: { a: 4 },
+      nextProps: {a: () => {}, b: '12345', c: {d: 'e'}, f: 3},
+      nextState: {a: 4},
     };
 
     const updateInfo = getUpdateInfo(input);
@@ -471,10 +471,10 @@ describe('getUpdateInfo', () => {
   });
 
   test('deep equals and same object', () => {
-    const sameProp = { a: { b: 'c' } };
+    const sameProp = {a: {b: 'c'}};
 
-    const prevProps = { className: 'aa', style: { width: '100%' }, sameProp };
-    const nextProps = { className: 'aa', style: { width: '100%' }, sameProp };
+    const prevProps = {className: 'aa', style: {width: '100%'}, sameProp};
+    const nextProps = {className: 'aa', style: {width: '100%'}, sameProp};
 
     const input = getUpdateInfo({
       Component: TestComponent,

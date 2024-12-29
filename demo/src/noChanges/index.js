@@ -4,7 +4,7 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'No Changes',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);

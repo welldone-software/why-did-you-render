@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 let updateInfos = [];
 
@@ -23,9 +23,9 @@ function createOwners(Child) {
   const FunctionalOwner = () => <Child />;
 
   class ClassOwner extends React.Component {
-    state = { a: 1 };
+    state = {a: 1};
     componentDidMount() {
-      this.setState({ a: 2 });
+      this.setState({a: 2});
     }
 
     render() {
@@ -46,10 +46,10 @@ function createOwners(Child) {
     return <Child />;
   }
 
-  return { FunctionalOwner, ClassOwner, HooksOwner };
+  return {FunctionalOwner, ClassOwner, HooksOwner};
 }
 
-function CloneOwner({ children }) {
+function CloneOwner({children}) {
   const [, setA] = React.useState(1);
   const [, setB] = React.useState(1);
   React.useLayoutEffect(() => {
@@ -64,10 +64,10 @@ describe('logOwnerReasons - function child', () => {
   const Child = () => null;
   Child.whyDidYouRender = true;
 
-  const { FunctionalOwner, ClassOwner, HooksOwner } = createOwners(Child);
+  const {FunctionalOwner, ClassOwner, HooksOwner} = createOwners(Child);
 
   test('owner props changed', () => {
-    const { rerender } = rtl.render(<FunctionalOwner a={1}/>);
+    const {rerender} = rtl.render(<FunctionalOwner a={1}/>);
     rerender(<FunctionalOwner a={2} />);
 
     expect(updateInfos).toHaveLength(1);
@@ -145,7 +145,7 @@ describe('logOwnerReasons - function child', () => {
   });
 
   test('owner state updated during render', () => {
-    function DerivedStateOwner({ ready }) {
+    function DerivedStateOwner({ready}) {
       const [wasReady, setWasReady] = React.useState(ready);
       if (ready && !wasReady) {
         setWasReady(true);
@@ -153,7 +153,7 @@ describe('logOwnerReasons - function child', () => {
 
       return <Child />;
     }
-    const { rerender } = rtl.render(<DerivedStateOwner ready={false}/>);
+    const {rerender} = rtl.render(<DerivedStateOwner ready={false}/>);
     rerender(<DerivedStateOwner ready/>);
     rerender(<DerivedStateOwner ready={false}/>);
 
@@ -195,7 +195,7 @@ describe('logOwnerReasons - function child', () => {
           nextValue: false,
         }],
         stateDifferences: false,
-        hookDifferences: [{ hookName: 'useState', differences: false }],
+        hookDifferences: [{hookName: 'useState', differences: false}],
       },
     });
   });
@@ -245,10 +245,10 @@ describe('logOwnerReasons - class child', () => {
     }
   }
 
-  const { FunctionalOwner, ClassOwner, HooksOwner } = createOwners(Child);
+  const {FunctionalOwner, ClassOwner, HooksOwner} = createOwners(Child);
 
   test('owner props changed', () => {
-    const { rerender } = rtl.render(<FunctionalOwner a={1}/>);
+    const {rerender} = rtl.render(<FunctionalOwner a={1}/>);
     rerender(<FunctionalOwner a={2} />);
 
     expect(updateInfos).toHaveLength(1);

@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 describe('hooks - useState', () => {
   let updateInfos = [];
@@ -19,7 +19,7 @@ describe('hooks - useState', () => {
   });
 
   test('setState - same value', () => {
-    const initialState = { b: 'b' };
+    const initialState = {b: 'b'};
     const ComponentWithHooks = () => {
       const [currentState, setCurrentState] = React.useState(initialState);
 
@@ -43,10 +43,10 @@ describe('hooks - useState', () => {
 
   test('setState of different values', () => {
     const ComponentWithHooks = () => {
-      const [currentState, setCurrentState] = React.useState({ b: 'b' });
+      const [currentState, setCurrentState] = React.useState({b: 'b'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ b: 'c' });
+        setCurrentState({b: 'c'});
       }, []);
 
       return (
@@ -74,8 +74,8 @@ describe('hooks - useState', () => {
         {
           pathString: '',
           diffType: diffTypes.different,
-          prevValue: { b: 'b' },
-          nextValue: { b: 'c' },
+          prevValue: {b: 'b'},
+          nextValue: {b: 'c'},
         },
       ],
       ownerDifferences: false,
@@ -83,11 +83,11 @@ describe('hooks - useState', () => {
   });
 
   test('setState of deep equals values', () => {
-    const ComponentWithHooks = ({ a }) => {
-      const [currentState, setCurrentState] = React.useState({ b: 'b' });
+    const ComponentWithHooks = ({a}) => {
+      const [currentState, setCurrentState] = React.useState({b: 'b'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ b: 'b' });
+        setCurrentState({b: 'b'});
       }, []);
 
       return (
@@ -108,8 +108,8 @@ describe('hooks - useState', () => {
       hookDifferences: [{
         pathString: '',
         diffType: diffTypes.deepEquals,
-        prevValue: { b: 'b' },
-        nextValue: { b: 'b' },
+        prevValue: {b: 'b'},
+        nextValue: {b: 'b'},
       }],
       ownerDifferences: false,
     });
@@ -133,11 +133,11 @@ describe('track hooks', () => {
   });
 
   test('same value', () => {
-    const value = { b: 'b' };
+    const value = {b: 'b'};
 
     let effectCalled = false;
 
-    const ComponentWithHooks = ({ a }) => {
+    const ComponentWithHooks = ({a}) => {
       const [currentState, setCurrentState] = React.useState(value);
 
       React.useLayoutEffect(() => {
@@ -186,11 +186,11 @@ describe('track hooks', () => {
   });
 
   test('deep equals', () => {
-    const ComponentWithHooks = ({ a }) => {
-      const [currentState, setCurrentState] = React.useState({ b: 'b' });
+    const ComponentWithHooks = ({a}) => {
+      const [currentState, setCurrentState] = React.useState({b: 'b'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ b: 'b' });
+        setCurrentState({b: 'b'});
       }, []);
 
       return (
@@ -209,8 +209,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { b: 'b' },
-        prevValue: { b: 'b' },
+        nextValue: {b: 'b'},
+        prevValue: {b: 'b'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -219,11 +219,11 @@ describe('track hooks', () => {
   });
 
   test('deep equals direct import', () => {
-    const ComponentWithHooks = ({ a }) => {
-      const [currentState, setCurrentState] = React.useState({ b: 'b' });
+    const ComponentWithHooks = ({a}) => {
+      const [currentState, setCurrentState] = React.useState({b: 'b'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ b: 'b' });
+        setCurrentState({b: 'b'});
       }, []);
 
       return (
@@ -242,8 +242,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { b: 'b' },
-        prevValue: { b: 'b' },
+        nextValue: {b: 'b'},
+        prevValue: {b: 'b'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -252,19 +252,19 @@ describe('track hooks', () => {
   });
 
   test('many deep equals direct import', () => {
-    const ComponentWithHooks = ({ a }) => {
-      const [currentStateA, setCurrentStateA] = React.useState({ a: 'a' });
-      const [currentStateB, setCurrentStateB] = React.useState({ b: 'b' });
-      const [currentStateC, setCurrentStateC] = React.useState({ c: 'c' });
-      const [currentStateD, setCurrentStateD] = React.useState({ d: 'd' });
-      const [currentStateE, setCurrentStateE] = React.useState({ e: 'e' });
+    const ComponentWithHooks = ({a}) => {
+      const [currentStateA, setCurrentStateA] = React.useState({a: 'a'});
+      const [currentStateB, setCurrentStateB] = React.useState({b: 'b'});
+      const [currentStateC, setCurrentStateC] = React.useState({c: 'c'});
+      const [currentStateD, setCurrentStateD] = React.useState({d: 'd'});
+      const [currentStateE, setCurrentStateE] = React.useState({e: 'e'});
 
       React.useLayoutEffect(() => {
-        setCurrentStateA({ a: 'a' });
-        setCurrentStateB({ b: 'b' });
-        setCurrentStateC({ c: 'c' });
-        setCurrentStateD({ d: 'd' });
-        setCurrentStateE({ e: 'e' });
+        setCurrentStateA({a: 'a'});
+        setCurrentStateB({b: 'b'});
+        setCurrentStateC({c: 'c'});
+        setCurrentStateD({d: 'd'});
+        setCurrentStateE({e: 'e'});
       }, []);
 
       return (
@@ -283,8 +283,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { a: 'a' },
-        prevValue: { a: 'a' },
+        nextValue: {a: 'a'},
+        prevValue: {a: 'a'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -294,8 +294,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { b: 'b' },
-        prevValue: { b: 'b' },
+        nextValue: {b: 'b'},
+        prevValue: {b: 'b'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -305,8 +305,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { c: 'c' },
-        prevValue: { c: 'c' },
+        nextValue: {c: 'c'},
+        prevValue: {c: 'c'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -316,8 +316,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { d: 'd' },
-        prevValue: { d: 'd' },
+        nextValue: {d: 'd'},
+        prevValue: {d: 'd'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -327,8 +327,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { e: 'e' },
-        prevValue: { e: 'e' },
+        nextValue: {e: 'e'},
+        prevValue: {e: 'e'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -337,11 +337,11 @@ describe('track hooks', () => {
   });
 
   test('deep equals functional use', () => {
-    const ComponentWithHooks = ({ a }) => {
-      const [currentState, setCurrentState] = React.useState({ b: 'b' });
+    const ComponentWithHooks = ({a}) => {
+      const [currentState, setCurrentState] = React.useState({b: 'b'});
 
       React.useLayoutEffect(() => {
-        setCurrentState(() => ({ b: 'b' }));
+        setCurrentState(() => ({b: 'b'}));
       }, []);
 
       return (
@@ -360,8 +360,8 @@ describe('track hooks', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { b: 'b' },
-        prevValue: { b: 'b' },
+        nextValue: {b: 'b'},
+        prevValue: {b: 'b'},
       }],
       propsDifferences: false,
       stateDifferences: false,

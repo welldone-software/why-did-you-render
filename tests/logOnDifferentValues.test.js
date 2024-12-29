@@ -38,13 +38,13 @@ test('hook value change', () => {
           {text}
         </button>
         <hr/>
-        <Foo a={{ v: '1' }}/>
-        <Foo a={{ v: '1' }}/>
+        <Foo a={{v: '1'}}/>
+        <Foo a={{v: '1'}}/>
       </div>
     );
   });
 
-  const { getByTestId } = rtl.render(
+  const {getByTestId} = rtl.render(
     <App/>
   );
 
@@ -52,14 +52,14 @@ test('hook value change', () => {
   rtl.fireEvent.click(button);
 
   expect(updateInfos).toEqual([
-    expect.objectContaining({ displayName: 'App' }),
-    expect.objectContaining({ displayName: 'Foo' }),
-    expect.objectContaining({ displayName: 'Foo' }),
+    expect.objectContaining({displayName: 'App'}),
+    expect.objectContaining({displayName: 'Foo'}),
+    expect.objectContaining({displayName: 'Foo'}),
   ]);
 });
 
 test('Non simple objects', () => {
-  const Foo = React.memo(function Foo({ error }) {
+  const Foo = React.memo(function Foo({error}) {
     return (
       <div>
         <h1>{error.message}</h1>
@@ -85,7 +85,7 @@ test('Non simple objects', () => {
     );
   });
 
-  const { getByTestId } = rtl.render(
+  const {getByTestId} = rtl.render(
     <App/>
   );
 
@@ -93,6 +93,6 @@ test('Non simple objects', () => {
   rtl.fireEvent.click(button);
 
   expect(updateInfos[1].reason.propsDifferences[0]).toEqual(
-    expect.objectContaining({ diffType: 'deepEquals', 'pathString': 'error' }),
+    expect.objectContaining({diffType: 'deepEquals', 'pathString': 'error'}),
   );
 });

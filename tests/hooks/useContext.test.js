@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 describe('hooks - useContext', () => {
   let updateInfos = [];
@@ -21,7 +21,7 @@ describe('hooks - useContext', () => {
   test('same value', () => {
     const MyContext = React.createContext('c');
 
-    const ComponentWithContextHook = ({ a, b }) => {
+    const ComponentWithContextHook = ({a, b}) => {
       const valueFromContext = React.useContext(MyContext);
 
       return (
@@ -54,9 +54,9 @@ describe('hooks - useContext', () => {
   });
 
   test('deep equals - memoized', () => {
-    const MyContext = React.createContext({ c: 'c' });
+    const MyContext = React.createContext({c: 'c'});
 
-    const ComponentWithContextHook = React.memo(({ a, b }) => {
+    const ComponentWithContextHook = React.memo(({a, b}) => {
       const valueFromContext = React.useContext(MyContext);
 
       return (
@@ -66,10 +66,10 @@ describe('hooks - useContext', () => {
     ComponentWithContextHook.whyDidYouRender = true;
 
     const OuterComponent = () => {
-      const [currentState, setCurrentState] = React.useState({ c: 'c' });
+      const [currentState, setCurrentState] = React.useState({c: 'c'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'c' });
+        setCurrentState({c: 'c'});
       }, []);
 
       return (
@@ -90,8 +90,8 @@ describe('hooks - useContext', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { c: 'c' },
-        prevValue: { c: 'c' },
+        nextValue: {c: 'c'},
+        prevValue: {c: 'c'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -100,9 +100,9 @@ describe('hooks - useContext', () => {
   });
 
   test('deep equals - not memoized', () => {
-    const MyContext = React.createContext({ c: 'c' });
+    const MyContext = React.createContext({c: 'c'});
 
-    const ComponentWithContextHook = ({ a, b }) => {
+    const ComponentWithContextHook = ({a, b}) => {
       const valueFromContext = React.useContext(MyContext);
 
       return (
@@ -112,10 +112,10 @@ describe('hooks - useContext', () => {
     ComponentWithContextHook.whyDidYouRender = true;
 
     const OuterComponent = () => {
-      const [currentState, setCurrentState] = React.useState({ c: 'c' });
+      const [currentState, setCurrentState] = React.useState({c: 'c'});
 
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'c' });
+        setCurrentState({c: 'c'});
       }, []);
 
       return (
@@ -141,8 +141,8 @@ describe('hooks - useContext', () => {
           differences: [{
             diffType: diffTypes.deepEquals,
             pathString: '',
-            nextValue: { c: 'c' },
-            prevValue: { c: 'c' },
+            nextValue: {c: 'c'},
+            prevValue: {c: 'c'},
           }],
           hookName: 'useState',
         }],
@@ -156,8 +156,8 @@ describe('hooks - useContext', () => {
         hookDifferences: [{
           diffType: diffTypes.deepEquals,
           pathString: '',
-          nextValue: { c: 'c' },
-          prevValue: { c: 'c' },
+          nextValue: {c: 'c'},
+          prevValue: {c: 'c'},
         }],
         propsDifferences: false,
         stateDifferences: false,

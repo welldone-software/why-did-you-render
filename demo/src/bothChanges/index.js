@@ -4,7 +4,7 @@ import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Props And State Changes',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -13,12 +13,12 @@ export default {
       static whyDidYouRender = true;
 
       state = {
-        c: { d: 'd' },
+        c: {d: 'd'},
       };
 
       static getDerivedStateFromProps() {
         return {
-          c: { d: 'd' },
+          c: {d: 'd'},
         };
       }
 
@@ -28,9 +28,9 @@ export default {
     }
 
     stepLogger('First Render');
-    reactDomRoot.render(<ClassDemo a={{ b: 'b' }}/>);
+    reactDomRoot.render(<ClassDemo a={{b: 'b'}}/>);
 
     stepLogger('Second Render', true);
-    reactDomRoot.render(<ClassDemo a={{ b: 'b' }}/>);
+    reactDomRoot.render(<ClassDemo a={{b: 'b'}}/>);
   },
 };

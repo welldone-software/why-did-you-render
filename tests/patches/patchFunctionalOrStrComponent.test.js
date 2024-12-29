@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 const FunctionalTestComponent = () => (
   <div>hi!</div>
@@ -27,7 +27,7 @@ test('simple inline component', () => {
   );
   InlineComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <InlineComponent a={1}/>
   );
   rerender(
@@ -49,10 +49,10 @@ test('simple inline component', () => {
 });
 
 test('Several functional components', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <>
       <FunctionalTestComponent/>
-      <FunctionalTestComponent a={{ a: 'a' }}/>
+      <FunctionalTestComponent a={{a: 'a'}}/>
       <FunctionalTestComponent/>
     </>
   );
@@ -60,7 +60,7 @@ test('Several functional components', () => {
   rerender(
     <>
       <FunctionalTestComponent/>
-      <FunctionalTestComponent a={{ a: 'a' }}/>
+      <FunctionalTestComponent a={{a: 'a'}}/>
       <FunctionalTestComponent/>
     </>
   );
@@ -78,8 +78,8 @@ test('Several functional components', () => {
     propsDifferences: [{
       diffType: diffTypes.deepEquals,
       pathString: 'a',
-      nextValue: { a: 'a' },
-      prevValue: { a: 'a' },
+      nextValue: {a: 'a'},
+      prevValue: {a: 'a'},
     }],
     stateDifferences: false,
     hookDifferences: false,

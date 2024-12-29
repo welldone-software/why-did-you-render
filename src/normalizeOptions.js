@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { createDefaultNotifier } from './defaultNotifier';
+import {createDefaultNotifier} from './defaultNotifier';
 
 const emptyFn = () => {};
 

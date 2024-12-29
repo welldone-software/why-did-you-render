@@ -2,7 +2,7 @@ import React from 'react';
 
 export default {
   description: 'Creating react element using React.cloneElement',
-  fn({ reactDomRoot, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     whyDidYouRender(React);
 
     class TestComponent extends React.Component {

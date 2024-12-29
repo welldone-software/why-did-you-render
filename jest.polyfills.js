@@ -9,18 +9,18 @@
  * you don't want to deal with this.
  */
  
-const { TextDecoder, TextEncoder } = require('node:util');
+const {TextDecoder, TextEncoder} = require('node:util');
  
 Object.defineProperties(globalThis, {
-  TextDecoder: { value: TextDecoder },
-  TextEncoder: { value: TextEncoder },
+  TextDecoder: {value: TextDecoder},
+  TextEncoder: {value: TextEncoder},
 });
  
-const { Blob, File } = require('node:buffer'); 
+const {Blob, File} = require('node:buffer'); 
  
 Object.defineProperties(globalThis, {
-  Blob: { value: Blob },
-  File: { value: File },
+  Blob: {value: Blob},
+  File: {value: File},
 });
 
 window.MessageChannel = jest.fn().mockImplementation(() => {
@@ -34,7 +34,7 @@ window.MessageChannel = jest.fn().mockImplementation(() => {
     port2: {
       postMessage: data => {
         if (onmessage) {
-          onmessage({ data });
+          onmessage({data});
         }
       },
     },
