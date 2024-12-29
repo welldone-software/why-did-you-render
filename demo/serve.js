@@ -16,11 +16,10 @@ if (!port) {
 const app = express();
 
 app.get('/ssrComponent', (req, res) => {
-  const stream = ReactDomServer.renderToNodeStream(
+  const html = ReactDomServer.renderToString(
     React.createElement(DemoComponent, {text: 'hydrated hi'})
   );
-  stream.pipe(res, {end: false});
-  stream.on('end', () => res.end());
+  res.send(html);
 });
 
 const server = http.createServer(app);

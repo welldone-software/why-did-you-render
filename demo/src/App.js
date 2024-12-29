@@ -54,13 +54,18 @@ const defaultDemoName = 'bigList';
 const domElement = document.getElementById('demo');
 let reactDomRoot;
 
-function changeDemo(demoFn) {
+function changeDemo(demoFn, {shouldCreateRoot = true} = {}) {
   console.clear && console.clear(); // eslint-disable-line no-console
   React.__REVERT_WHY_DID_YOU_RENDER__ && React.__REVERT_WHY_DID_YOU_RENDER__();
   reactDomRoot?.unmount();
-  reactDomRoot = ReactDom.createRoot(domElement);
+  if (shouldCreateRoot) {
+    reactDomRoot = ReactDom.createRoot(domElement);
+  }
   setTimeout(() => {
-    demoFn({whyDidYouRender, reactDomRoot});
+    const reactDomRootPromise = demoFn({whyDidYouRender, domElement, reactDomRoot});
+    if (reactDomRootPromise) {
+      reactDomRootPromise.then(r => reactDomRoot = r);
+    }
   }, 1);
 }
 
@@ -70,10 +75,10 @@ if (!demoFromHash) {
   window.location.hash = defaultDemoName;
 }
 
-changeDemo(initialDemo.fn);
+changeDemo(initialDemo.fn, initialDemo.settings);
 
-const DemoLink = ({name, description, fn}) => (
-  <li><a href={`#${name}`} onClick={() => changeDemo(fn)}>{description}</a></li>
+const DemoLink = ({name, description, fn, settings}) => (
+  <li><a href={`#${name}`} onClick={() => changeDemo(fn, settings)}>{description}</a></li>
 );
 
 const App = () => (
