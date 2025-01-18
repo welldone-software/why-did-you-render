@@ -66,5 +66,6 @@ export default function getUpdateInfo({Component, displayName, hookName, prevOwn
     nextState,
     nextHookResult,
     reason: getUpdateReason(prevOwner, prevProps, prevState, prevHookResult, nextOwner, nextProps, nextState, nextHookResult),
+    ownerDataMap: wdyrStore.ownerDataMap,
   };
 }

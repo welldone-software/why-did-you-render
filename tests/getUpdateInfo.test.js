@@ -34,6 +34,7 @@ describe('getUpdateInfo', () => {
 
     expect(updateInfo).toEqual({
       ...input,
+      ownerDataMap: expect.any(WeakMap),
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
@@ -58,6 +59,7 @@ describe('getUpdateInfo', () => {
 
     expect(updateInfo).toEqual({
       ...input,
+      ownerDataMap: expect.any(WeakMap),
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
@@ -82,6 +84,7 @@ describe('getUpdateInfo', () => {
 
     expect(updateInfo).toEqual({
       ...input,
+      ownerDataMap: expect.any(WeakMap),
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
@@ -106,6 +109,7 @@ describe('getUpdateInfo', () => {
 
     expect(updateInfo).toEqual({
       ...input,
+      ownerDataMap: expect.any(WeakMap),
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [],
@@ -131,6 +135,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -162,6 +167,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [],
         stateDifferences: [
@@ -193,6 +199,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -231,6 +238,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -264,6 +272,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [],
         stateDifferences: [
@@ -297,6 +306,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -335,6 +345,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -366,6 +377,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [],
         stateDifferences: [
@@ -397,6 +409,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -435,6 +448,7 @@ describe('getUpdateInfo', () => {
     expect(updateInfo).toEqual({
       ...input,
       displayName: 'TestComponent',
+      ownerDataMap: expect.any(WeakMap),
       reason: {
         propsDifferences: [
           {
@@ -489,6 +503,7 @@ describe('getUpdateInfo', () => {
 
     expect(updateInfo).toEqual({
       ...input,
+      ownerDataMap: expect.any(WeakMap),
       displayName: 'TestComponent',
       reason: {
         propsDifferences: [
