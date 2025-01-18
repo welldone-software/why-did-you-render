@@ -1,7 +1,7 @@
 {
   "name": "@welldone-software/why-did-you-render",
   "description": "Monkey patches React to notify you about avoidable re-renders.",
-  "version": "8.0.3",
+  "version": "9.0.0",
   "repository": "git+https://github.com/welldone-software/why-did-you-render.git",
   "license": "MIT",
   "authors": [
@@ -34,7 +34,7 @@
     "lint": "eslint . --max-warnings 0 --cache --cache-location .cache/eslint-cache",
     "clear": "rimraf .cache dist demo/dist node_modules",
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
-    "checkHealth": "yarn build && yarn lint && yarn test && yarn cypress:ci",
+    "checkHealth": "yarn build && yarn lint && yarn test && yarn cypress:test",
     "version": "yarn checkHealth",
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
