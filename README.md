@@ -12,12 +12,20 @@
 
 `why-did-you-render` by [Welldone Software](https://welldone.software/) monkey patches **`React`** to notify you about potentially avoidable re-renders. (Works with **`React Native`** as well.)
 
-For example, if you pass `style={{width: '100%'}}` to a big pure component it would always re-render on every element creation:
+For example, if you pass `style={{width: '100%'}}` to a big memo component it would always re-render on every element creation:
 ```jsx
-<BigListPureComponent style={{width: '100%'}}/>
+<MemoBigList style={{width: '100%'}}/>
 ```
-
 It can also help you to simply track when and why a certain component re-renders.
+
+> [!CAUTION]
+> The library was not tested with [React Compiler](https://react.dev/learn/react-compiler) at all. I believe it's completely incompatible with it.
+
+> [!CAUTION]
+> Not all re-renders are *"bad"*. Sometimes shenanigan to reduce re-renders can either hurt your App's performance or have a neglagable effect, in which case it would be just a waste of your efforts, and complicate your code. Try to focus on heavier components when optimizing and use the [React profiler](https://legacy.reactjs.org/blog/2018/09/10/introducing-the-react-profiler.html) inside the React dev-tools to measure the effects of any changes.
+
+> [!NOTE]
+I've joined the React team, specifically working on React tooling. This role has opened up exciting opportunities to enhance the developer experience for React users— and your input could offer valuable insights to help me with this effort. Please join the conversation in the [discussion thread](https://github.com/welldone-software/why-did-you-render/discussions/309)!
 
 ## Setup
 The latest version of the library was tested [(unit tests and E2E)]((https://travis-ci.com/welldone-software/why-did-you-render.svg?branch=master)) with **`React@19`** only.
@@ -33,7 +41,7 @@ yarn add @welldone-software/why-did-you-render -D
 ```
 Set the library to be the React's importSource and make sure `preset-react` is in `development` mode.
 
-This is because React 19 requires using the `automatic` [JSX transformation](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html). 
+This is because `React 19` requires using the `automatic` [JSX transformation](https://legacy.reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html). 
 ```js
 ['@babel/preset-react', {
   runtime: 'automatic',
@@ -46,7 +54,7 @@ This is because React 19 requires using the `automatic` [JSX transformation](htt
 
 #### Bare workflow
 
-Unfortunately, the `metro-react-native-babel-preset` that comes with react-native out of the box does not allow you to change the options of the `babel/plugin-transform-react-jsx` plugin. Just add the plugin with options as listed below and start react-native packager as usual. Default env for babel is "development". If you do not use expo when working with react-native, the following method will help you.
+Add the plugin as listed below and start react-native packager as usual. Default env for babel is "development". If you do not use expo when working with react-native, the following method will help you.
 
 ```js
 module.exports = {
@@ -54,7 +62,11 @@ module.exports = {
 
   env: {
     development: {
-      plugins: [['@babel/plugin-transform-react-jsx', { runtime: 'classic' }]],
+      plugins: [['@babel/plugin-transform-react-jsx', {
+        runtime: 'automatic',
+        development: process.env.NODE_ENV === 'development',
+        importSource: '@welldone-software/why-did-you-render',
+      }]],
     },
   },
 }
@@ -81,7 +93,7 @@ module.exports = function (api) {
 };
 ```
 
-> Notice: Create React App (CRA) ^4 **does use the `automatic` JSX transformation.**
+> Notice: Create React App (CRA) ^4 **uses the `automatic` JSX transformation.**
 > [See the following comment on how to do this step with CRA](https://github.com/welldone-software/why-did-you-render/issues/154#issuecomment-773905769)
 
 Create a `wdyr.js` file and import it as **the very first import** in your application.
@@ -98,7 +110,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 ```
 
-> **Notice: The library should *NEVER* be used in production because it significantly slows down React**
+> [!CAUTION]
+> The library should *NEVER* be used in production because:
+> - It significantly slows down React
+> - It monkey patches React and can result in unexpected behavior
 
 In [Typescript](https://github.com/welldone-software/why-did-you-render/issues/161), call the file wdyr.ts and add the following line to the top of the file to import the package's types:
 ```tsx
@@ -113,21 +128,18 @@ Import `wdyr` as the first import (even before `react-hot-loader` if you use it)
 import './wdyr'; // <--- first import
 
 import 'react-hot-loader';
-import {hot} from 'react-hot-loader/root';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 // ...
 import {App} from './app';
 // ...
-const HotApp = hot(App);
-// ...
-ReactDOM.render(<HotApp/>, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
 ```
 
-If you use `trackAllPureComponents` like we suggest, all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) will be tracked.
+If you use `trackAllPureComponents`, all pure components ([React.PureComponent](https://reactjs.org/docs/react-api.html#reactpurecomponent) or [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)) will be tracked.
 
-Otherwise, add `whyDidYouRender = true` to component classes/functions you want to track. (f.e `Component.whyDidYouRender = true`)
+Otherwise, add `whyDidYouRender = true` to ad-hoc components to track them. (f.e `Component.whyDidYouRender = true`)
 
 More information about what is tracked can be found in [Tracking Components](#tracking-components).
 
