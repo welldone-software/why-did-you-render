@@ -34,12 +34,13 @@
     "lint": "eslint . --max-warnings 0 --cache --cache-location .cache/eslint-cache",
     "clear": "rimraf .cache dist demo/dist node_modules",
     "watch": "concurrently --names \"Serve,Test\" \"npm:start\" \"npm:test:watch\"",
-    "checkHealth": "yarn lint && yarn test",
-    "version": "yarn checkHealth && yarn build",
+    "checkHealth": "yarn build && yarn lint && yarn test && yarn cypress:ci",
+    "version": "yarn checkHealth",
     "postversion": "git push && git push --tags",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run --browser chrome",
-    "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:run:ci",
+    "cypress:test": "start-server-and-test start http://localhost:3003 cypress:run",
+    "cypress:ci": "start-server-and-test start http://localhost:3003 _cypress:ci",
     "_cypress:ci": "yarn cypress:run --record --group main"
   },
   "comments": {

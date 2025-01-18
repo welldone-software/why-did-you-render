@@ -17,16 +17,6 @@ jobs:
       - name: Run Cypress tests
         run: yarn cypress:ci
 
-  cypress-tests-classic:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
-      - name: Run Cypress tests
-        run: yarn cypress:ci:classic
-
   unit-tests:
     runs-on: ubuntu-latest
     steps:
