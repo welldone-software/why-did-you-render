@@ -1,8 +1,11 @@
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDom from 'react-dom/client';
 
 import App from './App';
 
-const domMenuElement = document.getElementById('menu');
+const element = document.getElementById('menu');
 
-ReactDom.render(<App/>, domMenuElement);
+const root = ReactDom.createRoot(element);
+
+root.render(<App/>);
+

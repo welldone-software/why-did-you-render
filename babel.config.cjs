@@ -3,7 +3,6 @@ const compact = require('lodash/compact');
 module.exports = function(api) {
   const isProd = process.env.NODE_ENV === 'production';
   const isTest = process.env.NODE_ENV === 'test';
-  const isUseClassicJSX = process.env.USE_CLASSIC_JSX === 'true';
 
   api.cache(false);
 
@@ -12,16 +11,15 @@ module.exports = function(api) {
       modules: isTest ? 'commonjs' : false,
     }],
     ['@babel/preset-react', {
-      runtime: isUseClassicJSX ? 'classic' : 'automatic',
+      runtime: 'automatic',
       development: true,
-      importSource: isUseClassicJSX ? undefined : `${__dirname}`,
+      importSource: `${__dirname}`,
     }],
   ];
 
   const plugins = compact([
-    (!isProd && !isTest) && 'react-hot-loader/babel',
-    !isProd && '@babel/plugin-transform-class-properties',
+    (!isProd && !isTest) && 'react-refresh/babel',
   ]);
 
-  return { presets, plugins };
+  return {presets, plugins};
 };

@@ -16,11 +16,10 @@ if (!port) {
 const app = express();
 
 app.get('/ssrComponent', (req, res) => {
-  const stream = ReactDomServer.renderToNodeStream(
-    React.createElement(DemoComponent, { text: 'hydrated hi' })
+  const html = ReactDomServer.renderToString(
+    React.createElement(DemoComponent, {text: 'hydrated hi'})
   );
-  stream.pipe(res, { end: false });
-  stream.on('end', () => res.end());
+  res.send(html);
 });
 
 const server = http.createServer(app);
@@ -32,7 +31,7 @@ app.use(nollupDevServer(app, config, {
 
 app.use(express.static('demo/public'));
 
-app.use(fallback('index.html', { root: 'demo/public' }));
+app.use(fallback('index.html', {root: 'demo/public'}));
 
 server.listen(port, () => {
   // eslint-disable-next-line no-console

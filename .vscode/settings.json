@@ -10,6 +10,7 @@
   "eslint.alwaysShowStatus": true,
   "eslint.format.enable": true,
   "eslint.codeActionsOnSave.mode": "problems",
+  "editor.formatOnSave": true,
 
   "flow.enabled": false,
 
@@ -19,6 +20,7 @@
 
   "jestrunner.debugOptions": {"args": ["--watch"]},
   "jestrunner.configPath": "jest.config.js",
+
   "cSpell.words": [
     "astring",
     "lcov",

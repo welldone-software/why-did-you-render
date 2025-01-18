@@ -3,6 +3,7 @@ const babel = require('@rollup/plugin-babel').default;
 const nodeResolve = require('rollup-plugin-node-resolve');
 const alias = require('rollup-plugin-alias');
 const commonjs = require('rollup-plugin-commonjs-alternate');
+const refresh = require('rollup-plugin-react-refresh');
 
 module.exports = {
   input: 'demo/src/index.js',
@@ -32,5 +33,6 @@ module.exports = {
       mainFields: ['module', 'browser', 'main'],
     }),
     commonjs({}),
+    refresh(),
   ],
 };

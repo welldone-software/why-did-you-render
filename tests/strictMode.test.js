@@ -1,7 +1,7 @@
 import React from 'react';
 import * as rtl from '@testing-library/react';
 
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 import whyDidYouRender from '~';
 
 class TestComponent extends React.Component {
@@ -25,12 +25,12 @@ FunctionalTestComponent.whyDidYouRender = true;
 FunctionalTestComponent.dispalyName = 'FunctionalTestComponent';
 
 const FunctionalTestComponentWithHooks = () => {
-  const [state1, setState1] = React.useState({ count1: 1 });
-  const [state2, setState2] = React.useState({ count2: 2 });
+  const [state1, setState1] = React.useState({count1: 1});
+  const [state2, setState2] = React.useState({count2: 2});
 
   React.useLayoutEffect(() => {
-    setState1({ count1: 1 });
-    setState2({ count2: 2 });
+    setState1({count1: 1});
+    setState2({count2: 2});
   }, []);
 
   return (
@@ -61,7 +61,7 @@ afterEach(() => {
 });
 
 test('Strict mode- class component no props change', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <React.StrictMode>
       <div>
         <TestComponent a={1}/>
@@ -87,7 +87,7 @@ test('Strict mode- class component no props change', () => {
 });
 
 test('Strict mode- class component props change', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <React.StrictMode>
       <div>
         <TestComponent a={[]}/>
@@ -120,7 +120,7 @@ test('Strict mode- class component props change', () => {
 });
 
 test('Strict mode- pure class component no props change', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <React.StrictMode>
       <div>
         <PureTestComponent a={1}/>
@@ -140,7 +140,7 @@ test('Strict mode- pure class component no props change', () => {
 });
 
 test('Strict mode- pure class component props change', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <React.StrictMode>
       <div>
         <PureTestComponent a={[]}/>
@@ -182,7 +182,7 @@ test('Strict mode- functional component no props change', () => {
       </React.StrictMode>
     );
   };
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <Main a={1}/>
   );
 
@@ -213,7 +213,7 @@ test('Strict mode- functional component with props change', () => {
       </React.StrictMode>
     );
   };
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <Main a={[]}/>
   );
 
@@ -267,8 +267,8 @@ test('Strict mode- functional component with hooks no props change', () => {
       {
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { count1: 1 },
-        prevValue: { count1: 1 },
+        nextValue: {count1: 1},
+        prevValue: {count1: 1},
       },
     ],
     ownerDifferences: false,
@@ -280,8 +280,8 @@ test('Strict mode- functional component with hooks no props change', () => {
       {
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { count2: 2 },
-        prevValue: { count2: 2 },
+        nextValue: {count2: 2},
+        prevValue: {count2: 2},
       },
     ],
     ownerDifferences: false,
@@ -311,8 +311,8 @@ test('Strict mode- functional component with hooks with props change', () => {
       {
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { count1: 1 },
-        prevValue: { count1: 1 },
+        nextValue: {count1: 1},
+        prevValue: {count1: 1},
       },
     ],
     ownerDifferences: false,
@@ -324,8 +324,8 @@ test('Strict mode- functional component with hooks with props change', () => {
       {
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { count2: 2 },
-        prevValue: { count2: 2 },
+        nextValue: {count2: 2},
+        prevValue: {count2: 2},
       },
     ],
     ownerDifferences: false,
@@ -334,12 +334,12 @@ test('Strict mode- functional component with hooks with props change', () => {
 
 test('Strict mode- strict parent and child', () => {
   const App = React.memo(() => {
-    const [whatever, setWhatever] = React.useState({ a: 'b' });
-    const [whatever2, setWhatever2] = React.useState({ a2: 'b2' });
+    const [whatever, setWhatever] = React.useState({a: 'b'});
+    const [whatever2, setWhatever2] = React.useState({a2: 'b2'});
 
     const clickme = () => {
-      setWhatever({ a: 'b' });
-      setWhatever2({ a2: 'b2' });
+      setWhatever({a: 'b'});
+      setWhatever2({a2: 'b2'});
     };
 
     return (
@@ -363,7 +363,7 @@ test('Strict mode- strict parent and child', () => {
     </React.StrictMode>
   );
 
-  const { getByText } = rtl.render(<StrictApp/>);
+  const {getByText} = rtl.render(<StrictApp/>);
   const buttonReference = getByText('test');
 
   rtl.act(() => {
@@ -386,8 +386,8 @@ test('Strict mode- strict parent and child', () => {
           {
             diffType: 'deepEquals',
             pathString: '',
-            prevValue: { a: 'b' },
-            nextValue: { a: 'b' },
+            prevValue: {a: 'b'},
+            nextValue: {a: 'b'},
           },
         ],
       },
@@ -397,8 +397,8 @@ test('Strict mode- strict parent and child', () => {
           {
             diffType: 'deepEquals',
             pathString: '',
-            prevValue: { a2: 'b2' },
-            nextValue: { a2: 'b2' },
+            prevValue: {a2: 'b2'},
+            nextValue: {a2: 'b2'},
           },
         ],
       },

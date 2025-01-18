@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 describe('hooks - useSyncExternalStore', () => {
   let updateInfos = [];
@@ -39,7 +39,7 @@ describe('hooks - useSyncExternalStore', () => {
   test('same value', () => {
     const store = createSimpleStore('c');
 
-    const ComponentWithSyncExternalStore = ({ a, b }) => {
+    const ComponentWithSyncExternalStore = ({a, b}) => {
       const valueFromStore = React.useSyncExternalStore(
         store.subscribe,
         store.getState
@@ -71,9 +71,9 @@ describe('hooks - useSyncExternalStore', () => {
   });
 
   test('deep equals', () => {
-    const store = createSimpleStore({ c: 'c' });
+    const store = createSimpleStore({c: 'c'});
 
-    const ComponentWithSyncExternalStore = ({ a, b }) => {
+    const ComponentWithSyncExternalStore = ({a, b}) => {
       const valueFromStore = React.useSyncExternalStore(
         store.subscribe,
         store.getState
@@ -89,7 +89,7 @@ describe('hooks - useSyncExternalStore', () => {
 
     const OuterComponent = () => {
       React.useLayoutEffect(() => {
-        store.setState({ c: 'c' });
+        store.setState({c: 'c'});
       }, []);
 
       return (
@@ -107,8 +107,8 @@ describe('hooks - useSyncExternalStore', () => {
         {
           diffType: diffTypes.deepEquals,
           pathString: '',
-          nextValue: { c: 'c' },
-          prevValue: { c: 'c' },
+          nextValue: {c: 'c'},
+          prevValue: {c: 'c'},
         },
       ],
       propsDifferences: false,

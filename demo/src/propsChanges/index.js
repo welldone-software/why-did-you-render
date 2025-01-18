@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Props Changes',
-  fn({ domElement, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -22,35 +21,35 @@ export default {
     );
 
     stepLogger('First render');
-    ReactDom.render(<Main a={1} />, domElement);
+    reactDomRoot.render(<Main a={1} />);
 
     stepLogger('Same props', true);
-    ReactDom.render(<Main a={1} />, domElement);
+    reactDomRoot.render(<Main a={1} />);
 
     stepLogger('Other props');
-    ReactDom.render(<Main a={{ b: 'b' }} />, domElement);
+    reactDomRoot.render(<Main a={{b: 'b'}} />);
 
     stepLogger('Different by ref, equals by value', true);
-    ReactDom.render(<Main a={{ b: 'b' }} />, domElement);
+    reactDomRoot.render(<Main a={{b: 'b'}} />);
 
     stepLogger('Other nested props');
-    ReactDom.render(<Main a={{ b: { c: { d: 'd' } } }} />, domElement);
+    reactDomRoot.render(<Main a={{b: {c: {d: 'd'}}}} />);
 
     stepLogger('Deep equal nested props', true);
-    ReactDom.render(<Main a={{ b: { c: { d: 'd' } } }} />, domElement);
+    reactDomRoot.render(<Main a={{b: {c: {d: 'd'}}}} />);
 
     stepLogger('Mixed Props');
-    ReactDom.render(<Main containerProps={{ style: { height: '100%' }, className: 'default-highchart' }} />, domElement);
+    reactDomRoot.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart'}} />);
 
     stepLogger('Mixed Props again', true);
-    ReactDom.render(<Main containerProps={{ style: { height: '100%' }, className: 'default-highchart' }} />, domElement);
+    reactDomRoot.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart'}} />);
 
-    const sameObj = { a: { b: 'c' } };
+    const sameObj = {a: {b: 'c'}};
 
     stepLogger('Mixed Props including eq obj');
-    ReactDom.render(<Main containerProps={{ style: { height: '100%' }, className: 'default-highchart', sameObj }} />, domElement);
+    reactDomRoot.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart', sameObj}} />);
 
     stepLogger('Mixed Props including eq obj', true);
-    ReactDom.render(<Main containerProps={{ style: { height: '100%' }, className: 'default-highchart', sameObj }} />, domElement);
+    reactDomRoot.render(<Main containerProps={{style: {height: '100%'}, className: 'default-highchart', sameObj}} />);
   },
 };

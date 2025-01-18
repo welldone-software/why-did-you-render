@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Strict mode',
-  fn({ domElement, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -24,21 +23,21 @@ export default {
     );
 
     stepLogger('First render');
-    ReactDom.render(<Main a={1} />, domElement);
+    reactDomRoot.render(<Main a={1} />);
 
     stepLogger('Same props', true);
-    ReactDom.render(<Main a={1} />, domElement);
+    reactDomRoot.render(<Main a={1} />);
 
     stepLogger('Other props');
-    ReactDom.render(<Main a={{ b: 'b' }} />, domElement);
+    reactDomRoot.render(<Main a={{b: 'b'}} />);
 
     stepLogger('Different by ref, equals by value', true);
-    ReactDom.render(<Main a={{ b: 'b' }} />, domElement);
+    reactDomRoot.render(<Main a={{b: 'b'}} />);
 
     stepLogger('Other nested props');
-    ReactDom.render(<Main a={{ b: { c: { d: 'd' } } }} />, domElement);
+    reactDomRoot.render(<Main a={{b: {c: {d: 'd'}}}} />);
 
     stepLogger('Deep equal nested props', true);
-    ReactDom.render(<Main a={{ b: { c: { d: 'd' } } }} />, domElement);
+    reactDomRoot.render(<Main a={{b: {c: {d: 'd'}}}} />);
   },
 };

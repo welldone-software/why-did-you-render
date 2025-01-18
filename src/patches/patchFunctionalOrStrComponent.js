@@ -1,4 +1,4 @@
-import { defaults } from 'lodash';
+import {defaults} from 'lodash';
 
 import wdyrStore from '../wdyrStore';
 
@@ -8,22 +8,27 @@ const getFunctionalComponentFromStringComponent = (componentTypeStr) => props =>
   wdyrStore.React.createElement(componentTypeStr, props)
 );
 
-export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, { isPure, displayName, defaultProps }) {
+export default function patchFunctionalOrStrComponent(FunctionalOrStringComponent, {isPure, displayName, defaultProps}) {
   const FunctionalComponent = typeof(FunctionalOrStringComponent) === 'string' ?
     getFunctionalComponentFromStringComponent(FunctionalOrStringComponent) :
     FunctionalOrStringComponent;
 
-  function WDYRFunctionalComponent() {
-    const nextProps = arguments[0];
-    const ref = wdyrStore.React.useRef();
+  function WDYRFunctionalComponent(nextProps, refMaybe, ...args) {
+    const prevPropsRef = wdyrStore.React.useRef();
+    const prevProps = prevPropsRef.current;
+    prevPropsRef.current = nextProps;
 
-    const prevProps = ref.current;
-    ref.current = nextProps;
+    const prevOwnerRef = wdyrStore.React.useRef();
+    const prevOwner = prevOwnerRef.current;
+    const nextOwner = wdyrStore.ownerBeforeElementCreation;
+    prevOwnerRef.current = nextOwner;
 
     if (prevProps) {
       const updateInfo = getUpdateInfo({
         Component: FunctionalComponent,
         displayName,
+        prevOwner,
+        nextOwner,
         prevProps,
         nextProps,
       });
@@ -39,12 +44,12 @@ export default function patchFunctionalOrStrComponent(FunctionalOrStringComponen
       }
     }
 
-    return FunctionalComponent(...arguments);
+    return FunctionalComponent(nextProps, refMaybe, ...args);
   }
 
   try {
     WDYRFunctionalComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 

@@ -26,7 +26,7 @@ test('dont swallow errors', () => {
     );
   };
 
-  expect(mountBrokenComponent).toThrow(/(Cannot read property 'propTypes' of null|Cannot read properties of null \(reading 'propTypes'\))/);
+  expect(mountBrokenComponent).toThrow(/expected a string.*but got.*null/);
 
   global.flushConsoleOutput()
     .map(output => ({

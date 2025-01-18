@@ -1,14 +1,14 @@
-import { defaults } from 'lodash';
+import {defaults} from 'lodash';
 
 import wdyrStore from '../wdyrStore';
 
 import getDisplayName from '../getDisplayName';
-import { isForwardRefComponent, isMemoComponent, isReactClassComponent } from '../utils';
+import {isForwardRefComponent, isMemoComponent, isReactClassComponent} from '../utils';
 import patchClassComponent from './patchClassComponent';
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent';
 
-export default function patchMemoComponent(MemoComponent, { displayName, defaultProps }) {
-  const { type: InnerMemoComponent } = MemoComponent;
+export default function patchMemoComponent(MemoComponent, {displayName, defaultProps}) {
+  const {type: InnerMemoComponent} = MemoComponent;
 
   const isInnerMemoComponentAClassComponent = isReactClassComponent(InnerMemoComponent);
   const isInnerMemoComponentForwardRefs = isForwardRefComponent(InnerMemoComponent);
@@ -19,15 +19,15 @@ export default function patchMemoComponent(MemoComponent, { displayName, default
     InnerMemoComponent;
 
   const PatchedInnerComponent = isInnerMemoComponentAClassComponent ?
-    patchClassComponent(WrappedFunctionalComponent, { displayName, defaultProps }) :
+    patchClassComponent(WrappedFunctionalComponent, {displayName, defaultProps}) :
     (isInnerMemoComponentAnotherMemoComponent ?
-      patchMemoComponent(WrappedFunctionalComponent, { displayName, defaultProps }) :
-      patchFunctionalOrStrComponent(WrappedFunctionalComponent, { displayName, isPure: true })
+      patchMemoComponent(WrappedFunctionalComponent, {displayName, defaultProps}) :
+      patchFunctionalOrStrComponent(WrappedFunctionalComponent, {displayName, isPure: true})
     );
 
   try {
     PatchedInnerComponent.displayName = getDisplayName(WrappedFunctionalComponent);
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 
@@ -41,7 +41,7 @@ export default function patchMemoComponent(MemoComponent, { displayName, default
 
   try {
     WDYRMemoizedFunctionalComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 

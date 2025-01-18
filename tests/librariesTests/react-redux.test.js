@@ -1,21 +1,21 @@
 import React from 'react';
-import { legacy_createStore as createStore } from 'redux';
-import { cloneDeep } from 'lodash';
+import {legacy_createStore as createStore} from 'redux';
+import {cloneDeep} from 'lodash';
 import * as rtl from '@testing-library/react';
 
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 import whyDidYouRender from '~';
 
-const ReactRedux = { ...require('react-redux') };
-const { connect, Provider } = ReactRedux;
+const ReactRedux = {...require('react-redux')};
+const {connect, Provider} = ReactRedux;
 
 describe('react-redux - simple', () => {
-  const initialState = { a: { b: 'c' } };
+  const initialState = {a: {b: 'c'}};
 
   const rootReducer = (state, action) => {
     if (action.type === 'differentState') {
-      return { a: { b: 'd' } };
+      return {a: {b: 'd'}};
     }
 
     if (action.type === 'deepEqlState') {
@@ -43,11 +43,11 @@ describe('react-redux - simple', () => {
   });
 
   test('same state after dispatch', () => {
-    const SimpleComponent = ({ a }) => (
+    const SimpleComponent = ({a}) => (
       <div data-testid="foo">{a.b}</div>
     );
     const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a })
+      state => ({a: state.a})
     )(SimpleComponent);
 
     SimpleComponent.whyDidYouRender = true;
@@ -63,7 +63,7 @@ describe('react-redux - simple', () => {
     expect(store.getState().a.b).toBe('c');
 
     rtl.act(() => {
-      store.dispatch({ type: 'sameState' });
+      store.dispatch({type: 'sameState'});
     });
 
     expect(store.getState().a.b).toBe('c');
@@ -72,11 +72,11 @@ describe('react-redux - simple', () => {
   });
 
   test('different state after dispatch', () => {
-    const SimpleComponent = ({ a }) => (
+    const SimpleComponent = ({a}) => (
       <div data-testid="foo">{a.b}</div>
     );
     const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a })
+      state => ({a: state.a})
     )(SimpleComponent);
 
     SimpleComponent.whyDidYouRender = true;
@@ -92,7 +92,7 @@ describe('react-redux - simple', () => {
     expect(store.getState().a.b).toBe('c');
 
     rtl.act(() => {
-      store.dispatch({ type: 'differentState' });
+      store.dispatch({type: 'differentState'});
     });
 
     expect(store.getState().a.b).toBe('d');
@@ -100,8 +100,8 @@ describe('react-redux - simple', () => {
     expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [
-        expect.objectContaining({ diffType: diffTypes.different }),
-        expect.objectContaining({ diffType: diffTypes.different }),
+        expect.objectContaining({diffType: diffTypes.different}),
+        expect.objectContaining({diffType: diffTypes.different}),
       ],
       stateDifferences: false,
       hookDifferences: false,
@@ -110,13 +110,14 @@ describe('react-redux - simple', () => {
   });
 
   test('deep equals state after dispatch', () => {
-    const SimpleComponent = ({ a }) => (
+    const SimpleComponent = ({a}) => (
       <div data-testid="foo">
         {a.b}
       </div>
     );
+    
     const ConnectedSimpleComponent = connect(
-      state => ({ a: state.a })
+      state => ({a: state.a})
     )(SimpleComponent);
 
     SimpleComponent.whyDidYouRender = true;
@@ -132,7 +133,7 @@ describe('react-redux - simple', () => {
     expect(store.getState().a.b).toBe('c');
 
     rtl.act(() => {
-      store.dispatch({ type: 'deepEqlState' });
+      store.dispatch({type: 'deepEqlState'});
     });
 
     expect(store.getState().a.b).toBe('c');
@@ -140,7 +141,7 @@ describe('react-redux - simple', () => {
     expect(updateInfos).toHaveLength(1);
     expect(updateInfos[0].reason).toEqual({
       propsDifferences: [
-        expect.objectContaining({ diffType: diffTypes.deepEquals }),
+        expect.objectContaining({diffType: diffTypes.deepEquals}),
       ],
       stateDifferences: false,
       hookDifferences: false,
@@ -150,11 +151,11 @@ describe('react-redux - simple', () => {
 });
 
 describe('react-redux - hooks', () => {
-  const initialState = { a: { b: 'c' } };
+  const initialState = {a: {b: 'c'}};
 
   const rootReducer = (state, action) => {
     if (action.type === 'differentState') {
-      return { a: { b: 'd' } };
+      return {a: {b: 'd'}};
     }
 
     if (action.type === 'deepEqlState') {
@@ -204,7 +205,7 @@ describe('react-redux - hooks', () => {
     expect(store.getState().a.b).toBe('c');
 
     rtl.act(() => {
-      store.dispatch({ type: 'sameState' });
+      store.dispatch({type: 'sameState'});
     });
 
     expect(store.getState().a.b).toBe('c');
@@ -233,7 +234,7 @@ describe('react-redux - hooks', () => {
     expect(store.getState().a.b).toBe('c');
 
     rtl.act(() => {
-      store.dispatch({ type: 'differentState' });
+      store.dispatch({type: 'differentState'});
     });
 
     expect(store.getState().a.b).toBe('d');
@@ -245,8 +246,8 @@ describe('react-redux - hooks', () => {
         propsDifferences: false,
         stateDifferences: false,
         hookDifferences: [
-          { diffType: diffTypes.different, pathString: '.b', prevValue: 'c', nextValue: 'd' },
-          { diffType: diffTypes.different, pathString: '', prevValue: { b: 'c' }, nextValue: { b: 'd' } },
+          {diffType: diffTypes.different, pathString: '.b', prevValue: 'c', nextValue: 'd'},
+          {diffType: diffTypes.different, pathString: '', prevValue: {b: 'c'}, nextValue: {b: 'd'}},
         ],
         ownerDifferences: false,
       },
@@ -275,7 +276,7 @@ describe('react-redux - hooks', () => {
     expect(store.getState().a.b).toBe('c');
 
     rtl.act(() => {
-      store.dispatch({ type: 'deepEqlState' });
+      store.dispatch({type: 'deepEqlState'});
     });
 
     expect(store.getState().a.b).toBe('c');
@@ -287,7 +288,7 @@ describe('react-redux - hooks', () => {
         propsDifferences: false,
         stateDifferences: false,
         hookDifferences: [
-          { diffType: diffTypes.deepEquals, pathString: '', prevValue: { b: 'c' }, nextValue: { b: 'c' } },
+          {diffType: diffTypes.deepEquals, pathString: '', prevValue: {b: 'c'}, nextValue: {b: 'c'}},
         ],
         ownerDifferences: false,
       },

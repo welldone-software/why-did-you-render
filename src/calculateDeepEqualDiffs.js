@@ -10,14 +10,20 @@ import {
   uniq,
 } from 'lodash';
 
-import { diffTypes } from './consts';
+import {diffTypes} from './consts';
 
 const hasElementType = typeof Element !== 'undefined';
 
-// copied from https://github.com/facebook/react/packages/shared/ReactSymbols.js
+// copied from https://github.com/facebook/react/blob/fc5ef50da8e975a569622d477f1fed54cb8b193d/packages/react-devtools-shared/src/backend/shared/ReactSymbols.js#L26
 const hasSymbol = typeof Symbol === 'function' && Symbol.for;
-const REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
-const isReactElement = object => object.$$typeof === REACT_ELEMENT_TYPE;
+
+const LEGACY_ELEMENT_NUMBER = 0xeac7;
+const LEGACY_ELEMENT_SYMBOL_STRING = hasSymbol && Symbol.for('react.element');
+const ELEMENT_SYMBOL_STRING = hasSymbol && Symbol.for('react.transitional.element');
+const isReactElement = object => [
+  ...(hasSymbol ? [ELEMENT_SYMBOL_STRING, LEGACY_ELEMENT_SYMBOL_STRING] : []),
+  LEGACY_ELEMENT_NUMBER,
+].includes(object.$$typeof);
 // end
 
 function trackDiff(a, b, diffsAccumulator, pathString, diffType) {
@@ -36,7 +42,7 @@ function isGetter(obj, prop) {
 
 export const dependenciesMap = new WeakMap();
 
-function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { detailed }) {
+function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {detailed}) {
   if (a === b) {
     if (detailed) {
       trackDiff(a, b, diffsAccumulator, pathString, diffTypes.same);
@@ -57,7 +63,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     const arrayItemDiffs = [];
     let numberOfDeepEqualsItems = 0;
     for (let i = arrayLength; i--; i > 0) {
-      const diffEquals = accumulateDeepEqualDiffs(a[i], b[i], arrayItemDiffs, `${pathString}[${i}]`, { detailed });
+      const diffEquals = accumulateDeepEqualDiffs(a[i], b[i], arrayItemDiffs, `${pathString}[${i}]`, {detailed});
       if (diffEquals) {
         numberOfDeepEqualsItems++;
       }
@@ -110,7 +116,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     }
 
     const reactElementPropsAreDeepEqual =
-      accumulateDeepEqualDiffs(a.props, b.props, [], `${pathString}.props`, { detailed });
+      accumulateDeepEqualDiffs(a.props, b.props, [], `${pathString}.props`, {detailed});
 
     return reactElementPropsAreDeepEqual ?
       trackDiff(a, b, diffsAccumulator, pathString, diffTypes.reactElement) :
@@ -127,7 +133,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
 
     if (aDependenciesObj && bDependenciesObj) {
       const dependenciesAreDeepEqual =
-        accumulateDeepEqualDiffs(aDependenciesObj.deps, bDependenciesObj.deps, diffsAccumulator, `${pathString}:parent-hook-${aDependenciesObj.hookName}-deps`, { detailed });
+        accumulateDeepEqualDiffs(aDependenciesObj.deps, bDependenciesObj.deps, diffsAccumulator, `${pathString}:parent-hook-${aDependenciesObj.hookName}-deps`, {detailed});
 
       return dependenciesAreDeepEqual ?
         trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function) :
@@ -143,8 +149,8 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     
     const allKeys = uniq([...aKeys, ...bKeys]);
 
-    const clonedA = isPlainObject(a) ? { ...a } : a;
-    const clonedB = isPlainObject(b) ? { ...b } : b;
+    const clonedA = isPlainObject(a) ? {...a} : a;
+    const clonedB = isPlainObject(b) ? {...b} : b;
 
     if (allKeys.length !== aKeys.length || allKeys.length !== bKeys.length) {
       return trackDiff(clonedA, clonedB, diffsAccumulator, pathString, diffTypes.different);
@@ -177,7 +183,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
     let numberOfDeepEqualsObjectValues = 0;
     for (let i = keysLength; i--; i > 0) {
       const key = relevantKeys[i];
-      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, { detailed });
+      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, {detailed});
       if (deepEquals) {
         numberOfDeepEqualsObjectValues++;
       }
@@ -197,10 +203,10 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', { det
   return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
 }
 
-export default function calculateDeepEqualDiffs(a, b, initialPathString, { detailed = false } = {}) {
+export default function calculateDeepEqualDiffs(a, b, initialPathString, {detailed = false} = {}) {
   try {
     const diffs = [];
-    accumulateDeepEqualDiffs(a, b, diffs, initialPathString, { detailed });
+    accumulateDeepEqualDiffs(a, b, diffs, initialPathString, {detailed});
     return diffs;
   } catch (error) {
     if ((error.message && error.message.match(/stack|recursion/i)) || (error.number === -2146828260)) {

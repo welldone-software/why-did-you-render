@@ -3,7 +3,7 @@ import * as rtl from '@testing-library/react';
 import createReactClass from 'create-react-class';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 class TestComponent extends React.Component {
   static whyDidYouRender = true;
@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 test('Empty props and state', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <TestComponent/>
   );
   rerender(
@@ -55,7 +55,7 @@ test('Empty props and state', () => {
 });
 
 test('Same props', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <TestComponent a={1}/>
   );
   rerender(
@@ -72,7 +72,7 @@ test('Same props', () => {
 });
 
 test('Same state', () => {
-  const StateTestComponent = createStateTestComponent({ a: 1 }, { a: 1 });
+  const StateTestComponent = createStateTestComponent({a: 1}, {a: 1});
   rtl.render(
     <StateTestComponent/>
   );
@@ -90,7 +90,7 @@ test('Same state', () => {
 });
 
 test('Props change', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <TestComponent a={1}/>
   );
   rerender(
@@ -123,7 +123,7 @@ test('With implemented "componentDidUpdate()"', () => {
     }
   }
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <OwnTestComponent a={1}/>
   );
   rerender(
@@ -149,14 +149,14 @@ test('With render as an arrow function', () => {
   class OwnTestComponent extends React.Component {
     static whyDidYouRender = true;
     componentDidMount() {
-      this.setState({ c: 'c' });
+      this.setState({c: 'c'});
     }
     render = () => {
       return <div>hi!</div>;
     };
   }
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <OwnTestComponent a={1}/>
   );
 
@@ -199,14 +199,14 @@ test('With render as a binded function', () => {
       this.render = this.render.bind(this);
     }
     componentDidMount() {
-      this.setState({ c: 'c' });
+      this.setState({c: 'c'});
     }
     render() {
       return <div>hi!</div>;
     }
   }
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <OwnTestComponent a={1}/>
   );
 
@@ -255,7 +255,7 @@ test('With implemented "componentDidUpdate()" with a snapshot - not tracked', ()
     }
   }
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <OwnTestComponent a={1}/>
   );
   rerender(
@@ -281,7 +281,7 @@ test('With implemented "componentDidUpdate()" with a snapshot', () => {
     }
   }
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <OwnTestComponent a={1}/>
   );
   rerender(
@@ -302,7 +302,7 @@ test('Component created with "createReactClass"', () => {
 
   CreateReactClassComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <CreateReactClassComponent a={1}/>
   );
   rerender(
@@ -337,7 +337,7 @@ test('Component created with "createReactClass" with implemented "componentDidUp
 
   CreateReactClassComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <CreateReactClassComponent a={1}/>
   );
   rerender(
@@ -362,11 +362,11 @@ test('Component created with "createReactClass" with implemented "componentDidUp
 test('Element created with "createFactory"', () => {
   const TestComponentElementCreator = React.createFactory(TestComponent);
 
-  const { rerender } = rtl.render(
-    TestComponentElementCreator({ a: 1 })
+  const {rerender} = rtl.render(
+    TestComponentElementCreator({a: 1})
   );
   rerender(
-    TestComponentElementCreator({ a: 1 })
+    TestComponentElementCreator({a: 1})
   );
 
   expect(updateInfos[0].reason).toEqual({
@@ -383,7 +383,7 @@ test('Element created with "cloneElement"', () => {
   const testElement = <TestComponent a={1}/>;
   const testElement2 = React.cloneElement(testElement);
 
-  const { rerender } = rtl.render(testElement);
+  const {rerender} = rtl.render(testElement);
   rerender(testElement2);
 
   expect(updateInfos).toHaveLength(1);
@@ -396,10 +396,10 @@ test('Element created with "cloneElement"', () => {
 });
 
 test('Several class components', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <>
       <TestComponent/>
-      <TestComponent a={{ a: 'a' }}/>
+      <TestComponent a={{a: 'a'}}/>
       <TestComponent/>
     </>
   );
@@ -407,7 +407,7 @@ test('Several class components', () => {
   rerender(
     <>
       <TestComponent/>
-      <TestComponent a={{ a: 'a' }}/>
+      <TestComponent a={{a: 'a'}}/>
       <TestComponent/>
     </>
   );
@@ -425,8 +425,8 @@ test('Several class components', () => {
     propsDifferences: [{
       diffType: diffTypes.deepEquals,
       pathString: 'a',
-      nextValue: { a: 'a' },
-      prevValue: { a: 'a' },
+      nextValue: {a: 'a'},
+      prevValue: {a: 'a'},
     }],
     stateDifferences: false,
     hookDifferences: false,

@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 describe('hooks - useReducer', () => {
   let updateInfos = [];
@@ -19,7 +19,7 @@ describe('hooks - useReducer', () => {
   });
 
   test('same value', () => {
-    const initialState = { b: 'b' };
+    const initialState = {b: 'b'};
 
     function reducer() {
       return initialState;
@@ -31,7 +31,7 @@ describe('hooks - useReducer', () => {
       const [state, dispatch] = React.useReducer(reducer, initialState);
 
       React.useLayoutEffect(() => {
-        dispatch({ type: 'something' });
+        dispatch({type: 'something'});
       }, []);
 
       return (
@@ -50,17 +50,17 @@ describe('hooks - useReducer', () => {
   });
 
   test('different value', () => {
-    const initialState = { b: 'b' };
+    const initialState = {b: 'b'};
 
     function reducer() {
-      return { a: 'a' };
+      return {a: 'a'};
     }
 
-    const ComponentWithHooks = ({ a }) => {
+    const ComponentWithHooks = ({a}) => {
       const [state, dispatch] = React.useReducer(reducer, initialState);
 
       React.useLayoutEffect(() => {
-        dispatch({ type: 'something' });
+        dispatch({type: 'something'});
       }, []);
 
       return (
@@ -79,8 +79,8 @@ describe('hooks - useReducer', () => {
       hookDifferences: [{
         pathString: '',
         diffType: diffTypes.different,
-        prevValue: { b: 'b' },
-        nextValue: { a: 'a' },
+        prevValue: {b: 'b'},
+        nextValue: {a: 'a'},
       }],
       propsDifferences: false,
       stateDifferences: false,
@@ -89,17 +89,17 @@ describe('hooks - useReducer', () => {
   });
 
   test('deep equals', () => {
-    const initialState = { b: 'b' };
+    const initialState = {b: 'b'};
 
     function reducer() {
-      return { b: 'b' };
+      return {b: 'b'};
     }
 
-    const ComponentWithHooks = ({ a }) => {
+    const ComponentWithHooks = ({a}) => {
       const [state, dispatch] = React.useReducer(reducer, initialState);
 
       React.useLayoutEffect(() => {
-        dispatch({ type: 'something' });
+        dispatch({type: 'something'});
       }, []);
 
       return (
@@ -118,8 +118,8 @@ describe('hooks - useReducer', () => {
       hookDifferences: [{
         diffType: diffTypes.deepEquals,
         pathString: '',
-        nextValue: { b: 'b' },
-        prevValue: { b: 'b' },
+        nextValue: {b: 'b'},
+        prevValue: {b: 'b'},
       }],
       propsDifferences: false,
       stateDifferences: false,

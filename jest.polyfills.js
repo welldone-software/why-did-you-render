@@ -9,16 +9,34 @@
  * you don't want to deal with this.
  */
  
-const { TextDecoder, TextEncoder } = require('node:util');
-// eslint-disable-next-line no-undef
+const {TextDecoder, TextEncoder} = require('node:util');
+ 
 Object.defineProperties(globalThis, {
-  TextDecoder: { value: TextDecoder },
-  TextEncoder: { value: TextEncoder },
+  TextDecoder: {value: TextDecoder},
+  TextEncoder: {value: TextEncoder},
 });
  
-const { Blob, File } = require('node:buffer'); 
-// eslint-disable-next-line no-undef
+const {Blob, File} = require('node:buffer'); 
+ 
 Object.defineProperties(globalThis, {
-  Blob: { value: Blob },
-  File: { value: File },
+  Blob: {value: Blob},
+  File: {value: File},
+});
+
+window.MessageChannel = jest.fn().mockImplementation(() => {
+  let onmessage;
+  return {
+    port1: {
+      set onmessage(cb) {
+        onmessage = cb;
+      },
+    },
+    port2: {
+      postMessage: data => {
+        if (onmessage) {
+          onmessage({data});
+        }
+      },
+    },
+  };
 });

@@ -1,16 +1,14 @@
-/* eslint-disable no-console */
 import React from 'react';
-import ReactDom from 'react-dom';
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Hooks - useContext',
-  fn({ domElement, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     whyDidYouRender(React);
 
     const stepLogger = createStepLogger();
 
-    const MyContext = React.createContext({ c: 'c' });
+    const MyContext = React.createContext({c: 'c'});
 
     let alreadyMountedComponentWithContextHook = false;
     function ComponentWithContextHook() {
@@ -55,7 +53,7 @@ export default {
 
     let alreadyMountedMain = false;
     function Main() {
-      const [currentState, setCurrentState] = React.useState({ c: 'context value' });
+      const [currentState, setCurrentState] = React.useState({c: 'context value'});
 
       if (alreadyMountedMain) {
         stepLogger('renders Main and it would trigger the render of ComponentWithContextHook because it\'s not pure', true);
@@ -64,11 +62,11 @@ export default {
       }
 
       React.useLayoutEffect(() => {
-        setCurrentState({ c: 'context value' });
+        setCurrentState({c: 'context value'});
       }, []);
 
       return (
-        <MyContext.Provider value={currentState}>
+        <MyContext value={currentState}>
           <h3>
             {`While somehow weird, we have two notifications for "ComponentWithContextHook"
             since it is re-rendered regardless of context changes because "Main" is
@@ -82,11 +80,11 @@ export default {
             MemoizedParent
             <MemoizedParent />
           </div>
-        </MyContext.Provider>
+        </MyContext>
       );
     }
 
     stepLogger('initial render');
-    ReactDom.render(<Main/>, domElement);
+    reactDomRoot.render(<Main/>);
   },
 };

@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 export default {
   description: 'Creating react element using React.createFactory',
-  fn({ domElement, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     whyDidYouRender(React);
 
     class TestComponent extends React.Component {
@@ -19,7 +18,7 @@ export default {
 
     const TestComponentFactory = React.createFactory(TestComponent);
 
-    ReactDom.render(TestComponentFactory({ a: 1 }), domElement);
-    ReactDom.render(TestComponentFactory({ a: 1 }), domElement);
+    reactDomRoot.render(TestComponentFactory({a: 1}));
+    reactDomRoot.render(TestComponentFactory({a: 1}));
   },
 };

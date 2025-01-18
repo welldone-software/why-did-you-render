@@ -1,7 +1,6 @@
-import ReactHotLoader from 'react-hot-loader';
-
 import React from 'react';
-import ReactDom from 'react-dom';
+import ReactDom from 'react-dom/client';
+
 import whyDidYouRender from '@welldone-software/why-did-you-render';
 
 import Menu from './Menu';
@@ -26,6 +25,7 @@ import strict from './strict';
 import reactRedux from './reactRedux';
 import styledComponents from './styledComponents';
 import logOwnerReasons from './logOwnerReasons';
+import forwardRef from './forwardRef';
 
 const demosList = {
   bigList,
@@ -48,18 +48,26 @@ const demosList = {
   reactReduxHOC,
   styledComponents,
   logOwnerReasons,
+  forwardRef,
 };
 
 const defaultDemoName = 'bigList';
 
-const domDemoElement = document.getElementById('demo');
+const domElement = document.getElementById('demo');
+let reactDomRoot;
 
-function changeDemo(demoFn) {
+function changeDemo(demoFn, {shouldCreateRoot = true} = {}) {
   console.clear && console.clear(); // eslint-disable-line no-console
   React.__REVERT_WHY_DID_YOU_RENDER__ && React.__REVERT_WHY_DID_YOU_RENDER__();
-  ReactDom.unmountComponentAtNode(domDemoElement);
+  reactDomRoot?.unmount();
+  if (shouldCreateRoot) {
+    reactDomRoot = ReactDom.createRoot(domElement);
+  }
   setTimeout(() => {
-    demoFn({ whyDidYouRender, domElement: domDemoElement });
+    const reactDomRootPromise = demoFn({whyDidYouRender, domElement, reactDomRoot});
+    if (reactDomRootPromise) {
+      reactDomRootPromise.then(r => reactDomRoot = r);
+    }
   }, 1);
 }
 
@@ -69,10 +77,10 @@ if (!demoFromHash) {
   window.location.hash = defaultDemoName;
 }
 
-changeDemo(initialDemo.fn);
+changeDemo(initialDemo.fn, initialDemo.settings);
 
-const DemoLink = ({ name, description, fn }) => (
-  <li><a href={`#${name}`} onClick={() => changeDemo(fn)}>{description}</a></li>
+const DemoLink = ({name, description, fn, settings}) => (
+  <li><a href={`#${name}`} onClick={() => changeDemo(fn, settings)}>{description}</a></li>
 );
 
 const App = () => (
@@ -85,6 +93,6 @@ const App = () => (
   </Menu>
 );
 
-export default ReactHotLoader.hot(module)(App);
+export default App;
 
 

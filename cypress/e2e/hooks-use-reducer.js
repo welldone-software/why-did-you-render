@@ -1,12 +1,12 @@
 it('Hooks - useReducer', () => {
   const checkConsole = (console, times) => {
     expect(console.group).to.be.calledWithMatches([
-      { match: 'Main', times },
-      { match: '[hook useReducer result]', times },
+      {match: 'Main', times},
+      {match: '[hook useReducer result]', times},
     ]);
 
     expect(console.log).to.be.calledWithMatches([
-      { match: 'different objects that are equal by value.', times },
+      {match: 'different objects that are equal by value.', times},
     ]);
   };
 

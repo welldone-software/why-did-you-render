@@ -1,6 +1,6 @@
 import wdyrStore from './wdyrStore';
 
-import { diffTypes, diffTypesDescriptions } from './consts';
+import {diffTypes, diffTypesDescriptions} from './consts';
 import printDiff from './printDiff';
 
 const moreInfoUrl = 'http://bit.ly/wdyr02';
@@ -35,30 +35,32 @@ function shouldLog(reason, Component) {
   return !hasDifferentValues;
 }
 
-function logDifference({ Component, displayName, hookName, prefixMessage, diffObjType, differences, values }) {
+function logDifference({Component, displayName, hookName, prefixMessage, diffObjType, differences, values}) {
   if (differences && differences.length > 0) {
-    wdyrStore.options.consoleLog({ [displayName]: Component }, `${prefixMessage} of ${diffObjType} changes:`);
-    differences.forEach(({ pathString, diffType, prevValue, nextValue }) => {
+    wdyrStore.options.consoleLog({[displayName]: Component}, `${prefixMessage} of ${diffObjType} changes:`);
+    differences.forEach(({pathString, diffType, prevValue, nextValue}) => {
       function diffFn() {
-        printDiff(prevValue, nextValue, { pathString, consoleLog: wdyrStore.options.consoleLog });
+        printDiff(prevValue, nextValue, {pathString, consoleLog: wdyrStore.options.consoleLog});
       }
       wdyrStore.options.consoleGroup(
         `%c${diffObjType === 'hook' ? `[hook ${hookName} result]` : `${diffObjType}.`}%c${pathString}%c`,
-        `color:${wdyrStore.options.diffNameColor};`, `color:${wdyrStore.options.diffPathColor};`, 'color:default;'
+        `background-color: ${wdyrStore.options.textBackgroundColor};color:${wdyrStore.options.diffNameColor};`,
+        `background-color: ${wdyrStore.options.textBackgroundColor};color:${wdyrStore.options.diffPathColor};`,
+        'background-color: ${wdyrStore.options.textBackgroundColor};color:default;'
       );
       wdyrStore.options.consoleLog(
         `${diffTypesDescriptions[diffType]}. (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
       );
-      wdyrStore.options.consoleLog({ [`prev ${pathString}`]: prevValue }, '!==', { [`next ${pathString}`]: nextValue });
+      wdyrStore.options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue});
       if (diffType === diffTypes.deepEquals) {
-        wdyrStore.options.consoleLog({ 'For detailed diff, right click the following fn, save as global, and run: ': diffFn });
+        wdyrStore.options.consoleLog({'For detailed diff, right click the following fn, save as global, and run: ': diffFn});
       }
       wdyrStore.options.consoleGroupEnd();
     });
   }
   else if (differences) {
     wdyrStore.options.consoleLog(
-      { [displayName]: Component },
+      {[displayName]: Component},
       `${prefixMessage} the ${diffObjType} object itself changed but its values are all equal.`,
       diffObjType === 'props' ?
         'This could have been avoided by making the component pure, or by preventing its father from re-rendering.' :
@@ -70,13 +72,13 @@ function logDifference({ Component, displayName, hookName, prefixMessage, diffOb
 }
 
 export default function defaultNotifier(updateInfo) {
-  const { Component, displayName, hookName, prevProps, prevState, prevHook, nextProps, nextState, nextHook, reason } = updateInfo;
+  const {Component, displayName, hookName, prevOwner, nextOwner, prevProps, prevState, prevHookResult, nextProps, nextState, nextHookResult, reason} = updateInfo;
 
   if (!shouldLog(reason, Component, wdyrStore.options)) {
     return;
   }
 
-  wdyrStore.options.consoleGroup(`%c${displayName}`, `color: ${wdyrStore.options.titleColor};`);
+  wdyrStore.options.consoleGroup(`%c${displayName}`, `background-color: ${wdyrStore.options.textBackgroundColor};color: ${wdyrStore.options.titleColor};`);
 
   let prefixMessage = 'Re-rendered because';
 
@@ -87,7 +89,7 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'props',
       differences: reason.propsDifferences,
-      values: { prev: prevProps, next: nextProps },
+      values: {prev: prevProps, next: nextProps},
     });
     prefixMessage = 'And because';
   }
@@ -99,7 +101,7 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'state',
       differences: reason.stateDifferences,
-      values: { prev: prevState, next: nextState },
+      values: {prev: prevState, next: nextState},
     });
   }
 
@@ -110,60 +112,62 @@ export default function defaultNotifier(updateInfo) {
       prefixMessage,
       diffObjType: 'hook',
       differences: reason.hookDifferences,
-      values: { prev: prevHook, next: nextHook },
+      values: {prev: prevHookResult, next: nextHookResult},
       hookName,
     });
   }
 
   if (reason.propsDifferences && reason.ownerDifferences) {
-    const prevOwnerData = wdyrStore.ownerDataMap.get(prevProps);
-    const nextOwnerData = wdyrStore.ownerDataMap.get(nextProps);
+    const prevOwnerData = wdyrStore.ownerDataMap.get(prevOwner);
+    const nextOwnerData = wdyrStore.ownerDataMap.get(nextOwner);
 
-    wdyrStore.options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`);
-    let prefixMessage = 'Re-rendered because';
-
-    if (reason.ownerDifferences.propsDifferences) {
-      logDifference({
-        Component: nextOwnerData.Component,
-        displayName: nextOwnerData.displayName,
-        prefixMessage,
-        diffObjType: 'props',
-        differences: reason.ownerDifferences.propsDifferences,
-        values: { prev: prevOwnerData.props, next: nextOwnerData.props },
-      });
-      prefixMessage = 'And because';
-    }
-
-    if (reason.ownerDifferences.stateDifferences) {
-      logDifference({
-        Component: nextOwnerData.Component,
-        displayName: nextOwnerData.displayName,
-        prefixMessage,
-        diffObjType: 'state',
-        differences: reason.ownerDifferences.stateDifferences,
-        values: { prev: prevOwnerData.state, next: nextOwnerData.state },
-      });
-    }
-
-    if (reason.ownerDifferences.hookDifferences) {
-      reason.ownerDifferences.hookDifferences.forEach(({ hookName, differences }, i) =>
+    if (prevOwnerData && nextOwnerData) {
+      wdyrStore.options.consoleGroup(`Rendered by ${nextOwnerData.displayName}`);
+      let prefixMessage = 'Re-rendered because';
+  
+      if (reason.ownerDifferences.propsDifferences) {
         logDifference({
           Component: nextOwnerData.Component,
           displayName: nextOwnerData.displayName,
           prefixMessage,
-          diffObjType: 'hook',
-          differences,
-          values: { prev: prevOwnerData.hooks[i].result, next: nextOwnerData.hooks[i].result },
-          hookName,
-        })
-      );
+          diffObjType: 'props',
+          differences: reason.ownerDifferences.propsDifferences,
+          values: {prev: prevOwnerData.props, next: nextOwnerData.props},
+        });
+        prefixMessage = 'And because';
+      }
+  
+      if (reason.ownerDifferences.stateDifferences) {
+        logDifference({
+          Component: nextOwnerData.Component,
+          displayName: nextOwnerData.displayName,
+          prefixMessage,
+          diffObjType: 'state',
+          differences: reason.ownerDifferences.stateDifferences,
+          values: {prev: prevOwnerData.state, next: nextOwnerData.state},
+        });
+      }
+  
+      if (reason.ownerDifferences.hookDifferences) {
+        reason.ownerDifferences.hookDifferences.forEach(({hookName, differences}, i) =>
+          logDifference({
+            Component: nextOwnerData.Component,
+            displayName: nextOwnerData.displayName,
+            prefixMessage,
+            diffObjType: 'hook',
+            differences,
+            values: {prev: prevOwnerData.hooksInfo[i].result, next: nextOwnerData.hooksInfo[i].result},
+            hookName,
+          })
+        );
+      }
+      wdyrStore.options.consoleGroupEnd();
     }
-    wdyrStore.options.consoleGroupEnd();
   }
 
   if (!reason.propsDifferences && !reason.stateDifferences && !reason.hookDifferences) {
     wdyrStore.options.consoleLog(
-      { [displayName]: Component },
+      {[displayName]: Component},
       'Re-rendered although props and state objects are the same.',
       'This usually means there was a call to this.forceUpdate() inside the component.',
       `more info at ${moreInfoUrl}`

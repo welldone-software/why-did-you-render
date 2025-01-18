@@ -20,8 +20,11 @@ const wdyrStore = {
   /* A weak map of props to the owner element that passed them */
   ownerDataMap: new WeakMap(),
 
-  /* An array of hooks tracked during one render */
-  hooksPerRender: [],
+  /* An array of infos for hooks tracked during current render */
+  hooksInfoForCurrentRender: new WeakMap(),
+
+  /* Owner before element creation started */
+  ownerBeforeElementCreation: null,
 };
 
 export default wdyrStore;

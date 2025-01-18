@@ -20,8 +20,8 @@ export interface UpdateInfo {
   prevState: any;
   nextProps: any;
   nextState: any;
-  prevHook: any;
-  nextHook: any;
+  prevHookResult: any;
+  nextHookResult: any;
   reason: ReasonForUpdate;
   options: WhyDidYouRenderOptions;
   hookName?: string;
@@ -43,11 +43,12 @@ export interface WhyDidYouRenderOptions {
   titleColor?: string;
   diffNameColor?: string;
   diffPathColor?: string;
+  textBackgroundColor?: string;
   notifier?: Notifier;
   customName?: string;
 }
 
-export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions|boolean
+export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions | boolean
 
 export type Notifier = (options: UpdateInfo) => void
 

@@ -11,7 +11,7 @@ class TrackedTestComponent extends React.Component {
 }
 
 class TrackedTestComponentNoHooksTracking extends React.Component {
-  static whyDidYouRender = { trackHooks: false };
+  static whyDidYouRender = {trackHooks: false};
   render() {
     return <div>hi!</div>;
   }
@@ -49,13 +49,13 @@ describe('shouldTrack', () => {
   describe('component changes', () => {
     test('Do not track not tracked component (default)', () => {
       whyDidYouRender(React);
-      const isShouldTrack = shouldTrack(NotTrackedTestComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(NotTrackedTestComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(false);
     });
 
     test('Track tracked component', () => {
       whyDidYouRender(React);
-      const isShouldTrack = shouldTrack(TrackedTestComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(TrackedTestComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(true);
     });
 
@@ -63,7 +63,7 @@ describe('shouldTrack', () => {
       whyDidYouRender(React, {
         include: [/TestComponent/],
       });
-      const isShouldTrack = shouldTrack(NotTrackedTestComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(NotTrackedTestComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(true);
     });
 
@@ -71,7 +71,7 @@ describe('shouldTrack', () => {
       whyDidYouRender(React, {
         include: [/ExcludedTestComponent/],
       });
-      const isShouldTrack = shouldTrack(ExcludedTestComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(ExcludedTestComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(false);
     });
 
@@ -79,7 +79,7 @@ describe('shouldTrack', () => {
       whyDidYouRender(React, {
         include: [/0/],
       });
-      const isShouldTrack = shouldTrack(NotTrackedTestComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(NotTrackedTestComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(false);
     });
 
@@ -87,7 +87,7 @@ describe('shouldTrack', () => {
       whyDidYouRender(React, {
         exclude: [/TrackedTestComponent/],
       });
-      const isShouldTrack = shouldTrack(TrackedTestComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(TrackedTestComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(false);
     });
 
@@ -95,7 +95,7 @@ describe('shouldTrack', () => {
       whyDidYouRender(React, {
         trackAllPureComponents: true,
       });
-      const isShouldTrack = shouldTrack(PureComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(PureComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(true);
     });
 
@@ -103,7 +103,7 @@ describe('shouldTrack', () => {
       whyDidYouRender(React, {
         trackAllPureComponents: true,
       });
-      const isShouldTrack = shouldTrack(MemoComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(MemoComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(true);
     });
 
@@ -112,7 +112,7 @@ describe('shouldTrack', () => {
         trackAllPureComponents: true,
         exclude: [/PureComponent/],
       });
-      const isShouldTrack = shouldTrack(PureComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(PureComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(false);
     });
 
@@ -121,7 +121,7 @@ describe('shouldTrack', () => {
         trackAllPureComponents: true,
         exclude: [/MemoComponent/],
       });
-      const isShouldTrack = shouldTrack(MemoComponent, { isHookChange: false });
+      const isShouldTrack = shouldTrack(MemoComponent, {isHookChange: false});
       expect(isShouldTrack).toBe(false);
     });
   });
@@ -129,19 +129,19 @@ describe('shouldTrack', () => {
   describe('hooks changes', () => {
     test('Do not track not tracked component (default)', () => {
       whyDidYouRender(React);
-      const isShouldTrack = shouldTrack(NotTrackedTestComponent, { isHookChange: true });
+      const isShouldTrack = shouldTrack(NotTrackedTestComponent, {isHookChange: true});
       expect(isShouldTrack).toBe(false);
     });
 
     test('Track tracked component', () => {
       whyDidYouRender(React);
-      const isShouldTrack = shouldTrack(TrackedTestComponent, { isHookChange: true });
+      const isShouldTrack = shouldTrack(TrackedTestComponent, {isHookChange: true});
       expect(isShouldTrack).toBe(true);
     });
 
     test('Do not track hook changes with "trackHooks: false"', () => {
       whyDidYouRender(React);
-      const isShouldTrack = shouldTrack(TrackedTestComponentNoHooksTracking, { isHookChange: true });
+      const isShouldTrack = shouldTrack(TrackedTestComponentNoHooksTracking, {isHookChange: true});
       expect(isShouldTrack).toBe(false);
     });
   });

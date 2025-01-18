@@ -2,7 +2,7 @@ import React from 'react';
 import * as rtl from '@testing-library/react';
 
 import whyDidYouRender from '~';
-import { diffTypes } from '~/consts';
+import {diffTypes} from '~/consts';
 
 const ReactMemoTestComponent = React.memo(() => (
   <div>hi!</div>
@@ -23,12 +23,12 @@ afterEach(() => {
 });
 
 test('Memoize text component', () => {
-  const obj = { a: [] };
+  const obj = {a: []};
 
   const Svg = React.memo('svg');
   Svg.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <Svg arr={obj}/>
   );
   rerender(
@@ -39,9 +39,9 @@ test('Memoize text component', () => {
 });
 
 test('Component memoized with React.memo - no change', () => {
-  const obj = { a: [] };
+  const obj = {a: []};
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <ReactMemoTestComponent arr={obj}/>
   );
   rerender(
@@ -52,7 +52,7 @@ test('Component memoized with React.memo - no change', () => {
 });
 
 test('Component memoized with React.memo - different prop values', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <ReactMemoTestComponent a={1}/>
   );
   rerender(
@@ -74,7 +74,7 @@ test('Component memoized with React.memo - different prop values', () => {
 });
 
 test('Component memoized with React.memo - deep equal prop values', () => {
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <ReactMemoTestComponent a={[]}/>
   );
   rerender(
@@ -99,7 +99,7 @@ test('React.memo Component memoized with another React.memo - deep equal prop va
   const ReactSecondMemoComponent = React.memo(ReactMemoTestComponent);
   ReactSecondMemoComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <ReactSecondMemoComponent a={[]}/>
   );
   rerender(
@@ -140,7 +140,7 @@ test('memo a forward ref component', () => {
     componentContentFromRef = ref.innerHTML;
   };
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <MyComponent a={[]} ref={handleRef}/>
   );
 
@@ -178,7 +178,7 @@ test('memo a class component', () => {
 
   MyComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <MyComponent a={[]}/>
   );
 
@@ -213,7 +213,7 @@ test('memo a pure class component', () => {
 
   MyComponent.whyDidYouRender = true;
 
-  const { rerender } = rtl.render(
+  const {rerender} = rtl.render(
     <MyComponent a={[]}/>
   );
 

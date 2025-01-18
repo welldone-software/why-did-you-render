@@ -1,20 +1,20 @@
-import { defaults } from 'lodash';
+import {defaults} from 'lodash';
 
 import wdyrStore from '../wdyrStore';
 
 import getDisplayName from '../getDisplayName';
-import { isMemoComponent } from '../utils';
+import {isMemoComponent} from '../utils';
 import patchFunctionalOrStrComponent from './patchFunctionalOrStrComponent';
 
-export default function patchForwardRefComponent(ForwardRefComponent, { displayName, defaultProps }) {
-  const { render: InnerForwardRefComponent } = ForwardRefComponent;
+export default function patchForwardRefComponent(ForwardRefComponent, {displayName, defaultProps}) {
+  const {render: InnerForwardRefComponent} = ForwardRefComponent;
 
   const isInnerComponentMemoized = isMemoComponent(InnerForwardRefComponent);
   const WrappedFunctionalComponent = isInnerComponentMemoized ?
     InnerForwardRefComponent.type : InnerForwardRefComponent;
 
   const WDYRWrappedByReactForwardRefFunctionalComponent = (
-    patchFunctionalOrStrComponent(WrappedFunctionalComponent, { isPure: isInnerComponentMemoized, displayName })
+    patchFunctionalOrStrComponent(WrappedFunctionalComponent, {isPure: isInnerComponentMemoized, displayName})
   );
 
   WDYRWrappedByReactForwardRefFunctionalComponent.displayName = getDisplayName(WrappedFunctionalComponent);
@@ -29,7 +29,7 @@ export default function patchForwardRefComponent(ForwardRefComponent, { displayN
 
   try {
     WDYRForwardRefFunctionalComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 

@@ -1,11 +1,11 @@
-import { defaults } from 'lodash';
+import {defaults} from 'lodash';
 
 import wdyrStore from '../wdyrStore';
 
-import { checkIfInsideAStrictModeTree } from '../utils';
+import {checkIfInsideAStrictModeTree} from '../utils';
 import getUpdateInfo from '../getUpdateInfo';
 
-export default function patchClassComponent(ClassComponent, { displayName, defaultProps }) {
+export default function patchClassComponent(ClassComponent, {displayName, defaultProps}) {
   class WDYRPatchedClassComponent extends ClassComponent {
     constructor(props, context) {
       super(props, context);
@@ -38,8 +38,10 @@ export default function patchClassComponent(ClassComponent, { displayName, defau
           const updateInfo = getUpdateInfo({
             Component: ClassComponent,
             displayName,
+            prevOwner: this._WDYR.prevOwner,
             prevProps: this._WDYR.prevProps,
             prevState: this._WDYR.prevState,
+            nextOwner: wdyrStore.ownerBeforeElementCreation,
             nextProps: this.props,
             nextState: this.state,
           });
@@ -47,6 +49,7 @@ export default function patchClassComponent(ClassComponent, { displayName, defau
           wdyrStore.options.notifier(updateInfo);
         }
 
+        this._WDYR.prevOwner = wdyrStore.ownerBeforeElementCreation;
         this._WDYR.prevProps = this.props;
         this._WDYR.prevState = this.state;
       }
@@ -57,7 +60,7 @@ export default function patchClassComponent(ClassComponent, { displayName, defau
 
   try {
     WDYRPatchedClassComponent.displayName = displayName;
-  } catch (e) {
+  } catch (_e) {
     // not crucial if displayName couldn't be set
   }
 

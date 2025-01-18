@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 
 import createStepLogger from '../createStepLogger';
 
 export default {
   description: 'Log Owner Reasons',
-  fn({ domElement, whyDidYouRender }) {
+  fn({reactDomRoot, whyDidYouRender}) {
     const stepLogger = createStepLogger();
 
     whyDidYouRender(React);
@@ -16,9 +15,9 @@ export default {
     const Owner = () => <Child />;
 
     class ClassOwner extends React.Component {
-      state = { a: 1 };
+      state = {a: 1};
       componentDidMount() {
-        this.setState({ a: 2 });
+        this.setState({a: 2});
       }
 
       render() {
@@ -40,15 +39,15 @@ export default {
     }
 
     stepLogger('First render');
-    ReactDom.render(<Owner a={1} />, domElement);
+    reactDomRoot.render(<Owner a={1} />);
 
     stepLogger('Owner props change', true);
-    ReactDom.render(<Owner a={2} />, domElement);
+    reactDomRoot.render(<Owner a={2} />);
 
     stepLogger('Owner state change', true);
-    ReactDom.render(<ClassOwner />, domElement);
+    reactDomRoot.render(<ClassOwner />);
 
     stepLogger('Owner hooks changes', true);
-    ReactDom.render(<HooksOwner />, domElement);
+    reactDomRoot.render(<HooksOwner />);
   },
 };

@@ -1,4 +1,4 @@
-import { isString } from 'lodash';
+import {isString} from 'lodash';
 
 export default function getDisplayName(type) {
   return (
