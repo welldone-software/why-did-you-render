@@ -6,7 +6,7 @@
 
 [![npm version](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render.svg)](https://badge.fury.io/js/%40welldone-software%2Fwhy-did-you-render)
 [![Build Status](https://github.com/welldone-software/why-did-you-render/actions/workflows/main.yml/badge.svg)](https://github.com/welldone-software/why-did-you-render/actions/workflows/main.yml)
-![NPM](https://img.shields.io/npm/l/@welldone-software/why-did-you-render?style=flat)
+[![license](https://img.shields.io/npm/l/@welldone-software/why-did-you-render?style=flat)](https://github.com/welldone-software/why-did-you-render/blob/master/LICENSE)
 [![@welldone-software/why-did-you-render](https://snyk.io/advisor/npm-package/@welldone-software/why-did-you-render/badge.svg)](https://snyk.io/advisor/npm-package/@welldone-software/why-did-you-render)
 [![Coverage Status](https://coveralls.io/repos/github/welldone-software/why-did-you-render/badge.svg?branch=add-e2e-tests-using-cypress)](https://coveralls.io/github/welldone-software/why-did-you-render?branch=add-e2e-tests-using-cypress)
 
