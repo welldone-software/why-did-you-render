@@ -176,7 +176,7 @@ if (process.env.NODE_ENV === 'development') {
 * [Why Did You Render v4 Released!](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c) - TypeScript support, Custom hooks tracking (like React-Redux’s useSelector), Tracking of all pure components.
 
 ## Integration With Other Libraries
-* [Next.js example](https://github.com/zeit/next.js/tree/canary/examples/with-why-did-you-render)
+* [Next.js example](https://codesandbox.io/p/sandbox/why-did-you-render-nextjs-esmdk)
 * [React-Redux With Hooks](https://medium.com/welldone-software/why-did-you-render-v4-released-48e0f0b99d4c)
 * [Mobx is currently not supported](https://github.com/welldone-software/why-did-you-render/issues/162)
 * [React-Native flipper plugin made by @allen-hsu](https://github.com/allen-hsu/wdyr-flipper#wdry-flipper-reporter)
