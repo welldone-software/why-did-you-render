@@ -22,7 +22,7 @@ It can also help you to simply track when and why a certain component re-renders
 > The library was not tested with [React Compiler](https://react.dev/learn/react-compiler) at all. I believe it's completely incompatible with it.
 
 > [!CAUTION]
-> Not all re-renders are *"bad"*. Sometimes shenanigan to reduce re-renders can either hurt your App's performance or have a neglagable effect, in which case it would be just a waste of your efforts, and complicate your code. Try to focus on heavier components when optimizing and use the [React DevTools Profiler](https://legacy.reactjs.org/blog/2018/09/10/introducing-the-react-profiler.html) to measure the effects of any changes.
+> Not all re-renders are *"bad"*. Sometimes shenanigan to reduce re-renders can either hurt your App's performance or have a negligible effect, in which case it would be just a waste of your efforts, and complicate your code. Try to focus on heavier components when optimizing and use the [React DevTools Profiler](https://legacy.reactjs.org/blog/2018/09/10/introducing-the-react-profiler.html) to measure the effects of any changes.
 
 > [!NOTE]
 I've joined the React team, specifically working on React tooling. This role has opened up exciting opportunities to enhance the developer experience for React users— and your input could offer valuable insights to help me with this effort. Please join the conversation in the [discussion thread](https://github.com/welldone-software/why-did-you-render/discussions/309)!
