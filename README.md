@@ -408,3 +408,5 @@ Inspired by the following previous work:
 ## License
 
 This library is [MIT licensed](./LICENSE).
+
+[🔼Back to top!](#Why-Did-You-Render)
