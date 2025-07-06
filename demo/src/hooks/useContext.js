@@ -48,7 +48,7 @@ export default {
       </div>
     ));
 
-    MemoizedParent.dispalyName = 'MemoizedParent';
+    MemoizedParent.displayName = 'MemoizedParent';
     MemoizedParent.whyDidYouRender = true;
 
     let alreadyMountedMain = false;
