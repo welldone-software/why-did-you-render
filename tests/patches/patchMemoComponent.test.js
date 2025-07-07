@@ -8,7 +8,7 @@ const ReactMemoTestComponent = React.memo(() => (
   <div>hi!</div>
 ));
 ReactMemoTestComponent.whyDidYouRender = true;
-ReactMemoTestComponent.dispalyName = 'ReactMemoTestComponent';
+ReactMemoTestComponent.displayName = 'ReactMemoTestComponent';
 
 let updateInfos = [];
 beforeEach(() => {

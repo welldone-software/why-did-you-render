@@ -22,7 +22,7 @@ const FunctionalTestComponent = () => (
   <div>hi!</div>
 );
 FunctionalTestComponent.whyDidYouRender = true;
-FunctionalTestComponent.dispalyName = 'FunctionalTestComponent';
+FunctionalTestComponent.displayName = 'FunctionalTestComponent';
 
 const FunctionalTestComponentWithHooks = () => {
   const [state1, setState1] = React.useState({count1: 1});
@@ -38,13 +38,13 @@ const FunctionalTestComponentWithHooks = () => {
   );
 };
 FunctionalTestComponentWithHooks.whyDidYouRender = true;
-FunctionalTestComponentWithHooks.dispalyName = 'FunctionalTestComponentWithHooks';
+FunctionalTestComponentWithHooks.displayName = 'FunctionalTestComponentWithHooks';
 
 const ReactMemoTestComponent = React.memo(() => (
   <div>hi!</div>
 ));
 ReactMemoTestComponent.whyDidYouRender = true;
-ReactMemoTestComponent.dispalyName = 'ReactMemoTestComponent';
+ReactMemoTestComponent.displayName = 'ReactMemoTestComponent';
 
 let updateInfos = [];
 beforeEach(() => {
