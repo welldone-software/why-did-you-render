@@ -8,6 +8,52 @@ const moreInfoHooksUrl = 'http://bit.ly/wdyr3';
 
 let inHotReload = false;
 
+// Wrap opaque values to prevent console from accessing their properties
+function safeValue(value, visited = new WeakSet()) {
+  if (!wdyrStore.options?.opaqueOverride) {
+    return value;
+  }
+  
+  const opaqueOverride = wdyrStore.options.opaqueOverride;
+  
+  // Check if the value itself is opaque
+  if (opaqueOverride(value)) {
+    // Return a safe representation that won't trigger property access
+    return `[Opaque Reference ${typeof value}]`;
+  }
+  
+  // For objects and arrays, recursively check for opaque values
+  if (value && typeof value === 'object') {
+    // Check for circular reference
+    if (visited.has(value)) {
+      return '[Circular Reference]';
+    }
+    
+    // Add to visited set
+    visited.add(value);
+    
+    // Don't modify the original, and be careful with property access
+    try {
+      if (Array.isArray(value)) {
+        return value.map(item => safeValue(item, visited));
+      }
+      
+      const safeObj = {};
+      for (const key in value) {
+        if (Object.prototype.hasOwnProperty.call(value, key)) {
+          safeObj[key] = safeValue(value[key], visited);
+        }
+      }
+      return safeObj;
+    } catch {
+      // If we can't safely traverse, return a placeholder
+      return '[Complex object with potential opaque values]';
+    }
+  }
+  
+  return value;
+}
+
 function shouldLog(reason, Component) {
   if (inHotReload) {
     return false;
@@ -51,7 +97,7 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
       wdyrStore.options.consoleLog(
         `${diffTypesDescriptions[diffType]}. (more info at ${hookName ? moreInfoHooksUrl : moreInfoUrl})`,
       );
-      wdyrStore.options.consoleLog({[`prev ${pathString}`]: prevValue}, '!==', {[`next ${pathString}`]: nextValue});
+      wdyrStore.options.consoleLog({[`prev ${pathString}`]: safeValue(prevValue)}, '!==', {[`next ${pathString}`]: safeValue(nextValue)});
       if (diffType === diffTypes.deepEquals) {
         wdyrStore.options.consoleLog({'For detailed diff, right click the following fn, save as global, and run: ': diffFn});
       }
@@ -67,7 +113,7 @@ function logDifference({Component, displayName, hookName, prefixMessage, diffObj
         'This usually means this component called setState when no changes in its state actually occurred.',
       `More info at ${moreInfoUrl}`
     );
-    wdyrStore.options.consoleLog(`prev ${diffObjType}:`, values.prev, ' !== ', values.next, `:next ${diffObjType}`);
+    wdyrStore.options.consoleLog(`prev ${diffObjType}:`, safeValue(values.prev), ' !== ', safeValue(values.next), `:next ${diffObjType}`);
   }
 }
 

@@ -38,6 +38,7 @@ export default function normalizeOptions(userOptions = {}) {
     textBackgroundColor: 'white',
     trackExtraHooks: [],
     trackAllPureComponents: false,
+    opaqueOverride: null,
     ...userOptions,
   };
 }

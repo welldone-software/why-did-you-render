@@ -46,6 +46,7 @@ export interface WhyDidYouRenderOptions {
   textBackgroundColor?: string;
   notifier?: Notifier;
   customName?: string;
+  opaqueOverride?: (obj: any) => boolean;
 }
 
 export type WhyDidYouRenderComponentMember = WhyDidYouRenderOptions | boolean

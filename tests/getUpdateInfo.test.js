@@ -521,3 +521,231 @@ describe('getUpdateInfo', () => {
     });
   });
 });
+
+describe('getUpdateInfo - hook differences', () => {
+  let wdyrStore;
+
+  beforeEach(() => {
+    whyDidYouRender(React);
+    wdyrStore = require('~/wdyrStore').default;
+  });
+
+  afterEach(() => {
+    React.__REVERT_WHY_DID_YOU_RENDER__();
+    jest.restoreAllMocks();
+  });
+
+  test('Empty next hooks - prev length > 0, next []', () => {
+    const prevOwner = {};
+    const nextOwner = {};
+
+    wdyrStore.ownerDataMap.set(prevOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: {value: 1}},
+        {hookName: 'useEffect', result: undefined},
+        {hookName: 'useMemo', result: 42},
+      ],
+    });
+
+    wdyrStore.ownerDataMap.set(nextOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [],
+    });
+
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
+      prevOwner,
+      nextOwner,
+      prevProps: {},
+      prevState: null,
+      nextProps: {},
+      nextState: null,
+    });
+
+    expect(updateInfo.reason.ownerDifferences).toBeTruthy();
+    expect(updateInfo.reason.ownerDifferences.hookDifferences).toEqual([
+      {
+        hookName: 'useState',
+        differences: {change: 'removed'},
+      },
+      {
+        hookName: 'useEffect',
+        differences: {change: 'removed'},
+      },
+      {
+        hookName: 'useMemo',
+        differences: {change: 'removed'},
+      },
+    ]);
+  });
+
+  test('Shorter next hooks - prev length n, next length n-1', () => {
+    const prevOwner = {};
+    const nextOwner = {};
+
+    const stateResult = {value: 1};
+
+    wdyrStore.ownerDataMap.set(prevOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: stateResult},
+        {hookName: 'useEffect', result: undefined},
+        {hookName: 'useMemo', result: 42},
+      ],
+    });
+
+    wdyrStore.ownerDataMap.set(nextOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: stateResult},
+        {hookName: 'useEffect', result: undefined},
+      ],
+    });
+
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
+      prevOwner,
+      nextOwner,
+      prevProps: {},
+      prevState: null,
+      nextProps: {},
+      nextState: null,
+    });
+
+    expect(updateInfo.reason.ownerDifferences).toBeTruthy();
+    expect(updateInfo.reason.ownerDifferences.hookDifferences).toEqual([
+      {
+        hookName: 'useState',
+        differences: false,
+      },
+      {
+        hookName: 'useEffect',
+        differences: false,
+      },
+      {
+        hookName: 'useMemo',
+        differences: {change: 'removed'},
+      },
+    ]);
+  });
+
+  test('Longer next hooks - prev n-1, next n', () => {
+    const prevOwner = {};
+    const nextOwner = {};
+
+    const stateResult = {value: 1};
+
+    wdyrStore.ownerDataMap.set(prevOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: stateResult},
+        {hookName: 'useEffect', result: undefined},
+      ],
+    });
+
+    wdyrStore.ownerDataMap.set(nextOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: stateResult},
+        {hookName: 'useEffect', result: undefined},
+        {hookName: 'useMemo', result: 42},
+      ],
+    });
+
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
+      prevOwner,
+      nextOwner,
+      prevProps: {},
+      prevState: null,
+      nextProps: {},
+      nextState: null,
+    });
+
+    expect(updateInfo.reason.ownerDifferences).toBeTruthy();
+    expect(updateInfo.reason.ownerDifferences.hookDifferences).toEqual([
+      {
+        hookName: 'useState',
+        differences: false,
+      },
+      {
+        hookName: 'useEffect',
+        differences: false,
+      },
+      {
+        hookName: 'useMemo',
+        differences: {change: 'added'},
+      },
+    ]);
+  });
+
+  test('Diff failure safety - findObjectsDifferences throws error', () => {
+    const prevOwner = {};
+    const nextOwner = {};
+
+    wdyrStore.ownerDataMap.set(prevOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: {value: 1}},
+        {hookName: 'useEffect', result: {deps: [1, 2, 3]}},
+      ],
+    });
+
+    wdyrStore.ownerDataMap.set(nextOwner, {
+      props: {},
+      state: null,
+      hooksInfo: [
+        {hookName: 'useState', result: {value: 2}},
+        {hookName: 'useEffect', result: {deps: [4, 5, 6]}},
+      ],
+    });
+
+    const findObjectsDifferencesModule = require('~/findObjectsDifferences');
+    const originalFindObjectsDifferences = findObjectsDifferencesModule.default;
+    
+    let hookDiffCallCount = 0;
+    jest.spyOn(findObjectsDifferencesModule, 'default').mockImplementation((prev, next, options) => {
+      if (options && options.shallow === false && prev && next) {
+        hookDiffCallCount++;
+        if (hookDiffCallCount <= 2) {
+          throw new Error('Simulated diff error');
+        }
+      }
+      return originalFindObjectsDifferences(prev, next, options);
+    });
+
+    const updateInfo = getUpdateInfo({
+      Component: TestComponent,
+      displayName: getDisplayName(TestComponent),
+      prevOwner,
+      nextOwner,
+      prevProps: {},
+      prevState: null,
+      nextProps: {},
+      nextState: null,
+    });
+
+    expect(updateInfo.reason.ownerDifferences).toBeTruthy();
+    expect(updateInfo.reason.ownerDifferences.hookDifferences).toEqual([
+      {
+        hookName: 'useState',
+        differences: {error: 'diff_failed'},
+      },
+      {
+        hookName: 'useEffect',
+        differences: {error: 'diff_failed'},
+      },
+    ]);
+  });
+});

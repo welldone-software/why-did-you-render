@@ -19,14 +19,54 @@ function getOwnerDifferences(prevOwner, nextOwner) {
       prevOwnerData.hooksInfo.slice(prevOwnerData.hooksInfo.length / 2) :
       prevOwnerData.hooksInfo;
 
-    const hookDifferences = prevOwnerDataHooks.map(({hookName, result}, i) => ({
-      hookName,
-      differences: findObjectsDifferences(result, nextOwnerData.hooksInfo[i].result, {shallow: false}),
-    }));
+    const prevHooks = Array.isArray(prevOwnerDataHooks) ? prevOwnerDataHooks : [];
+    const nextHooks = Array.isArray(nextOwnerData?.hooksInfo) ? nextOwnerData.hooksInfo : [];
+    
+    // Handle different array lengths safely
+    const hookDifferences = [];
+    const maxLen = Math.max(prevHooks.length, nextHooks.length);
+    
+    for (let i = 0; i < maxLen; i++) {
+      const prev = prevHooks[i];
+      const next = nextHooks[i];
+      
+      if (!prev && next) {
+        // Hook was added
+        hookDifferences.push({
+          hookName: next.hookName,
+          differences: {change: 'added'},
+        });
+      } else if (prev && !next) {
+        // Hook was removed
+        hookDifferences.push({
+          hookName: prev.hookName,
+          differences: {change: 'removed'},
+        });
+      } else if (prev && next) {
+        // Both exist, compare them
+        let differences;
+        try {
+          differences = findObjectsDifferences(prev.result, next.result, {
+            shallow: false,
+            opaqueOverride: wdyrStore.options?.opaqueOverride
+          });
+        } catch {
+          differences = {error: 'diff_failed'};
+        }
+        hookDifferences.push({
+          hookName: prev.hookName,
+          differences,
+        });
+      }
+    }
 
     return {
-      propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props),
-      stateDifferences: findObjectsDifferences(prevOwnerData.state, nextOwnerData.state),
+      propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props, {
+        opaqueOverride: wdyrStore.options?.opaqueOverride
+      }),
+      stateDifferences: findObjectsDifferences(prevOwnerData.state, nextOwnerData.state, {
+        opaqueOverride: wdyrStore.options?.opaqueOverride
+      }),
       hookDifferences: hookDifferences.length > 0 ? hookDifferences : false,
     };
   }
@@ -45,9 +85,16 @@ function getOwnerDifferences(prevOwner, nextOwner) {
 
 function getUpdateReason(prevOwner, prevProps, prevState, prevHookResult, nextOwner, nextProps, nextState, nextHookResult) {
   return {
-    propsDifferences: findObjectsDifferences(prevProps, nextProps),
-    stateDifferences: findObjectsDifferences(prevState, nextState),
-    hookDifferences: findObjectsDifferences(prevHookResult, nextHookResult, {shallow: false}),
+    propsDifferences: findObjectsDifferences(prevProps, nextProps, {
+      opaqueOverride: wdyrStore.options?.opaqueOverride
+    }),
+    stateDifferences: findObjectsDifferences(prevState, nextState, {
+      opaqueOverride: wdyrStore.options?.opaqueOverride
+    }),
+    hookDifferences: findObjectsDifferences(prevHookResult, nextHookResult, {
+      shallow: false,
+      opaqueOverride: wdyrStore.options?.opaqueOverride
+    }),
     ownerDifferences: getOwnerDifferences(prevOwner, nextOwner),
   };
 }

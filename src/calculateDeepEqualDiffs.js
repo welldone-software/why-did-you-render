@@ -42,7 +42,19 @@ function isGetter(obj, prop) {
 
 export const dependenciesMap = new WeakMap();
 
-function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {detailed}) {
+function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {detailed, opaqueOverride}) {
+  // Check if either value should be treated as opaque
+  if (opaqueOverride) {
+    const aIsOpaque = opaqueOverride(a);
+    const bIsOpaque = opaqueOverride(b);
+    if (aIsOpaque || bIsOpaque) {
+      // If either is opaque, only compare by reference
+      return a === b ? 
+        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.same) :
+        trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
+    }
+  }
+
   if (a === b) {
     if (detailed) {
       trackDiff(a, b, diffsAccumulator, pathString, diffTypes.same);
@@ -63,7 +75,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
     const arrayItemDiffs = [];
     let numberOfDeepEqualsItems = 0;
     for (let i = arrayLength; i--; i > 0) {
-      const diffEquals = accumulateDeepEqualDiffs(a[i], b[i], arrayItemDiffs, `${pathString}[${i}]`, {detailed});
+      const diffEquals = accumulateDeepEqualDiffs(a[i], b[i], arrayItemDiffs, `${pathString}[${i}]`, {detailed, opaqueOverride});
       if (diffEquals) {
         numberOfDeepEqualsItems++;
       }
@@ -116,7 +128,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
     }
 
     const reactElementPropsAreDeepEqual =
-      accumulateDeepEqualDiffs(a.props, b.props, [], `${pathString}.props`, {detailed});
+      accumulateDeepEqualDiffs(a.props, b.props, [], `${pathString}.props`, {detailed, opaqueOverride});
 
     return reactElementPropsAreDeepEqual ?
       trackDiff(a, b, diffsAccumulator, pathString, diffTypes.reactElement) :
@@ -133,7 +145,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
 
     if (aDependenciesObj && bDependenciesObj) {
       const dependenciesAreDeepEqual =
-        accumulateDeepEqualDiffs(aDependenciesObj.deps, bDependenciesObj.deps, diffsAccumulator, `${pathString}:parent-hook-${aDependenciesObj.hookName}-deps`, {detailed});
+        accumulateDeepEqualDiffs(aDependenciesObj.deps, bDependenciesObj.deps, diffsAccumulator, `${pathString}:parent-hook-${aDependenciesObj.hookName}-deps`, {detailed, opaqueOverride});
 
       return dependenciesAreDeepEqual ?
         trackDiff(a, b, diffsAccumulator, pathString, diffTypes.function) :
@@ -144,6 +156,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
   }
 
   if (typeof a === 'object' && typeof b === 'object' && Object.getPrototypeOf(a) === Object.getPrototypeOf(b)) {
+    
     const aKeys = Object.getOwnPropertyNames(a);
     const bKeys = Object.getOwnPropertyNames(b);
     
@@ -183,7 +196,7 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
     let numberOfDeepEqualsObjectValues = 0;
     for (let i = keysLength; i--; i > 0) {
       const key = relevantKeys[i];
-      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, {detailed});
+      const deepEquals = accumulateDeepEqualDiffs(a[key], b[key], objectValuesDiffs, `${pathString}.${key}`, {detailed, opaqueOverride});
       if (deepEquals) {
         numberOfDeepEqualsObjectValues++;
       }
@@ -203,10 +216,10 @@ function accumulateDeepEqualDiffs(a, b, diffsAccumulator, pathString = '', {deta
   return trackDiff(a, b, diffsAccumulator, pathString, diffTypes.different);
 }
 
-export default function calculateDeepEqualDiffs(a, b, initialPathString, {detailed = false} = {}) {
+export default function calculateDeepEqualDiffs(a, b, initialPathString, {detailed = false, opaqueOverride} = {}) {
   try {
     const diffs = [];
-    accumulateDeepEqualDiffs(a, b, diffs, initialPathString, {detailed});
+    accumulateDeepEqualDiffs(a, b, diffs, initialPathString, {detailed, opaqueOverride});
     return diffs;
   } catch (error) {
     if ((error.message && error.message.match(/stack|recursion/i)) || (error.number === -2146828260)) {
