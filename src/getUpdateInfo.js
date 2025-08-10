@@ -19,10 +19,43 @@ function getOwnerDifferences(prevOwner, nextOwner) {
       prevOwnerData.hooksInfo.slice(prevOwnerData.hooksInfo.length / 2) :
       prevOwnerData.hooksInfo;
 
-    const hookDifferences = prevOwnerDataHooks.map(({hookName, result}, i) => ({
-      hookName,
-      differences: findObjectsDifferences(result, nextOwnerData.hooksInfo[i].result, {shallow: false}),
-    }));
+    const prevHooks = Array.isArray(prevOwnerDataHooks) ? prevOwnerDataHooks : [];
+    const nextHooks = Array.isArray(nextOwnerData?.hooksInfo) ? nextOwnerData.hooksInfo : [];
+    
+    // Handle different array lengths safely
+    const hookDifferences = [];
+    const maxLen = Math.max(prevHooks.length, nextHooks.length);
+    
+    for (let i = 0; i < maxLen; i++) {
+      const prev = prevHooks[i];
+      const next = nextHooks[i];
+      
+      if (!prev && next) {
+        // Hook was added
+        hookDifferences.push({
+          hookName: next.hookName,
+          differences: {change: 'added'},
+        });
+      } else if (prev && !next) {
+        // Hook was removed
+        hookDifferences.push({
+          hookName: prev.hookName,
+          differences: {change: 'removed'},
+        });
+      } else if (prev && next) {
+        // Both exist, compare them
+        let differences;
+        try {
+          differences = findObjectsDifferences(prev.result, next.result, {shallow: false});
+        } catch {
+          differences = {error: 'diff_failed'};
+        }
+        hookDifferences.push({
+          hookName: prev.hookName,
+          differences,
+        });
+      }
+    }
 
     return {
       propsDifferences: findObjectsDifferences(prevOwnerData.props, nextOwnerData.props),
